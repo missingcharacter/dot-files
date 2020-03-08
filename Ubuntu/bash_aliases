@@ -1,0 +1,67 @@
+# Ubuntu only aliases and functions
+# ricdros' custom aliases
+alias apt-search='sudo apt search'
+alias upgrade="sudo apt update && sudo apt dist-upgrade"
+alias upinstall="sudo apt update && sudo apt install"
+alias install="sudo apt install"
+# http://www.briandolhansky.com/blog/2014/8/5/linux-snippets-using-xclip-to-pipe-to-the-system-clipboard
+alias xclip='xclip -selection c'
+
+function upall () {
+  msg_info 'sudo apt-get update && sudo apt-get dist-upgrade;'
+  sudo apt-get update && sudo apt-get dist-upgrade;
+
+  msg_info 'cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -'
+  cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -
+
+  msg_info 'asdf update; asdf plugin-update --all'
+  asdf update; asdf plugin-update --all
+
+  msg_info 'npm install npm -g; npm update -g;'
+  npm install npm -g; npm update -g;
+
+  msg_info 'yarn global upgrade;'
+  yarn global upgrade;
+
+  msg_info 'gem update --system; gem update;'
+  gem update --system; gem update;
+
+  msg_info 'pip3 list --outdated --format=freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip3 install -U;'
+  pip3 list --outdated --format=freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip3 install -U;
+
+  msg_info 'mackup backup; rclone sync to dot-files and dot-files-dropbox'
+  mackup backup;
+  rclone sync -v --password-command "gettoken.sh RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:Ubuntu;
+  rclone sync -v --password-command "gettoken.sh RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:Ubuntu;
+}
+
+# Add key to ssh-agent
+function addkeys () {
+  local SSH_KEYS=( $(ls ~/.ssh/id_* | xargs -n1 file | grep 'private key' | cut -d ':' -f 1) )
+  if ! ps aux | grep "$(whoami)" | grep ssh-agent | grep -v grep > /dev/null; then
+    eval "$(ssh-agent -s)"
+  fi
+  if [[ ! -n "${SSH_AUTH_SOCK}" ]]; then
+    SSH_AUTH_SOCK="$(ls /tmp/ssh*/agent.*)"
+  fi
+  export SSH_AUTH_SOCK
+  for KEY in "${SSH_KEYS[@]}"; do
+    if ssh-add -L | grep -q "$(awk '{ print $2 }' ${KEY}.pub)" &> /dev/null; then
+      msg_info "You already have ${KEY} in ssh-add"
+    else
+      msg_info "You already have a ssh-agent session running, we will now add ${KEY}"
+      ssh-add "${KEY}"
+    fi
+  done
+}
+
+# Clean your environment from ssh-agent stuff
+function cleansshagent () {
+  unset SSH_AUTH_SOCK && \
+  unset SSH_AGENT_PID && \
+  echo 'list ssh-agent PIDs before pkill' && \
+  pgrep -U $(whoami) 'ssh-agent' && \
+  pkill -U $(whoami) 'ssh-agent' && \
+  echo 'list ssh-agent PIDs after pkill' && \
+  pgrep -U $(whoami) 'ssh-agent'
+}

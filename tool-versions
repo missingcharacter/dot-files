@@ -1,0 +1,18 @@
+# Programming languages
+java adopt-openjdk-8u232-b09
+golang 1.13.6
+nodejs 12.16.1
+python 3.8.2
+ruby 2.7.0
+kotlin 1.3.61
+sbt 1.3.6
+# Infrastructure as code tools
+terraform 0.12.19
+terragrunt 0.21.11
+terraform-docs v0.8.2
+tflint 0.14.0
+# K8s related tools
+kubectl 1.17.2
+helm 3.0.3
+kops 1.15.0
+aws-iam-authenticator 0.4.0

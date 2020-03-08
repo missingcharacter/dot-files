@@ -1,0 +1,19 @@
+# Homebrew's Bash completion stuff
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  source $(brew --prefix)/etc/bash_completion
+fi
+
+# `brew install bash-git-prompt`
+# https://github.com/magicmonty/bash-git-prompt#all-configs-for-bashrc
+if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
+  GIT_PROMPT_THEME=Solarized
+  __GIT_PROMPT_DIR="$(brew --prefix)/opt/bash-git-prompt/share"
+  source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
+  GIT_PS1_SHOWDIRTYSTATE=true
+fi
+
+# Update PATH
+export PATH="${PATH}:$(brew --prefix)/sbin:$(brew --prefix)/opt/libarchive/bin:$(brew --prefix)/opt/gettext/bin:${HOME}/src/gopath/bin:${HOME}/bin"
+
+# Source: https://iterm2.com/documentation-shell-integration.html
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Enable bash's unofficial strict mode
+GITROOT=$(git rev-parse --show-toplevel)
+. ${GITROOT}/lib/strict-mode
+strictMode
+# Enabling utils
+. ${GITROOT}/lib/utils
+
+
+function test_arrays() {
+  local arr=(a b c 'd e' f g)
+  local sub_arr=(b c)
+  local not_sub_arr=(g h)
+  array_contains arr 'a b' && echo yes || echo no # no
+  array_contains arr 'd e' && echo yes || echo no # yes
+  is_subarray_in_array arr sub_arr  && echo yes || echo no     # yes
+  is_subarray_in_array arr not_sub_arr  && echo yes || echo no # no
+}
+
+test_arrays
+
+function test_latest_tag() {
+  local repo1="https://github.com/JetBrains/kotlin"
+  local repo2="https://github.com/asdf-vm/asdf.git"
+  echo "getting tags for ${repo1}"
+  local tags_from_repo1=( $(get_git_tags ${repo1}) )
+  echo "tags from repo1 are: ${tags_from_repo1[@]}"
+  echo "latest tag from repo1 is: ${tags_from_repo1[-1]}"
+  echo "getting tags for ${repo2}"
+  local tags_from_repo2=( $(get_git_tags ${repo2}) )
+  echo "tags from repo2 are: ${tags_from_repo2[@]}"
+  echo "latest tag from repo2 is: ${tags_from_repo2[-1]}"
+}
+
+test_latest_tag

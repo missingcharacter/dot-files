@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+# Enable bash's unofficial strict mode
+GITROOT=$(git rev-parse --show-toplevel)
+. ${GITROOT}/lib/strict-mode
+strictMode
+# Enabling utils
+. ${GITROOT}/lib/utils
+. ${GITROOT}/Ubuntu/base
+
+# Install stuff?
+
+function add_apt_repo() {
+  local REPO="${1}"
+  echo "will try to remove repository ${REPO} if it exists already"
+  if ! sudo add-apt-repository -ry "${REPO}" $> /dev/null; then
+    echo
+  fi
+  sudo add-apt-repository -y "${REPO}"
+}
+
+function add_apt_key() {
+  local URL="${1}"
+  curl -fsSL "${URL}" | sudo apt-key add -
+}
+
+echo "Adding apt keys for bintray, docker, spotify, sublime-text, virtualbox"
+APT_KEYS=('https://bintray.com/user/downloadSubjectPublicKey?username=bintray'
+  'https://download.docker.com/linux/ubuntu/gpg'
+  'https://download.spotify.com/debian/pubkey.gpg'
+  'https://download.sublimetext.com/sublimehq-pub.gpg'
+  'https://www.virtualbox.org/download/oracle_vbox_2016.asc'
+  'https://www.virtualbox.org/download/oracle_vbox.asc'
+)
+
+for APT_KEY in "${APT_KEYS[@]}"; do
+  add_apt_key "${APT_KEY}"
+done
+
+echo "Adding repositories: fpm-my-package, docker, GhostWriter, spotify, sublime-text, termshark, virtualbox"
+REPOSITORIES=("deb https://dl.bintray.com/missingcharacter/fpm-my-package $(lsb_release -cs) stable"
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  'ppa:wereturtle/ppa'
+  'deb http://repository.spotify.com stable non-free'
+  'deb https://download.sublimetext.com/ apt/stable/'
+  'ppa:nicolais/termshark'
+  "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
+)
+
+for REPOSITORY in "${REPOSITORIES[@]}"; do
+  add_apt_repo "${REPOSITORY}"
+done
+
+sudo apt update
+
+function are_extra_tools_installed() {
+  local EXTRA_UBUNTU_TOOLS=('1password-cli' 'bash-completion' 'ca-certificates' 'cmake' 'fpp' 'ghostwriter' 'lastpass-cli' 'libcurl4' 'libcurl4-openssl-dev' 'libxml2' 'libxml2-dev' 'libssl1.1' 'mitmproxy' 'network-manager-openvpn-gnome' 'openvpn-systemd-resolved' 'pandoc' 'pathod' 'pinta' 'pkg-config' 'shellcheck' 'spotify-client' 'sublime-text' 'termshark' 'tmux' 'transmission-gtk' 'tshark' 'vlc' 'virtualbox-6.1' 'wireguard' 'wireshark-gtk' 'xclip')
+  install_if_not_installed EXTRA_UBUNTU_TOOLS 'apt' 'y'
+}
+
+are_extra_tools_installed
+
+function are_python_based_tools_installed() {
+  local PYTHON_BASED_TOOLS=( 'mackup' )
+  install_if_not_installed PYTHON_BASED_TOOLS 'pip3' y
+}
+
+are_python_based_tools_installed
+
+function is_docker_installed() {
+  if [[ ! -x $(command -v docker) ]]; then
+    local DOCKER_DEPS=('apt-transport-https' 'ca-certificates' 'curl' 'gnupg-agent')
+    install_if_not_installed DOCKER_DEPS 'apt' 'y'
+    sudo DEBIAN_FRONTEND='noninteractive' apt -y install docker-ce docker-ce-cli containerd.io
+  fi
+}
+
+is_docker_installed
+
+function download_and_install_deb() {
+  local DEB_URL="${1}"
+  local DEB_NAME="${2}"
+  local DEB_FILE_NAME="${DEB_NAME}.deb"
+
+  if ! sudo apt list --installed 2> /dev/null | grep "${DEB_NAME}" &>/dev/null; then
+    msg_info "Will download and install ${DEB_NAME}"
+    curl -Lv "${DEB_URL}" -o "${DEB_FILE_NAME}"
+    sudo DEBIAN_FRONTEND='noninteractive' apt install -y "./${DEB_FILE_NAME}"
+    rm "${DEB_FILE_NAME}"
+  else
+    msg_info "${DEB_NAME} is installed already"
+  fi
+}
+
+echo "Installing visual studio code, Google Chrome Stable, Slack"
+# ripgrep is not available on ubuntu 18.04 repos, this can me moved up when 20.04
+LATEST_RCLONE="$(curl -s 'https://rclone.org/downloads/' | xmllint --html --xpath 'string(/html/body/div/div/div[1]/table[1]/tbody/tr[1]/td[5]/a/@href)' - 2> /dev/null)"
+LATEST_RIPGREP="$(curl -s 'https://api.github.com/repos/burntsushi/ripgrep/releases/latest' | grep \"browser_download_url.*deb\" | cut -d ':' -f 2,3 | tr -d '"' | tr -d ' ')"
+LATEST_SLACK="$(curl -s 'https://slack.com/downloads/instructions/ubuntu' | xmllint --html --xpath 'string(/html/body/main/section[1]/div/header/p/a[1]/@href)' - 2> /dev/null )"
+declare -A DEB_PACKAGES=(
+  ['code']='https://go.microsoft.com/fwlink/?LinkID=760868'
+  ['google-chrome-stable']='https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
+  ['rclone']="${LATEST_RCLONE}"
+  ['ripgrep']="${LATEST_RIPGREP}"
+  ['slack']="${LATEST_SLACK}")
+
+for KEY in "${!DEB_PACKAGES[@]}"; do
+  download_and_install_deb "${DEB_PACKAGES[${KEY}]}" "${KEY}"
+done
+
+TMP_DOT_FILES=$(mktemp -d dot-files.XXXX)
+
+if ! sudo VBoxManage list extpacks | grep 'Oracle VM VirtualBox Extension Pack' &>/dev/null; then
+  echo "Installing virtualbox Extension pack"
+  LATEST_EXT_PACK=$(curl 'https://www.virtualbox.org/wiki/Downloads' | xmllint --html --xpath 'string(//html/body/div[4]/div[3]/div[3]/div/div[2]/ul[3]/li/a/@href)' - 2> /dev/null)
+  curl -Lv "${LATEST_EXT_PACK}" -o "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
+  sudo VBoxManage extpack install --replace "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
+fi
+
+if ! fc-list | grep 'JetBrains Mono' &>/dev/null; then
+  echo 'Installing Jetbrains Font'
+  LATEST_JETBRAINS_FONT=$(curl 'https://www.jetbrains.com/lp/mono/' | xmllint --html --xpath 'string(//html/body/div/div/div/header/div/div[2]/div[7]/a/@href)' - 2> /dev/null)
+  curl -Lv "${LATEST_JETBRAINS_FONT}" -o "${TMP_DOT_FILES}/JetBrainsMono.zip"
+  unzip "${TMP_DOT_FILES}/JetBrainsMono.zip" -d "${HOME}/.fonts/"
+  fc-cache -f -v
+fi
+
+if ! aws --version | grep '^aws-cli/2' &>/dev/null; then
+ echo 'Installing awscli v2'
+ curl -Lv 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o "${TMP_DOT_FILES}/awscliv2.zip"
+ unzip "${TMP_DOT_FILES}/awscliv2.zip" -d "${TMP_DOT_FILES}"
+ sudo "${TMP_DOT_FILES}/aws/install"
+fi
+
+if ! piactl --version &>/dev/null; then
+  echo "Installing Private Internet Access"
+  LATEST_PIA_INSTALLER=$(curl 'https://www.privateinternetaccess.com/installer/x/download_installer_linux' | xmllint --html --xpath '//html/head/meta[5]/@content' - 2> /dev/null | cut -d '"' -f2 | cut -d '=' -f2)
+  curl -Lv "${LATEST_PIA_INSTALLER}" -o ${TMP_DOT_FILES}/pia-linux.run
+  sh ${TMP_DOT_FILES}/pia-linux.run
+fi
+
+rm -rf "${TMP_DOT_FILES}"

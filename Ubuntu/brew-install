@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Enable bash's unofficial strict mode
+GITROOT=$(git rev-parse --show-toplevel)
+. ${GITROOT}/lib/strict-mode
+strictMode
+# Enabling utils
+. ${GITROOT}/lib/utils
+
+function is_enus_utf_8_available() {
+  local LANGUAGE='en_US.utf8'
+  declare -A DEPS=( ["LC_ALL=${LANGUAGE}"]='/etc/environment' ["${LANGUAGE} UTF-8"]='/etc/locale.gen' ["LANG=${LANGUAGE}"]='/etc/locale.conf' )
+  if ! locale -a | grep ${LANG} &> /dev/null; then
+    for DEP in ${!DEPS[@]}; do
+      if ! grep "^${DEP}" ${DEPS[${DEP}]} &> /dev/null; then
+        sudo bash -c "echo \"${DEP}\" >> ${DEPS[${DEP}]}"
+      fi
+    done
+    sudo locale-gen en_US.UTF-8
+  fi
+}
+
+function are_brew_deps_installed() {
+  local BREW_DEPS=('build-essential' 'curl' 'file' 'git')
+  is_enus_utf_8_available
+  local INSTALLED_TOOLS=( $(apt list --installed 2>/dev/null | grep -v 'Listing' | cut -d '/' -f1) )
+  local USER_REPLY
+
+  # Check if extra tools are installed
+  if ! $(is_subarray_in_array INSTALLED_TOOLS BREW_DEPS); then
+    echo "Seems like some (or all) the homebrew dependencies are missing" >&2
+    read -p "Want me to install them? " -n 1 -r USER_REPLY
+    echo
+    if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
+      sudo DEBIAN_FRONTEND='noninteractive' apt install -y ${BREW_DEPS[@]}
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+      #echo 'eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)' >> ~/.bashrc
+      source ~/.bashrc
+      brew install gcc
+      brew install asciidoc # this fails right now because it wants macOS
+    fi
+  fi
+}

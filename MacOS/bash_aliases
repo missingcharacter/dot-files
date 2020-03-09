@@ -11,6 +11,9 @@ function upall () {
   msg_info 'mas upgrade;'
   mas upgrade;
 
+  msg_info 'brew cu -y;'
+  brew cu -y;
+
   msg_info 'brew update; brew upgrade; brew cleanup;'
   brew update; brew upgrade; brew cleanup;
 

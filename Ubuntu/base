@@ -8,7 +8,7 @@ strictMode
 
 function are_basics_installed() {
   local USER_REPLY="${1:-''}"
-  local UBUNTU_BASICS=('apt-file' 'apt-transport-https' 'build-essential' 'curl' 'dirmngr' 'gawk' 'git' 'gnupg' 'gnutls-bin' 'inetutils-tools' 'jq' 'libxml2-utils' 'lsb-release' 'parallel' 'software-properties-common' 'tree' 'vim' 'wget' 'xz-utils')
+  local UBUNTU_BASICS=('apt-file' 'apt-transport-https' 'build-essential' 'curl' 'dirmngr' 'gawk' 'git' 'gnupg' 'gnutls-bin' 'inetutils-tools' 'jq' 'libxml2-utils' 'lsb-release' 'parallel' 'software-properties-common' 'tree' 'vim' 'wget' 'xz-utils' 'zlib1g-dev')
   msg_info 'Will run apt update'
   sudo apt update
   msg_info 'Will try to install Ubuntu basics'

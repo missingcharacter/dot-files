@@ -171,7 +171,7 @@ function git_install_asdf() {
   fi
 }
 
-function install_asdf_tool_versions () {
+function install_asdf_tool_versions() {
   # How to:
   # only to be used after asdf has been installed and asdf's:
   # `${HOME}/.asdf/shims:${HOME}/.asdf/bin`
@@ -190,9 +190,15 @@ function install_asdf_tool_versions () {
       msg_warn "asdf plugin ${PLUGIN} was not installed"
     fi
 
-    if grep "${PLUGIN} " ${TOOLS_VERSIONS} | awk '{ print $2 }' | xargs -I{} asdf install ${PLUGIN} {} &> /dev/null; then
+    CATCH_OUTPUT=$(mktemp install_asdf_tool_versions.XXXXXXX)
+    if grep "${PLUGIN} " ${TOOLS_VERSIONS} | awk '{ print $2 }' | xargs -I{} asdf install ${PLUGIN} {} &> "${CATCH_OUTPUT}"; then
       msg_info "Installed ${PLUGIN} version in ${TOOLS_VERSIONS}"
+    else
+      msg_warn "I was not able to ${PLUGIN} version in ${TOOLS_VERSIONS} error, error is below:"
+      msg_warn "$(cat "${CATCH_OUTPUT}")"
+      return 1
     fi
+    rm -f "${CATCH_OUTPUT}"
   done
 }
 

@@ -1,5 +1,6 @@
 # Ubuntu only aliases and functions
 # ricdros' custom aliases
+alias ls='ls --color=auto'
 alias apt-search='sudo apt search'
 alias upgrade="sudo apt update && sudo apt dist-upgrade"
 alias upinstall="sudo apt update && sudo apt install"

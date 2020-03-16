@@ -201,30 +201,3 @@ function install_asdf_tool_versions() {
     rm -f "${CATCH_OUTPUT}"
   done
 }
-
-function is_git_configured() {
-  # How to:
-  # Only to be used after gitconfig has been linked to ${HOME}/.gitconfig
-  if ! git config --global user.name &> /dev/null; then
-    local NAME
-    local NAME_REPLY
-    msg_info "Seems like git's global user.name is not set"
-    read -p 'Want me to set it? ' -n 1 -r NAME_REPLY
-    echo
-    if [[ ${NAME_REPLY} =~ ^[Yy]$ ]]; then
-      read -p 'Please enter your name? ' -r NAME
-      git config --global user.name "${NAME}"
-    fi
-  fi
-  if ! git config --global user.email &> /dev/null; then
-    local EMAIL
-    local EMAIL_REPLY
-    msg_info "Seems like git's global user.email is not set"
-    read -p 'Want me to set it? ' -n 1 -r EMAIL_REPLY
-    echo
-    if [[ ${EMAIL_REPLY} =~ ^[Yy]$ ]]; then
-      read -p 'Please enter your email? ' -r EMAIL
-      git config --global user.email "${EMAIL}"
-    fi
-  fi
-}

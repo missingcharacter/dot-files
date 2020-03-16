@@ -26,6 +26,18 @@ function msg_info () {
   printf "${GREEN}${@}${NC}\n"
 }
 
+function msg_warn () {
+  local YELLOW='\033[0;33m'
+  local NC='\033[0m' # No Color
+  printf "${YELLOW}${@}${NC}\n"
+}
+
+function msg_fatal () {
+  local RED='\033[0;31m'
+  local NC='\033[0m' # No Color
+  printf "${RED}${@}${NC}\n"
+}
+
 function gettoken() {
   local TOKEN_TO_LOOKUP="${1}"
   local FILE_WITH_TOKENS="${2:-"${HOME}/.tokens"}"

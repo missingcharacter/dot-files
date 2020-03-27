@@ -37,22 +37,16 @@ function msg_fatal () {
   printf "${RED}${@}${NC}\n"
 }
 
-function gettoken() {
-  local TOKEN_TO_LOOKUP="${1}"
-  local FILE_WITH_TOKENS="${2:-"${HOME}/.tokens"}"
-  local SEPARATOR='='
-  grep "^${TOKEN_TO_LOOKUP}" ${FILE_WITH_TOKENS} | cut -d ${SEPARATOR} -f2
-}
-
-function gitclone() {
-  local REPO="${1}"
-  local DEFAULT_DIR="${REPO##*/}"
-  local DIR="${2:-"${DEFAULT_DIR%.*}"}"
-  local CLONE_TYPE="${3}"
-  local EMAIL="$(gettoken "${CLONE_TYPE}_GIT_EMAIL")"
-  local NAME="$(gettoken "${CLONE_TYPE}_GIT_NAME")"
-  local GPG_SIGN="$(gettoken "${CLONE_TYPE}_GIT_GPG_SIGN")"
-  git clone -c user.email="${EMAIL}" -c user.name="${NAME}" -c commit.gpgsign="${GPG_SIGN}" "${REPO}" "${DIR}"
+function gitconfig() {
+  local CONFIG_TYPE="${1}"
+  local EMAIL="$(keyring get git "${CONFIG_TYPE}_EMAIL")"
+  local NAME="$(keyring get git "${CONFIG_TYPE}_NAME")"
+  local GPG_SIGN="$(keyring get git "${CONFIG_TYPE}_GPG_SIGN")"
+  git config user.name &> /dev/null && msg_warn 'user.name not set' || git config user.name "${NAME}" && msg_info 'user.name was set'
+  git config user.email &> /dev/null && msg_warn 'user.email was not set' || git config user.email "${EMAIL}" && msg_info 'user.email was not set'
+  git config commit.gpgsign &> /dev/null && msg_warn 'commit.gpgsign was not set' || git config commit.gpgsign "${GPG_SIGN}" && msg_info 'commit.gpgsign was set'
+  git config tag.gpgsign &> /dev/null && msg_warn 'tag.gpgsign was not set' || git config tag.gpgsign "${GPG_SIGN}" && msg_info 'tag.gpgsign was set'
+  [[ "GPG_SIGN" == 'true' ]] && git config user.signingkey "$(keyring get git "${CONFIG_TYPE}_GPG_KEY")" && msg_info 'user.signkey was set' || msg_warn 'user.signkey was not set'
 }
 
 function asdf-all () {

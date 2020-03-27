@@ -38,8 +38,8 @@ function upall () {
 
   msg_info 'mackup backup and rclone'
   mackup backup;
-  rclone sync -v --password-command "gettoken.sh RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:MacOS;
-  rclone sync -v --password-command "gettoken.sh RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:MacOS;
+  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:MacOS;
+  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:MacOS;
 }
 
 function watch () {

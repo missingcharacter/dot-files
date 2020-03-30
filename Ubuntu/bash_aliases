@@ -32,8 +32,8 @@ function upall () {
 
   msg_info 'mackup backup; rclone sync to dot-files and dot-files-dropbox'
   mackup backup;
-  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:Ubuntu;
-  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:Ubuntu;
+  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:PopOS;
+  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:PopOS;
 }
 
 # Add key to ssh-agent

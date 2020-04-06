@@ -37,6 +37,14 @@ function msg_fatal () {
   printf "${RED}${@}${NC}\n"
 }
 
+function to_lower() {
+  echo "${1}" | tr '[:upper:]' '[:lower:]'
+}
+
+function to_upper() {
+  echo "${1}" | tr '[:lower:]' '[:upper:]'
+}
+
 function gitconfig() {
   local CONFIG_TYPE="${1}"
   local EMAIL="$(keyring get git "${CONFIG_TYPE}_EMAIL")"
@@ -46,7 +54,7 @@ function gitconfig() {
   git config user.email &> /dev/null && msg_warn 'user.email was not set' || git config user.email "${EMAIL}" && msg_info 'user.email was not set'
   git config commit.gpgsign &> /dev/null && msg_warn 'commit.gpgsign was not set' || git config commit.gpgsign "${GPG_SIGN}" && msg_info 'commit.gpgsign was set'
   git config tag.gpgsign &> /dev/null && msg_warn 'tag.gpgsign was not set' || git config tag.gpgsign "${GPG_SIGN}" && msg_info 'tag.gpgsign was set'
-  [[ "GPG_SIGN" == 'true' ]] && git config user.signingkey "$(keyring get git "${CONFIG_TYPE}_GPG_KEY")" && msg_info 'user.signkey was set' || msg_warn 'user.signkey was not set'
+  [[ "${GPG_SIGN}" == 'true' ]] && git config user.signingkey "$(keyring get git "${CONFIG_TYPE}_GPG_KEY")" && msg_info 'user.signkey was set' || msg_warn 'user.signkey was not set'
 }
 
 function asdf-all () {

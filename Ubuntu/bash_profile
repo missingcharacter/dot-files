@@ -36,4 +36,4 @@ if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
   GIT_PS1_SHOWDIRTYSTATE=true
 fi
 
-export PATH="${PATH}:${GOROOT}/bin:${GOPATH}/bin:${HOME}/.local/bin:${HOME}/bin"
+export PATH="${PATH}:${GOROOT}/bin:${GOPATH}/bin:${HOME}/.local/bin:${HOME}/bin:/snap/bin"

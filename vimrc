@@ -330,6 +330,18 @@ map <leader>x :e ~/buffer.md<cr>
 "map <leader>pp :setlocal paste!<cr>
 set pastetoggle=<F3>
 
+" Plugin dependant
+" I use this structure using native vim 8+ plugin
+" ~/.vim/pack/plugins/
+"             ├── start
+"             └── opt
+
+" depend on https://github.com/junegunn/vim-easy-align
+"" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+"" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions

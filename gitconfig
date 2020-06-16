@@ -98,3 +98,5 @@
     co = checkout
     br = branch
     dc = diff --cached
+[pull]
+	rebase = true

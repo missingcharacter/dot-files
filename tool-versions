@@ -1,5 +1,5 @@
 # Programming languages
-java adopt-openjdk-8u232-b09
+java adoptopenjdk-8.0.252+9.1
 golang 1.13.6
 nodejs 12.16.1
 ocaml 4.02.3

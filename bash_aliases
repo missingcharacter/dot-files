@@ -18,6 +18,7 @@ alias findterragruntcache='find . -type d -name ".terragrunt-cache"'
 alias findterraformcache='find . -type d -name ".terraform"'
 alias clearterragruntcache='find . -type d -name ".terragrunt-cache" -prune -exec rm -rf {} \;'
 alias clearterraformcache='find . -type d -name ".terraform" -prune -exec rm -rf {} \;'
+alias kdump='kubectl get all --all-namespaces'
 
 function msg_info () {
   local GREEN='\033[0;32m'
@@ -86,7 +87,6 @@ function sunglasses() {
 function showmethecolours() {
   for i in {0..255}; do printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"; done
 }
-
 
 function cleancontainers() {
   docker ps -qa | xargs docker rm;

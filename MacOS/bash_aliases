@@ -48,6 +48,14 @@ function watch () {
   while true ; do clear && echo "Watching ${COMMAND} every ${SECONDS} seconds" && ${COMMAND} && sleep ${SECONDS} ; done
 }
 
+function gitgrepreplace () {
+  local OLD_TEXT="${1}"
+  local NEW_TEXT="${2}"
+  local SEPARATOR="${3:-!}"
+  local REPLACE="s${SEPARATOR}${OLD_TEXT}${SEPARATOR}${NEW_TEXT}${SEPARATOR}g"
+  git grep "${OLD_TEXT}" | cut -d ':' -f1 | sort -u | xargs sed -i '' "${REPLACE}"
+}
+
 function getent() {
   # Trying to make dscacheutil like getent
   # in macOS `man dscacheutil`

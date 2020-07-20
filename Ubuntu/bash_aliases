@@ -69,3 +69,11 @@ function cleansshagent () {
   echo 'list ssh-agent PIDs after pkill' && \
   pgrep -U $(whoami) 'ssh-agent'
 }
+
+function gitgrepreplace () {
+  local OLD_TEXT="${1}"
+  local NEW_TEXT="${2}"
+  local SEPARATOR="${3:-!}"
+  local REPLACE="s${SEPARATOR}${OLD_TEXT}${SEPARATOR}${NEW_TEXT}${SEPARATOR}g"
+  git grep "${OLD_TEXT}" | cut -d ':' -f1 | sort -u | xargs sed -i "${REPLACE}"
+}

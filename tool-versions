@@ -17,5 +17,5 @@ tflint 0.14.0
 # K8s related tools
 kubectl 1.18.5
 helm 3.0.3
-kops 1.15.0
+kops v1.17.1
 aws-iam-authenticator 0.4.0

@@ -15,6 +15,9 @@ function upall () {
   msg_info 'sudo snap refresh --list && sudo snap refresh;'
   sudo snap refresh --list && sudo snap refresh;
 
+  msg_info 'flatpak update;'
+  flatpak update;
+
   msg_info 'cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -'
   cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -
 

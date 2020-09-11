@@ -5,6 +5,7 @@ alias apt-search='sudo apt search'
 alias upgrade="sudo apt update && sudo apt dist-upgrade"
 alias upinstall="sudo apt update && sudo apt install"
 alias install="sudo apt install"
+alias showversion="neofetch"
 # http://www.briandolhansky.com/blog/2014/8/5/linux-snippets-using-xclip-to-pipe-to-the-system-clipboard
 alias xclip='xclip -selection c'
 

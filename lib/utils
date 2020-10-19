@@ -91,7 +91,7 @@ function install_if_not_installed() {
   local -A LIST_COMMAND=(
     ['apt']="sudo apt list --installed 2>/dev/null | grep -v 'Listing' | cut -d '/' -f1"
     ['brew']='brew list'
-    ['brewcask']='brew cask list'
+    ['brewcask']='brew list --cask'
     ['code']='code --list-extensions'
     ['pip3']='pip3 list --format=freeze | cut -d '=' -f1')
   local -A INSTALL_COMMAND=(

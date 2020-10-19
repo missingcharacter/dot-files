@@ -10,13 +10,13 @@ strictMode
 # Install stuff?
 
 function are_brew_basics_installed() {
-  local BREW_BASICS=('fpp' 'ripgrep' 'pandoc' 'shellcheck' 'termshark' 'tmux' 'wireshark')
+  local BREW_BASICS=('fpp' 'ripgrep' 'pandoc' 'shellcheck' 'termshark' 'tmux' 'wireshark' 'fontconfig')
   is_brew_installed
   install_if_not_installed BREW_BASICS 'brew' 'y'
 }
 
 function are_cask_basics_installed() {
-  local BREW_CASK_BASICS=('1password-cli' 'alfred' 'bartender' 'docker' 'firefox' 'gas-mask' 'google-backup-and-sync' 'google-chrome' 'iterm2' 'jdownloader' 'macdown' 'pinta' 'private-internet-access' 'proxyman' 'slack' 'spectacle' 'spotify' 'sublime-text' 'transmission' 'tunnelblick' 'vagrant' 'virtualbox' 'virtualbox-extension-pack' 'visual-studio-code' 'vlc')
+  local BREW_CASK_BASICS=('1password-cli' 'alfred' 'bartender' 'docker' 'firefox' 'gas-mask' 'google-backup-and-sync' 'google-chrome' 'iterm2' 'jdownloader' 'macdown' 'pinta' 'private-internet-access' 'proxyman' 'slack' 'rectangle' 'spotify' 'sublime-text' 'transmission' 'tunnelblick' 'vagrant' 'virtualbox' 'virtualbox-extension-pack' 'visual-studio-code' 'vlc')
   are_brew_basics_installed
   install_if_not_installed BREW_CASK_BASICS 'brewcask' 'y'
 }
@@ -29,7 +29,7 @@ if ! system_profiler SPFontsDataType 2> /dev/null | grep 'JetBrains Mono' &> /de
   msg_info 'Installing Jetbrains Mono Font'
   curl -Lv 'https://download.jetbrains.com/fonts/JetBrainsMono-1.0.3.zip' -o "${TMP_DOT_FILES}/JetBrainsMono-1.0.3.zip"
   unzip "${TMP_DOT_FILES}/JetBrainsMono-1.0.3.zip" -d "${TMP_DOT_FILES}"
-  cp "${TMP_DOT_FILES}/JetBrainsMono-1.0.3/ttf/*.ttf" ~/Library/Fonts
+  cp "${TMP_DOT_FILES}/JetBrainsMono-1.0.3/ttf/"*.ttf ~/Library/Fonts
   fc-cache -f -v
 else
   msg_info 'JetBrains Mono font is already installed'

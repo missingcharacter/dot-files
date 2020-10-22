@@ -48,7 +48,7 @@ Keep key configurations and share them among your computers
       - [JDownloader](http://jdownloader.org/)
       - [MacDown](https://macdown.uranusjr.com/)
       - [Proxyman](https://proxyman.app/)
-      - [Spectacle](https://www.spectacleapp.com/)
+      - [Rectangle](https://rectangleapp.com/)
       - [tunnelblick](https://www.tunnelblick.net/)
   - [mas](https://github.com/mas-cli/mas)
     - [Amphetamine](https://apps.apple.com/us/app/amphetamine/id937984704?mt=12)

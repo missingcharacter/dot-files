@@ -140,8 +140,9 @@ if $COLORTERM == 'gnome-terminal'
 endif
 
 try
-    packadd! dracula
-    colorscheme dracula
+    packadd! dracula_pro
+    let g:dracula_colorterm = 0
+    colorscheme dracula_pro_van_helsing
 catch
 endtry
 

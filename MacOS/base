@@ -43,7 +43,7 @@ function are_basics_installed() {
 function is_asdf_installed() {
   local USER_REPLY="${1:-''}"
   if [[ ! -x $(which asdf) ]]; then
-    local ASDF_DEPS=('autoconf' 'automake' 'coreutils' 'libtool' 'libxslt' 'libyaml' 'openssl' 'readline' 'unixodbc' 'unzip')
+    local ASDF_DEPS=('autoconf' 'automake' 'coreutils' 'gcc' 'libtool' 'libxslt' 'libyaml' 'openssl' 'make' 'readline' 'unixodbc' 'unzip')
     msg_info 'Will try to install brew if not installed'
     are_basics_installed "${USER_REPLY}"
     msg_info 'Will try to install asdf dependencies'

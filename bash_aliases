@@ -93,6 +93,10 @@ function cleancontainers() {
   docker images | grep '<none>' | awk '{ print $3 }' | xargs docker rmi
 }
 
+function cleandockervolumes() {
+  docker volume ls | awk '{ print $2 }' | grep -v 'VOLUME' | xargs docker volume rm
+}
+
 function virtualenv3() {
   python3 -m venv ${1}
 }

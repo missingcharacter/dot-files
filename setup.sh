@@ -19,7 +19,7 @@ function usage() {
 
 function check_dependencies() {
   # Ensure dependencies are present
-  if [[ ! -x $(which git) ]]; then
+  if [[ ! -x $(command -v git) ]]; then
       msg_fatal "[-] Dependencies unmet. Please verify that the following are installed and in the PATH: git" >&2
       exit 1
   fi

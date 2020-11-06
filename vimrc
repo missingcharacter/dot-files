@@ -330,6 +330,7 @@ map <leader>x :e ~/buffer.md<cr>
 " Toggle paste mode on and off
 "map <leader>pp :setlocal paste!<cr>
 set pastetoggle=<F3>
+map <F4> :%!python -m json.tool <enter>
 
 " Plugin dependant
 " I use this structure using native vim 8+ plugin

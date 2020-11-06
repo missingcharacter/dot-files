@@ -10,7 +10,7 @@ strictMode
 # Install stuff?
 
 function are_brew_basics_installed() {
-  local BREW_BASICS=('fpp' 'ripgrep' 'pandoc' 'shellcheck' 'termshark' 'tmux' 'wireshark' 'fontconfig')
+  local BREW_BASICS=('bfg' 'fpp' 'rclone' 'ripgrep' 'pandoc' 'shellcheck' 'termshark' 'tmux' 'wireshark' 'fontconfig')
   is_brew_installed
   install_if_not_installed BREW_BASICS 'brew' 'y'
 }

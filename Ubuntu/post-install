@@ -109,8 +109,23 @@ done
 
 TMP_DOT_FILES=$(mktemp -d dot-files.XXXX)
 
+# needed for multiple apps
+mkdir -p "${HOME}/bin" || true
+HOME_BIN="${HOME}/bin"
+
+if ! bfg --version &>/dev/null; then
+  echo 'Installing bfg (git repo cleaner)'
+  LATEST_BFG=$(curl -s 'https://rtyley.github.io/bfg-repo-cleaner/' | xmllint --html --xpath 'string(//html/body/div/div/aside/a/@href)' - 2> /dev/null)
+  curl -Lv "${LATEST_BFG}" -o "${HOME_BIN}/bfg.jar"
+  cat <<'EOF' > "${HOME_BIN}/bfg"
+#!/bin/bash
+exec "java" -jar "${HOME}/bin/bfg.jar" "$@"
+EOF
+  chmod u+x "${HOME_BIN}/bfg"
+fi
+
 if ! sudo VBoxManage list extpacks | grep 'Oracle VM VirtualBox Extension Pack' &>/dev/null; then
-  echo "Installing virtualbox Extension pack"
+  echo 'Installing virtualbox Extension pack'
   LATEST_EXT_PACK=$(curl 'https://www.virtualbox.org/wiki/Downloads' | xmllint --html --xpath 'string(//html/body/div[4]/div[3]/div[3]/div/div[2]/ul[3]/li/a/@href)' - 2> /dev/null)
   curl -Lv "${LATEST_EXT_PACK}" -o "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
   sudo VBoxManage extpack install --replace "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
@@ -143,8 +158,7 @@ if ! jetbrains-toolbox --version &>/dev/null; then
   LATEST_JETBRAINS_TOOLBOX=$(curl -sL 'https://data.services.jetbrains.com//products/releases?code=TBA&latest=true&type=release' | jq -r '.TBA[].downloads.linux.link')
   curl -Lv "${LATEST_JETBRAINS_TOOLBOX}" -o "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz"
   tar -xzvf "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz" -C "${TMP_DOT_FILES}"
-  mkdir -p "${HOME}/bin" || true
-  mv "${TMP_DOT_FILES}/jetbrains-toolbox-*/jetbrains-toolbox" "${HOME}/bin/"
+  mv "${TMP_DOT_FILES}/jetbrains-toolbox-*/jetbrains-toolbox" "${HOME_BIN}/"
 fi
 
 rm -rf "${TMP_DOT_FILES}"

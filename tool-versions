@@ -11,6 +11,7 @@ kotlin 1.3.61
 maven 3.6.3
 sbt 1.3.6
 # Infrastructure as code tools
+pulumi 2.13.2
 terraform 0.12.25
 terragrunt 0.21.11
 terraform-docs v0.8.2

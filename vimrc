@@ -331,6 +331,7 @@ map <leader>x :e ~/buffer.md<cr>
 "map <leader>pp :setlocal paste!<cr>
 set pastetoggle=<F3>
 map <F4> :%!python -m json.tool <enter>
+map <F5> :%!xmllint --encode UTF-8 --format - <enter>
 
 " Plugin dependant
 " I use this structure using native vim 8+ plugin

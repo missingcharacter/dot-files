@@ -90,7 +90,7 @@ function showmethecolours() {
 
 function cleancontainers() {
   docker ps -qa | xargs docker rm;
-  docker images | grep '<none>' | awk '{ print $3 }' | xargs docker rmi
+  docker images -a | grep '<none>' | awk '{ print $3 }' | xargs docker rmi
 }
 
 function cleandockervolumes() {

@@ -1,18 +1,20 @@
 # Programming languages
 java adoptopenjdk-8.0.252+9.1
 golang 1.13.6
+groovy 2.4.12
 nodejs 12.16.1
 ocaml 4.11.1
 opam 2.0.7
 python 3.9.0
+#python 3.8.6
 ruby 2.7.1
 rust 1.46.0
 kotlin 1.3.61
 maven 3.6.3
 sbt 1.3.6
 # Infrastructure as code tools
-pulumi 2.13.2
-terraform 0.12.25
+pulumi 2.16.1
+terraform 0.12.28
 terragrunt 0.21.11
 terraform-docs v0.8.2
 tflint 0.14.0
@@ -20,6 +22,6 @@ tflint 0.14.0
 kubectl 1.18.5
 helm 3.0.3
 kops v1.17.1
-aws-iam-authenticator 0.4.0
+aws-iam-authenticator 0.5.2
 # misc tools
 rclone 1.51.0

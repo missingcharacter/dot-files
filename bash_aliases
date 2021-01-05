@@ -101,6 +101,16 @@ function virtualenv3() {
   python3 -m venv ${1}
 }
 
+function gitgrepdiff() {
+  local STRING="${1}"
+  local DEFAULT_BRANCH="${2:-$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')}"
+  local BRANCH="${3:-$(git branch --show-current)}"
+  # see https://git-scm.com/docs/git-diff
+  # --diff-filter=[(A|C|D|M|R|T|U|X|B)…[*]]
+  local DIFF_FILTERS=${4:-A}
+  git grep -l "${STRING}" $(git diff "${DEFAULT_BRANCH}"..."${BRANCH}" --name-status --diff-filter="${DIFF_FILTERS}" | awk '{ print $2 }')
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     . ~/.bash_os_aliases

@@ -22,8 +22,8 @@ if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 
 #. ${HOME}/.asdf/asdf.sh
 #. ${HOME}/.asdf/completions/asdf.bash
-PATH="$PATH:~/.asdf/bin"
-source "~/.asdf/lib/asdf.sh"
+PATH="${PATH}:${HOME}/.asdf/bin"
+. "${HOME}/.asdf/lib/asdf.sh"
 # Hook direnv into your shell.
 eval "$(asdf exec direnv hook bash)"
 # A shortcut for asdf managed direnv.

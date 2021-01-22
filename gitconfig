@@ -100,3 +100,5 @@
     dc = diff --cached
 [pull]
 	rebase = true
+[init]
+	defaultBranch = main

@@ -20,8 +20,10 @@ HISTFILESIZE=2000
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 
-. ${HOME}/.asdf/asdf.sh
-. ${HOME}/.asdf/completions/asdf.bash
+#. ${HOME}/.asdf/asdf.sh
+#. ${HOME}/.asdf/completions/asdf.bash
+PATH="$PATH:~/.asdf/bin"
+source "~/.asdf/lib/asdf.sh"
 # Hook direnv into your shell.
 eval "$(asdf exec direnv hook bash)"
 # A shortcut for asdf managed direnv.

@@ -3,22 +3,21 @@ GITROOT=$(git rev-parse --show-toplevel)
 . ${GITROOT}/lib/strict-mode
 strictMode
 
+ANSI_NO_COLOR='\033[0m'
+
 function msg_info () {
   local GREEN='\033[0;32m'
-  local NC='\033[0m' # No Color
-  printf "${GREEN}${@}${NC}\n"
+  printf "%s\n" "${GREEN}${*}${ANSI_NO_COLOR}"
 }
 
 function msg_warn () {
   local YELLOW='\033[0;33m'
-  local NC='\033[0m' # No Color
-  printf "${YELLOW}${@}${NC}\n"
+  printf "%s\n" "${YELLOW}${*}${ANSI_NO_COLOR}"
 }
 
 function msg_fatal () {
   local RED='\033[0;31m'
-  local NC='\033[0m' # No Color
-  printf "${RED}${@}${NC}\n"
+  printf "%s\n" "${RED}${*}${ANSI_NO_COLOR}"
 }
 
 function retry_command() {
@@ -97,7 +96,7 @@ function install_if_not_installed() {
   local -A INSTALL_COMMAND=(
     ['apt']="sudo DEBIAN_FRONTEND='noninteractive' apt install -y"
     ['brew']='brew install'
-    ['brewcask']='brew cask install'
+    ['brewcask']='brew install --cask'
     ['code']='code --install-extension'
     ['pip3']='pip3 install --upgrade')
   local -A INSTALL_COMMAND_TYPE=(

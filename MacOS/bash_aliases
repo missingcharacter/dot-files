@@ -24,8 +24,8 @@ function upall () {
   msg_info 'asdf update; asdf plugin-update --all'
   asdf update; asdf plugin-update --all
 
-  msg_info 'npm install npm -g; npm update -g;'
-  npm install npm -g; npm update -g;
+  msg_info 'npm install -g npm; npm update -g;'
+  npm install -g npm; npm update -g;
 
   msg_info 'yarn global upgrade;'
   yarn global upgrade;

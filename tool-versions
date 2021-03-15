@@ -5,8 +5,7 @@ groovy 2.4.12
 nodejs 12.16.1
 ocaml 4.11.1
 opam 2.0.7
-python 3.9.0
-#python 3.8.6
+python 3.9.2
 ruby 2.7.2
 rust 1.46.0
 kotlin 1.3.61
@@ -21,7 +20,7 @@ terraform-docs v0.8.2
 tflint 0.14.0
 # K8s related tools
 kubectl 1.18.5
-helm 3.0.3
+helm 3.5.2
 kops v1.17.1
 aws-iam-authenticator 0.5.2
 # misc tools

@@ -20,22 +20,25 @@ alias clearterragruntcache='find . -type d -name ".terragrunt-cache" -prune -exe
 alias clearterraformcache='find . -type d -name ".terraform" -prune -exec rm -rf {} \;'
 alias kdump='kubectl get all --all-namespaces'
 
+export ANSI_NO_COLOR=$'\033[0m'
 function msg_info () {
-  local GREEN='\033[0;32m'
-  local NC='\033[0m' # No Color
-  printf "${GREEN}${@}${NC}\n"
+  local GREEN=$'\033[0;32m'
+  printf "%s\n" "${GREEN}${*}${ANSI_NO_COLOR}"
 }
 
 function msg_warn () {
-  local YELLOW='\033[0;33m'
-  local NC='\033[0m' # No Color
-  printf "${YELLOW}${@}${NC}\n"
+  local YELLOW=$'\033[0;33m'
+  printf "%s\n" "${YELLOW}${*}${ANSI_NO_COLOR}"
+}
+
+function msg_error () {
+  local LRED=$'\033[01;31m'
+  printf "%s\n" "${LRED}${*}${ANSI_NO_COLOR}"
 }
 
 function msg_fatal () {
-  local RED='\033[0;31m'
-  local NC='\033[0m' # No Color
-  printf "${RED}${@}${NC}\n"
+  local RED=$'\033[0;31m'
+  printf "%s\n" "${RED}${*}${ANSI_NO_COLOR}"
 }
 
 function to_lower() {

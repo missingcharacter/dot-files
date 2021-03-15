@@ -3,20 +3,20 @@ GITROOT=$(git rev-parse --show-toplevel)
 . ${GITROOT}/lib/strict-mode
 strictMode
 
-ANSI_NO_COLOR='\033[0m'
+ANSI_NO_COLOR=$'\033[0m'
 
 function msg_info () {
-  local GREEN='\033[0;32m'
+  local GREEN=$'\033[0;32m'
   printf "%s\n" "${GREEN}${*}${ANSI_NO_COLOR}"
 }
 
 function msg_warn () {
-  local YELLOW='\033[0;33m'
+  local YELLOW=$'\033[0;33m'
   printf "%s\n" "${YELLOW}${*}${ANSI_NO_COLOR}"
 }
 
 function msg_fatal () {
-  local RED='\033[0;31m'
+  local RED=$'\033[0;31m'
   printf "%s\n" "${RED}${*}${ANSI_NO_COLOR}"
 }
 

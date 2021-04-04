@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # macOS and Ubuntu compatible aliases and functions
 # ricdros' custom aliases
 alias grep='grep --color=auto'
@@ -50,15 +51,25 @@ function to_upper() {
 }
 
 function gitconfig() {
-  local CONFIG_TYPE="${1}"
-  local EMAIL="$(keyring get git "${CONFIG_TYPE}_EMAIL")"
-  local NAME="$(keyring get git "${CONFIG_TYPE}_NAME")"
-  local GPG_SIGN="$(keyring get git "${CONFIG_TYPE}_GPG_SIGN")"
+  local CONFIG_TYPE
+  local EMAIL
+  local NAME
+  local GPG_SIGN
+  CONFIG_TYPE="${1}"
+  EMAIL="$(keyring get git "${CONFIG_TYPE}_EMAIL")"
+  NAME="$(keyring get git "${CONFIG_TYPE}_NAME")"
+  GPG_SIGN="$(keyring get git "${CONFIG_TYPE}_GPG_SIGN")"
   git config user.name &> /dev/null && msg_warn 'user.name not set' || git config user.name "${NAME}" && msg_info 'user.name was set'
   git config user.email &> /dev/null && msg_warn 'user.email was not set' || git config user.email "${EMAIL}" && msg_info 'user.email was not set'
   git config commit.gpgsign &> /dev/null && msg_warn 'commit.gpgsign was not set' || git config commit.gpgsign "${GPG_SIGN}" && msg_info 'commit.gpgsign was set'
   git config tag.gpgsign &> /dev/null && msg_warn 'tag.gpgsign was not set' || git config tag.gpgsign "${GPG_SIGN}" && msg_info 'tag.gpgsign was set'
-  [[ "${GPG_SIGN}" == 'true' ]] && git config user.signingkey "$(keyring get git "${CONFIG_TYPE}_GPG_KEY")" && msg_info 'user.signkey was set' || msg_warn 'user.signkey was not set'
+  if [[ "${GPG_SIGN}" == 'true' ]]; then
+    if git config user.signingkey "$(keyring get git "${CONFIG_TYPE}_GPG_KEY")" &> /dev/null; then
+      msg_info 'user.signkey was set'
+    else
+      msg_warn 'user.signkey was not set'
+    fi
+  fi
 }
 
 function asdf-all () {
@@ -67,17 +78,17 @@ function asdf-all () {
 
 function httpval() {
   local URL=${1}
-  curl --raw -LsD - -o /dev/null ${URL} \
+  curl --raw -LsD - -o /dev/null "${URL}" \
   | grep -v -E '(Connection:|Date:|Server:|X-Frame-Options:|Keep-Alive:|Content-Length:|Content-Type:|Via:|Retry-After:|Content-Language:|Vary:|Content-Encoding:|Transfer-Encoding:|Set-Cookie:)'
 }
 
 function parentpid() {
   local PROCESS_ID=${1}
-  ps -o ppid= -p ${PROCESS_ID} | xargs
+  ps -o ppid= -p "${PROCESS_ID}" | xargs
 }
 
 function findcommands () {
-  compgen -ac | grep ${1}
+  compgen -ac | grep "${1}"
 }
 
 function sunglasses() {
@@ -88,7 +99,7 @@ function sunglasses() {
 }
 
 function showmethecolours() {
-  for i in {0..255}; do printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"; done
+  for i in {0..255}; do printf "\x1b[38;5;%smcolour%s\x1b[0m\n" "${i}" "${i}"; done
 }
 
 function cleancontainers() {
@@ -101,7 +112,7 @@ function cleandockervolumes() {
 }
 
 function virtualenv3() {
-  python3 -m venv ${1}
+  python3 -m venv "${1}"
 }
 
 function gitgrepdiff() {
@@ -111,20 +122,24 @@ function gitgrepdiff() {
   # see https://git-scm.com/docs/git-diff
   # --diff-filter=[(A|C|D|M|R|T|U|X|B)…[*]]
   local DIFF_FILTERS=${4:-A}
+  # shellcheck disable=SC2046
   git grep -l "${STRING}" $(git diff "${DEFAULT_BRANCH}"..."${BRANCH}" --name-status --diff-filter="${DIFF_FILTERS}" | awk '{ print $2 }')
 }
 
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
+    # shellcheck source=/dev/null
     . ~/.bash_os_aliases
 fi
 
 # Sourcing personal bash_aliases
 if [ -f ~/.bash_my_aliases ]; then
+    # shellcheck source=/dev/null
     . ~/.bash_my_aliases
 fi
 
 # Sourcing work only bash_aliases
 if [ -f ~/.bash_work_aliases ]; then
+    # shellcheck source=/dev/null
     . ~/.bash_work_aliases
 fi

@@ -50,25 +50,30 @@ function to_upper() {
   echo "${1}" | tr '[:lower:]' '[:upper:]'
 }
 
+function setgitconfig() {
+  local FIELD
+  local VALUE
+  FIELD="${1}"
+  VALUE="${2}"
+  if git config "${FIELD}" &> /dev/null; then
+    msg_warn "${FIELD} was not set"
+  else
+    git config "${FIELD}" "${VALUE}"
+    msg_info "${FIELD} was set"
+  fi
+}
+
 function gitconfig() {
   local CONFIG_TYPE
-  local EMAIL
-  local NAME
   local GPG_SIGN
   CONFIG_TYPE="${1}"
-  EMAIL="$(keyring get git "${CONFIG_TYPE}_EMAIL")"
-  NAME="$(keyring get git "${CONFIG_TYPE}_NAME")"
   GPG_SIGN="$(keyring get git "${CONFIG_TYPE}_GPG_SIGN")"
-  git config user.name &> /dev/null && msg_warn 'user.name not set' || git config user.name "${NAME}" && msg_info 'user.name was set'
-  git config user.email &> /dev/null && msg_warn 'user.email was not set' || git config user.email "${EMAIL}" && msg_info 'user.email was not set'
-  git config commit.gpgsign &> /dev/null && msg_warn 'commit.gpgsign was not set' || git config commit.gpgsign "${GPG_SIGN}" && msg_info 'commit.gpgsign was set'
-  git config tag.gpgsign &> /dev/null && msg_warn 'tag.gpgsign was not set' || git config tag.gpgsign "${GPG_SIGN}" && msg_info 'tag.gpgsign was set'
+  setgitconfig 'user.name' "$(keyring get git "${CONFIG_TYPE}_NAME")"
+  setgitconfig 'user.email' "$(keyring get git "${CONFIG_TYPE}_EMAIL")"
+  setgitconfig 'commit.gpgsign' "${GPG_SIGN}"
+  setgitconfig 'tag.gpgsign' "${GPG_SIGN}"
   if [[ "${GPG_SIGN}" == 'true' ]]; then
-    if git config user.signingkey "$(keyring get git "${CONFIG_TYPE}_GPG_KEY")" &> /dev/null; then
-      msg_info 'user.signkey was set'
-    else
-      msg_warn 'user.signkey was not set'
-    fi
+    setgitconfig 'user.signingkey' "$(keyring get git "${CONFIG_TYPE}_GPG_KEY")"
   fi
 }
 

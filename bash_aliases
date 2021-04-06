@@ -131,6 +131,13 @@ function gitgrepdiff() {
   git grep -l "${STRING}" $(git diff "${DEFAULT_BRANCH}"..."${BRANCH}" --name-status --diff-filter="${DIFF_FILTERS}" | awk '{ print $2 }')
 }
 
+function argodiff() {
+  local APP_TO_CHECK
+  APP_TO_CHECK="${1}"
+  APP="$(kubectl get applications -n argocd "${APP_TO_CHECK}" -o yaml)"
+  diff <(echo "$APP" | yq e '.status.history[-2]' -) <(echo "$APP" | yq e '.status.history[-1]' -)
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

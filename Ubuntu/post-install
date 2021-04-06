@@ -161,4 +161,11 @@ if ! jetbrains-toolbox --version &>/dev/null; then
   mv "${TMP_DOT_FILES}/jetbrains-toolbox-*/jetbrains-toolbox" "${HOME_BIN}/"
 fi
 
+if ! yq --version &>/dev/null; then
+  echo "Installing yq"
+  LATEST_YQ="$(curl -s 'https://api.github.com/repos/mikefarah/yq/releases/latest' | grep 'tag_name'  | cut -d '"' -f4)"
+  curl -Lv "https://github.com/mikefarah/yq/releases/download/${LATEST_YQ}/yq_linux_amd64" -o "${HOME_BIN}/yq"
+  chmod u+x "${HOME_BIN}/yq"
+fi
+
 rm -rf "${TMP_DOT_FILES}"

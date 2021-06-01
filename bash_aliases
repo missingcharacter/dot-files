@@ -107,15 +107,6 @@ function showmethecolours() {
   for i in {0..255}; do printf "\x1b[38;5;%smcolour%s\x1b[0m\n" "${i}" "${i}"; done
 }
 
-function cleancontainers() {
-  docker ps -qa | xargs docker rm;
-  docker images -a | grep '<none>' | awk '{ print $3 }' | xargs docker rmi
-}
-
-function cleandockervolumes() {
-  docker volume ls | awk '{ print $2 }' | grep -v 'VOLUME' | xargs docker volume rm
-}
-
 function virtualenv3() {
   python3 -m venv "${1}"
 }

@@ -81,3 +81,12 @@ function gitgrepreplace () {
   local REPLACE="s${SEPARATOR}${OLD_TEXT}${SEPARATOR}${NEW_TEXT}${SEPARATOR}g"
   git grep -l "${OLD_TEXT}" | xargs sed -i "${REPLACE}"
 }
+
+function cleancontainers() {
+  sudo docker rm $(sudo docker ps -qa -f status=exited);
+  sudo docker rmi $(sudo docker images -qa -f dangling=true)
+}
+
+function cleandockervolumes() {
+  sudo docker volume rm $(sudo docker volume ls -f dangling=true -q)
+}

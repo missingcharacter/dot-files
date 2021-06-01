@@ -65,3 +65,12 @@ function getent() {
   local QUERY_VALUE=${2}
   dscacheutil -q ${CATEGORY} -a ${QUERY_KEY} ${QUERY_VALUE}
 }
+
+function cleancontainers() {
+  docker rm $(docker ps -qa -f status=exited);
+  docker rmi $(docker images -qa -f dangling=true)
+}
+
+function cleandockervolumes() {
+  docker volume rm $(docker volume ls -f dangling=true -q)
+}

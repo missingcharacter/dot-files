@@ -26,6 +26,8 @@ function is_brew_installed() {
       #brew bundle # maybe later when I have a Brewfile
       # Source: https://github.com/buo/homebrew-cask-upgrade
       brew tap buo/cask-upgrade
+      brew tap homebrew/cask-fonts
+      brew tap jandedobbeleer/oh-my-posh
     fi
   fi
 }
@@ -33,7 +35,7 @@ function is_brew_installed() {
 function are_basics_installed() {
   local USER_REPLY="${1:-''}"
   # `awscli` https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
-  local BREW_BASICS=('awscli' 'bash' 'bash-git-prompt' 'curl' 'gawk' 'git' 'gnupg' 'gnutls' 'inetutils' 'jq' 'lastpass-cli' 'mackup' 'mas' 'parallel' 'tree' 'vim' 'wget' 'xz' 'yq')
+  local BREW_BASICS=('awscli' 'bash' 'curl' 'gawk' 'git' 'gnupg' 'gnutls' 'inetutils' 'jq' 'lastpass-cli' 'mackup' 'mas' 'oh-my-posh' 'parallel' 'tree' 'vim' 'wget' 'xz' 'yq')
   msg_info 'Will try to install brew if not installed'
   is_brew_installed "${USER_REPLY}"
   msg_info 'Will try to install basic packages with brew'

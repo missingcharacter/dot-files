@@ -133,9 +133,16 @@ fi
 
 if ! fc-list | grep 'JetBrains Mono' &>/dev/null; then
   echo 'Installing Jetbrains Font'
-  LATEST_JETBRAINS_FONT=$(curl 'https://www.jetbrains.com/lp/mono/' | xmllint --html --xpath 'string(//html/body/div/div/div/header/div/div[2]/div[7]/a/@href)' - 2> /dev/null)
-  curl -Lv "${LATEST_JETBRAINS_FONT}" -o "${TMP_DOT_FILES}/JetBrainsMono.zip"
-  unzip "${TMP_DOT_FILES}/JetBrainsMono.zip" -d "${HOME}/.fonts/"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
+  fc-cache -f -v
+fi
+
+if ! fc-list | grep 'Nerd Font' &>/dev/null; then
+  echo 'Installing Nerd Fonts'
+  git clone https://github.com/ryanoasis/nerd-fonts.git "${HOME}/src/nerd-fonts"
+  cd "${HOME}/src/nerd-fonts"
+  ./install.sh -q -A
+  cd -
   fc-cache -f -v
 fi
 

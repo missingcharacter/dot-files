@@ -57,6 +57,10 @@ export JAVA_HOME="$(asdf where java)/jre"
 #complete -C /usr/local/bin/terraform terraform
 #source <(kubectl completion bash)
 
+# https://ohmyposh.dev/
+# load oh-my-posh prompt
+eval "$(oh-my-posh --init --shell bash --config ${HOME}/.ohmyposh.json)"
+
 # Sourcing Operating System specific bash_profile settings
 if [ -f ~/.bash_os_profile ]; then
     . ~/.bash_os_profile

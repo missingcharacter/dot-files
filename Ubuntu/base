@@ -15,23 +15,22 @@ function are_basics_installed() {
   install_if_not_installed UBUNTU_BASICS 'apt' "${USER_REPLY}"
 }
 
-function is_bash_git_prompt_installed() {
+function is_ohmyposh_installed() {
   local USER_REPLY="${1:-''}"
-  if [[ ! -x $(type -a git_prompt_toggle &> /dev/null) ]]; then
-    if [[ ! -d "${HOME}/.bash-git-prompt" ]]; then
-      are_basics_installed "${USER_REPLY}"
-      msg_info "Seem like \"github.com/magicmonty/bash-git-prompt\" is not installed"
-      if [[ "${USER_REPLY}" == 'y' ]]; then
-        msg_info 'I will install it righ away'
-      elif [[ "${USER_REPLY}" == 'n' ]]; then
-        msg_warn 'You already said no, I will not install it'
-      else
-        read -p 'Want me to install it? ' -n 1 -r USER_REPLY
-      fi
-      echo
-      if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
-        git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt --depth=1
-      fi
+  if [[ ! -x $(command -v oh-my-posh &> /dev/null) ]]; then
+    are_basics_installed "${USER_REPLY}"
+    msg_info "Seem like \"oh-my-posh\" is not installed"
+    if [[ "${USER_REPLY}" == 'y' ]]; then
+      msg_info 'I will install it righ away'
+    elif [[ "${USER_REPLY}" == 'n' ]]; then
+      msg_warn 'You already said no, I will not install it'
+    else
+      read -p 'Want me to install it? ' -n 1 -r USER_REPLY
+    fi
+    echo
+    if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
+     sudo curl -sL https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -o /usr/local/bin/oh-my-posh
+     sudo chmod +x /usr/local/bin/oh-my-posh
     fi
   fi
 }
@@ -50,5 +49,5 @@ function is_asdf_installed() {
     git_install_asdf "${USER_REPLY}"
   fi
   msg_info 'Will try to install bash-git-prompt'
-  is_bash_git_prompt_installed "${USER_REPLY}"
+  is_ohmyposh_installed "${USER_REPLY}"
 }

@@ -20,6 +20,7 @@ alias findterraformcache='find . -type d -name ".terraform"'
 alias clearterragruntcache='find . -type d -name ".terragrunt-cache" -prune -exec rm -rf {} \;'
 alias clearterraformcache='find . -type d -name ".terraform" -prune -exec rm -rf {} \;'
 alias kdump='kubectl get all --all-namespaces'
+alias kips='kubectl get nodes -o jsonpath={.items[*].status.addresses[?\(@.type==\"InternalIP\"\)].address}'
 
 export ANSI_NO_COLOR=$'\033[0m'
 function msg_info () {

@@ -8,7 +8,7 @@ strictMode
 
 function is_brew_installed() {
   local USER_REPLY="${1:-''}"
-  if [[ ! -x $(which brew) ]]; then
+  if [[ ! -x $(command -v brew &> /dev/null) ]]; then
     msg_info 'Seems like brew is not installed'
     if [[ "${USER_REPLY}" == 'y' ]]; then
       msg_info 'I will install it righ away'
@@ -21,9 +21,10 @@ function is_brew_installed() {
     if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
       sudo softwareupdate -i -a
       xcode-select --install
-      /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       # Source: https://github.com/Homebrew/homebrew-bundle#install
       #brew bundle # maybe later when I have a Brewfile
+      eval "$(/usr/local/bin/brew shellenv)"
       # Source: https://github.com/buo/homebrew-cask-upgrade
       brew tap buo/cask-upgrade
       brew tap homebrew/cask-fonts

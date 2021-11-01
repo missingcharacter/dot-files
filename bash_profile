@@ -70,4 +70,4 @@ fi
 test -r "${HOME}/.opam/opam-init/init.sh" && . "${HOME}/.opam/opam-init/init.sh" > /dev/null 2> /dev/null || true
 
 # added by travis gem
-[ ! -s /Users/ricardo/.travis/travis.sh ] || source /Users/ricardo/.travis/travis.sh
+[ ! -s ${HOME}/.travis/travis.sh ] || source ${HOME}/.travis/travis.sh

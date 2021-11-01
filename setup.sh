@@ -77,7 +77,7 @@ fi
 
 # Actual dot-files
 cd ${MACHINE_OS}
-LINKS=('bashrc' 'bash_profile' 'bash_aliases' 'envrc' 'gitconfig' 'mackup.cfg' 'tmux.conf' 'tool-versions' 'vimrc')
+LINKS=('bashrc' 'bash_profile' 'bash_aliases' 'envrc' 'gitconfig' 'mackup.cfg' 'ohmyposh.json' 'tmux.conf' 'tool-versions' 'vimrc')
 OS_SPECIFIC_LINKS=( $(ls bash_*) )
 cd -
 

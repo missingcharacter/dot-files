@@ -6,20 +6,10 @@ strictMode
 # Enabling utils
 . ${GITROOT}/lib/utils
 
-function are_basics_installed() {
+function is_brew_installed() {
   local USER_REPLY="${1:-''}"
-  local UBUNTU_BASICS=('apt-file' 'apt-transport-https' 'build-essential' 'curl' 'dirmngr' 'gawk' 'git' 'gnupg' 'gnutls-bin' 'inetutils-tools' 'jq' 'libxml2-utils' 'lsb-release' 'parallel' 'software-properties-common' 'tree' 'vim' 'wget' 'xz-utils' 'zlib1g-dev')
-  msg_info 'Will run apt update'
-  sudo apt update
-  msg_info 'Will try to install Ubuntu basics'
-  install_if_not_installed UBUNTU_BASICS 'apt' "${USER_REPLY}"
-}
-
-function is_ohmyposh_installed() {
-  local USER_REPLY="${1:-''}"
-  if [[ ! -x $(command -v oh-my-posh &> /dev/null) ]]; then
-    are_basics_installed "${USER_REPLY}"
-    msg_info "Seem like \"oh-my-posh\" is not installed"
+  if [[ ! -e /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    msg_info "Seem like \"brew\" is not installed"
     if [[ "${USER_REPLY}" == 'y' ]]; then
       msg_info 'I will install it righ away'
     elif [[ "${USER_REPLY}" == 'n' ]]; then
@@ -29,10 +19,27 @@ function is_ohmyposh_installed() {
     fi
     echo
     if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
-     sudo curl -sL https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -o /usr/local/bin/oh-my-posh
-     sudo chmod +x /usr/local/bin/oh-my-posh
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      # Source: https://github.com/Homebrew/homebrew-bundle#install
+      #brew bundle # maybe later when I have a Brewfile
+      # Note: Brew cask is not support on homebrew for linux
+      brew tap jandedobbeleer/oh-my-posh
     fi
   fi
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+}
+
+function are_basics_installed() {
+  local USER_REPLY="${1:-''}"
+  local UBUNTU_BASICS=('apt-file' 'apt-transport-https' 'build-essential' 'curl' 'dirmngr' 'file' 'gawk' 'gnome-tweaks' 'gnupg' 'gnutls-bin' 'inetutils-tools' 'libxml2-utils' 'lsb-release' 'procps' 'software-properties-common' 'wget' 'xclip' 'xz-utils' 'zlib1g-dev')
+  local BREW_BASICS=('asciidoc' 'awscli' 'fontconfig' 'gcc' 'git' 'jq' 'mackup' 'oh-my-posh' 'parallel' 'tree' 'vim' 'yq')
+  msg_info 'Will run apt update'
+  sudo apt update
+  msg_info 'Will try to install Ubuntu basics'
+  install_if_not_installed UBUNTU_BASICS 'apt' "${USER_REPLY}"
+  msg_info 'Will try to install brew if not installed'
+  is_brew_installed "${USER_REPLY}"
+  install_if_not_installed BREW_BASICS 'brew' "${USER_REPLY}"
 }
 
 function is_asdf_installed() {
@@ -48,6 +55,4 @@ function is_asdf_installed() {
     msg_info 'Will try to install asdf using git'
     git_install_asdf "${USER_REPLY}"
   fi
-  msg_info 'Will try to install bash-git-prompt'
-  is_ohmyposh_installed "${USER_REPLY}"
 }

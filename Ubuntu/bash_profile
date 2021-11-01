@@ -1,3 +1,4 @@
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
@@ -29,4 +30,4 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH="${PATH}:${GOROOT}/bin:${GOPATH}/bin:${HOME}/.local/bin:${HOME}/bin:/snap/bin"
+export PATH="${PATH}:${HOME}/src/gopath/bin:${HOME}/.local/bin:${HOME}/bin:/snap/bin"

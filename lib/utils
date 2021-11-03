@@ -218,3 +218,25 @@ function install_asdf_tool_version() {
     return 1
   fi
 }
+
+function write_direnvrc() {
+    msg_info 'Creating file ~/.config/direnv/direnvrc'
+  cat <<'EOF' > ${HOME}/.config/direnv/direnvrc
+source "$(asdf direnv hook asdf)"
+
+# Uncomment the following line to make direnv silent by default.
+#export DIRENV_LOG_FORMAT=""
+EOF
+}
+
+function configure_direnv() {
+  local DIRENV_CONFIG_FOLDER="${HOME}/.config/direnv"
+  if [[ ! -e "${DIRENV_CONFIG_FOLDER}" ]]; then
+    msg_info "${DIRENV_CONFIG_FOLDER} does not exist, I will create it"
+    mkdir "${DIRENV_CONFIG_FOLDER}"
+  fi
+  if [[ ! -e "${DIRENV_CONFIG_FOLDER}/direnvrc" ]]; then
+    msg_info "${DIRENV_CONFIG_FOLDER}/direnvrc does not exist, I'll create it now"
+    write_direnvrc
+  fi
+}

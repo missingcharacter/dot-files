@@ -112,6 +112,7 @@ done
 function install_everything_else() {
   # Install asdf plugins and tools' versions
   install_asdf_tool_versions
+  configure_direnv
 
   msg_info "Sourcing ${HOME}/.bashrc"
   disableStrictMode
@@ -119,7 +120,7 @@ function install_everything_else() {
   strictMode
 
   # Running post-install steps
-  . ${MACHINE_OS}/post-install
+  . ${GITROOT}/${MACHINE_OS}/post-install
 }
 
 if [[ "${INSTALL_EVERYTHING:-''}" == 'y' ]]; then

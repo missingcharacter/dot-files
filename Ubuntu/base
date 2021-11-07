@@ -31,7 +31,7 @@ function is_brew_installed() {
 
 function are_basics_installed() {
   local USER_REPLY="${1:-''}"
-  local UBUNTU_BASICS=('apt-file' 'apt-transport-https' 'build-essential' 'curl' 'dirmngr' 'file' 'gawk' 'gnome-tweaks' 'gnupg' 'gnutls-bin' 'inetutils-tools' 'libxml2-utils' 'lsb-release' 'procps' 'software-properties-common' 'wget' 'xclip' 'xz-utils' 'zlib1g-dev')
+  local UBUNTU_BASICS=('apt-file' 'apt-transport-https' 'build-essential' 'curl' 'dirmngr' 'file' 'gawk' 'gnome-tweaks' 'gnupg' 'gnutls-bin' 'inetutils-tools' 'libxml2-utils' 'lsb-release' 'procps' 'python3-keyring' 'software-properties-common' 'wget' 'xclip' 'xz-utils' 'zlib1g-dev')
   local BREW_BASICS=('asciidoc' 'awscli' 'fontconfig' 'gcc' 'git' 'jq' 'mackup' 'oh-my-posh' 'parallel' 'tree' 'vim' 'yq')
   msg_info 'Will run apt update'
   sudo apt update

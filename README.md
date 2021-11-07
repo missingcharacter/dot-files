@@ -69,6 +69,7 @@ Keep key configurations and share them among your computers
     - [ghostwriter](https://wereturtle.github.io/ghostwriter/)
     - [libxml2-utils](http://xmlsoft.org)
     - [Network Manager OpenVPN](https://gitlab.gnome.org/GNOME/NetworkManager-openvpn)
+    - [python3-keyring](https://pypi.org/project/keyring/)
     - [xclip](https://github.com/astrand/xclip)
 
 ## Stuff I may replace

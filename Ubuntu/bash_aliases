@@ -13,8 +13,11 @@ function upall () {
   msg_info 'sudo apt-get update && sudo apt-get dist-upgrade;'
   sudo apt-get update && sudo apt-get dist-upgrade;
 
-  msg_info 'sudo snap refresh --list && sudo snap refresh;'
-  sudo snap refresh --list && sudo snap refresh;
+  msg_info 'brew update; brew upgrade; brew cleanup;'
+  brew update; brew upgrade; brew cleanup;
+
+  #msg_info 'sudo snap refresh --list && sudo snap refresh;'
+  #sudo snap refresh --list && sudo snap refresh;
 
   msg_info 'flatpak update -y;'
   flatpak update -y;
@@ -28,8 +31,8 @@ function upall () {
   msg_info 'npm install npm -g; npm update -g;'
   npm install npm -g; npm update -g;
 
-  msg_info 'yarn global upgrade;'
-  yarn global upgrade;
+  #msg_info 'yarn global upgrade;'
+  #yarn global upgrade;
 
   msg_info 'gem update --system; gem update;'
   gem update --system; gem update;

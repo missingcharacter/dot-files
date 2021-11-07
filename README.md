@@ -61,16 +61,15 @@ Keep key configurations and share them among your computers
 
 ## Ubuntu
 
-**NOTE:** I'm not using homebrew for linux at the moment, but may do it in the [future](Ubuntu/brew-install)
-
 - Installs:
-  - [apt-file](https://wiki.debian.org/apt-file)
-  - [caffeine](https://launchpad.net/caffeine)
-  - [ghostwriter](https://wereturtle.github.io/ghostwriter/)
-  - [libxml2-utils](http://xmlsoft.org)
-  - [mitmproxy](https://mitmproxy.org/downloads/)
-  - [Network Manager OpenVPN](https://gitlab.gnome.org/GNOME/NetworkManager-openvpn)
-  - [xclip](https://github.com/astrand/xclip)
+  - [Homebrew](https://brew.sh)
+    - [mitmproxy](https://mitmproxy.org/downloads/)
+  - [apt](https://wiki.debian.org/Apt)
+    - [apt-file](https://wiki.debian.org/apt-file)
+    - [ghostwriter](https://wereturtle.github.io/ghostwriter/)
+    - [libxml2-utils](http://xmlsoft.org)
+    - [Network Manager OpenVPN](https://gitlab.gnome.org/GNOME/NetworkManager-openvpn)
+    - [xclip](https://github.com/astrand/xclip)
 
 ## Stuff I may replace
 

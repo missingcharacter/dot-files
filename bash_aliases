@@ -21,6 +21,8 @@ alias clearterragruntcache='find . -type d -name ".terragrunt-cache" -prune -exe
 alias clearterraformcache='find . -type d -name ".terraform" -prune -exec rm -rf {} \;'
 alias kdump='kubectl get all --all-namespaces'
 alias kips='kubectl get nodes -o jsonpath={.items[*].status.addresses[?\(@.type==\"InternalIP\"\)].address}'
+# If you want to see where cpu/memory is being used at
+alias kpodscpu='kubectl top pods --containers --sort-by=cpu'
 
 export ANSI_NO_COLOR=$'\033[0m'
 function msg_info () {

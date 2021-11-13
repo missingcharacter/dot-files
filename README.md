@@ -26,6 +26,7 @@ Keep key configurations and share them among your computers
   - [Private Internet Access](https://www.privateinternetaccess.com/pages/download)
   - [rclone](https://rclone.org/)
   - [ripgrep](https://github.com/BurntSushi/ripgrep)
+  - [saml2aws](https://github.com/Versent/saml2aws)
   - [shellcheck](https://www.shellcheck.net/)
   - [spotify](https://www.spotify.com/us/download/other/)
   - [sublime text](https://www.sublimetext.com/3)

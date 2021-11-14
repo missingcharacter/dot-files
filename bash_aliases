@@ -84,6 +84,12 @@ function asdf-all () {
   awk '{ print $1 }' ~/.tool-versions
 }
 
+function asdf-all-versions () {
+  for i in $(asdf plugin list); do
+    echo "Plugin ${i} and versions are $(asdf list ${i})"
+  done
+}
+
 function httpval() {
   local URL=${1}
   curl --raw -LsD - -o /dev/null "${URL}" \

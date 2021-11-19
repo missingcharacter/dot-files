@@ -53,7 +53,7 @@ function gitgrepreplace () {
   local NEW_TEXT="${2}"
   local SEPARATOR="${3:-!}"
   local REPLACE="s${SEPARATOR}${OLD_TEXT}${SEPARATOR}${NEW_TEXT}${SEPARATOR}g"
-  git grep -l "${OLD_TEXT}" | xargs sed -i '' "${REPLACE}"
+  git grep -l "${OLD_TEXT}" | xargs gsed -i "${REPLACE}"
 }
 
 function getent() {

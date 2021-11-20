@@ -9,7 +9,7 @@ strictMode
 
 function is_repo_present() {
   local REPO="${1}"
-  if grep '^ppa:' <<<${REPO} &>/dev/null; then
+  if grep -q '^ppa:' <<<${REPO} ; then
     REPO="$(sed 's!ppa:!!'<<<${REPO})"
   fi
   egrep -v '^#|^ *$' /etc/apt/sources.list /etc/apt/sources.list.d/*.list | grep -Fq "${REPO}"
@@ -79,7 +79,7 @@ function download_and_install_deb() {
   local DEB_NAME="${2}"
   local DEB_FILE_NAME="${DEB_NAME}.deb"
 
-  if ! sudo apt list --installed 2> /dev/null | grep "${DEB_NAME}" &>/dev/null; then
+  if ! grep -q "${DEB_NAME}" <(sudo apt list --installed 2> /dev/null); then
     msg_info "Will download and install ${DEB_NAME}"
     curl -Lv "${DEB_URL}" -o "${DEB_FILE_NAME}"
     sudo DEBIAN_FRONTEND='noninteractive' apt install -y "./${DEB_FILE_NAME}"
@@ -107,20 +107,20 @@ TMP_DOT_FILES=$(mktemp -d dot-files.XXXX)
 mkdir -p "${HOME}/bin" || true
 HOME_BIN="${HOME}/bin"
 
-if ! sudo VBoxManage list extpacks | grep 'Oracle VM VirtualBox Extension Pack' &>/dev/null; then
+if ! grep -q 'Oracle VM VirtualBox Extension Pack' <(sudo VBoxManage list extpacks); then
   echo 'Installing virtualbox Extension pack'
   LATEST_EXT_PACK=$(curl 'https://www.virtualbox.org/wiki/Downloads' | xmllint --html --xpath 'string(//html/body/div[4]/div[3]/div[3]/div/div[2]/ul[3]/li/a/@href)' - 2> /dev/null)
   curl -Lv "${LATEST_EXT_PACK}" -o "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
   sudo VBoxManage extpack install --replace "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
 fi
 
-if ! fc-list | grep 'JetBrains Mono' &>/dev/null; then
+if ! grep -q 'JetBrains Mono' <(fc-list); then
   echo 'Installing Jetbrains Font'
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
   fc-cache -f -v
 fi
 
-if ! fc-list | grep 'Nerd Font' &>/dev/null; then
+if ! grep -q 'Nerd Font' <(fc-list); then
   echo 'Installing Nerd Fonts'
   git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${HOME}/src/nerd-fonts"
   cd "${HOME}/src/nerd-fonts"
@@ -142,6 +142,12 @@ if ! jetbrains-toolbox --version &>/dev/null; then
   curl -Lv "${LATEST_JETBRAINS_TOOLBOX}" -o "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz"
   tar -xzvf "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz" -C "${TMP_DOT_FILES}"
   mv "${TMP_DOT_FILES}/jetbrains-toolbox-*/jetbrains-toolbox" "${HOME_BIN}/"
+fi
+
+if ! grep -q 'Bourne-Again shell' <(file ~/.tmux/plugins/tpm/tpm); then
+  echo "tmux plugin manager"
+  mkdir -p ~/.tmux/plugins/tpm
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
 rm -rf "${TMP_DOT_FILES}"

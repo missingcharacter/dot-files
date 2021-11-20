@@ -23,6 +23,12 @@ function are_cask_basics_installed() {
 
 are_cask_basics_installed
 
+if ! grep -q 'Bourne-Again shell' <(file ~/.tmux/plugins/tpm/tpm); then
+  echo "tmux plugin manager"
+  mkdir -p ~/.tmux/plugins/tpm
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
+
 msg_info 'Will start configuring MacOS'
 
 ###############################################################################

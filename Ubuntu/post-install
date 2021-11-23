@@ -58,7 +58,7 @@ sudo apt update
 function are_extra_tools_installed() {
   local EXTRA_UBUNTU_TOOLS=('bash-completion' 'ca-certificates' 'cmake' 'ghostwriter' 'grub-customizer' 'libcurl4' 'libcurl4-openssl-dev' 'libxml2' 'libxml2-dev' 'libssl1.1' 'network-manager-openvpn-gnome' 'openvpn-systemd-resolved' 'pandoc' 'pinta' 'pkg-config' 'sublime-text' 'termshark' 'transmission-gtk' 'tshark' 'vlc' 'virtualbox-6.1' 'wireguard' 'wireshark-gtk')
   install_if_not_installed EXTRA_UBUNTU_TOOLS 'apt' 'y'
-  local EXTRA_BREW_TOOLS=('bfg' 'fpp' 'lastpass-cli' 'mitmproxy' 'rclone' 'ripgrep' 'shellcheck' 'termshark' 'tmux')
+  local EXTRA_BREW_TOOLS=('bfg' 'fpp' 'lastpass-cli' 'mitmproxy' 'rclone' 'ripgrep' 'shellcheck' 'shfmt' 'termshark' 'tmux')
   flatpak install -y com.spotify.Client
 }
 

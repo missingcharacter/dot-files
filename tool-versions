@@ -29,3 +29,4 @@ aws-iam-authenticator 0.5.3
 # misc tools
 rclone 1.57.0
 direnv 2.28.0
+1password-cli 1.12.3

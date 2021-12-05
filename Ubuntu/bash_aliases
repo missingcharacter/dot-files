@@ -10,8 +10,8 @@ alias showversion="neofetch"
 alias xclip='xclip -selection c'
 
 function upall () {
-  msg_info 'sudo apt-get update && sudo apt-get dist-upgrade;'
-  sudo apt-get update && sudo apt-get dist-upgrade;
+  msg_info 'sudo apt update && sudo apt dist-upgrade;'
+  sudo apt update && sudo apt dist-upgrade;
 
   msg_info 'brew update; brew upgrade; brew cleanup;'
   brew update; brew upgrade; brew cleanup;
@@ -92,4 +92,14 @@ function cleancontainers() {
 
 function cleandockervolumes() {
   sudo docker volume rm $(sudo docker volume ls -f dangling=true -q)
+}
+
+function base64encodestring() {
+  local TEXT="${1}"
+  base64 -w 0 <<<"${TEXT}"
+}
+
+function base64decodestring() {
+  local TEXT="${1}"
+  base64 -d -w 0 <<<"${TEXT}"
 }

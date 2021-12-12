@@ -33,6 +33,7 @@
     autoupdate = 1
 [diff]
     tool = vimdiff
+    wsErrorHighlight = all
 [alias]
     ###########################################
     # The essentials from http://www.theodo.fr/blog/2017/06/git-game-advanced-git-aliases/

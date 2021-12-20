@@ -99,6 +99,7 @@
     co = checkout
     br = branch
     dc = diff --cached
+    pt = !git tag -l | xargs git tag -d && git fetch -t
 [pull]
 	rebase = true
 [init]

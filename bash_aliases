@@ -12,11 +12,13 @@ alias tmuxn='echo "Name the tmux session: "; read SESSION; tmux new -s ${SESSION
 alias gitpushchange='git remote set-url --push origin'
 alias gitcdroot='cd $(git rev-parse --show-toplevel)'
 alias lowercaseuuid="uuidgen | tr -ds '-' '' | tr '[:upper:]' '[:lower:]'"
+alias lowercaseuuidwithdashes="uuidgen | tr '[:upper:]' '[:lower:]'"
 alias cssh='tmux-cssh -uc'
 alias findterragruntcache='find . -type d -name ".terragrunt-cache"'
 alias findterraformcache='find . -type d -name ".terraform"'
 alias clearterragruntcache='find . -type d -name ".terragrunt-cache" -prune -exec rm -rf {} \;'
 alias clearterraformcache='find . -type d -name ".terraform" -prune -exec rm -rf {} \;'
+alias clearawscreds='truncate -s 0 ~/.aws/credentials'
 alias kdump='kubectl get all --all-namespaces'
 alias kips='kubectl get nodes -o jsonpath={.items[*].status.addresses[?\(@.type==\"InternalIP\"\)].address}'
 # If you want to see where cpu/memory is being used at

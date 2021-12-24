@@ -80,9 +80,10 @@ function cleansshagent () {
 function gitgrepreplace () {
   local OLD_TEXT="${1}"
   local NEW_TEXT="${2}"
-  local SEPARATOR="${3:-!}"
+  local GREP_PATH="${3:-.}"
+  local SEPARATOR="${4:-!}"
   local REPLACE="s${SEPARATOR}${OLD_TEXT}${SEPARATOR}${NEW_TEXT}${SEPARATOR}g"
-  git grep -l "${OLD_TEXT}" | xargs sed -i "${REPLACE}"
+  git grep -l "${OLD_TEXT}" "${GREP_PATH}" | xargs sed -i "${REPLACE}"
 }
 
 function cleancontainers() {

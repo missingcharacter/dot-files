@@ -36,7 +36,7 @@ function is_brew_installed() {
 function are_basics_installed() {
   local USER_REPLY="${1:-''}"
   # `awscli` https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
-  local BREW_BASICS=('awscli' 'bash' 'coreutils' 'curl' 'gawk' 'git' 'gnupg' 'gnutls' 'gnu-sed' 'inetutils' 'jq' 'lastpass-cli' 'mackup' 'mas' 'oh-my-posh' 'parallel' 'pssh' 'saml2aws' 'tree' 'vim' 'wget' 'xz' 'yq')
+  local BREW_BASICS=('awscli' 'bash' 'coreutils' 'curl' 'gawk' 'git' 'git-filter-repo' 'gnupg' 'gnutls' 'gnu-sed' 'inetutils' 'jq' 'lastpass-cli' 'mackup' 'mas' 'oh-my-posh' 'parallel' 'pssh' 'saml2aws' 'tree' 'vim' 'wget' 'xz' 'yq')
   msg_info 'Will try to install brew if not installed'
   is_brew_installed "${USER_REPLY}"
   msg_info 'Will try to install basic packages with brew'

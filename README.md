@@ -15,6 +15,7 @@ Keep key configurations and share them among your computers
   - [docker](https://docs.docker.com/install/)
   - [fpp](https://github.com/facebook/PathPicker)
   - [gawk](https://www.gnu.org/software/gawk/)
+  - [git-filter-repo](https://github.com/newren/git-filter-repo)
   - [gnupg](https://gnupg.org/)
   - [JetBrains Mono font](https://www.jetbrains.com/lp/mono/)
   - [jq](https://stedolan.github.io/jq/)

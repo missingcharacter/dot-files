@@ -138,6 +138,13 @@ function argodiff() {
   diff <(echo "$APP" | yq e '.status.history[-2]' -) <(echo "$APP" | yq e '.status.history[-1]' -)
 }
 
+function kube-run-in-node() {
+  local NODE_NAME="${1}"
+  local OVERRIDES="{\"spec\":{\"nodeName\":\"${NODE_NAME}\"}}"
+  kubectl run --rm -i --tty \
+    ricdros-test --image=quay.io/giantswarm/debug --overrides="${OVERRIDES}" -- bash
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

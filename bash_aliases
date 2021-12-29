@@ -19,6 +19,7 @@ alias findterraformcache='find . -type d -name ".terraform"'
 alias clearterragruntcache='find . -type d -name ".terragrunt-cache" -prune -exec rm -rf {} \;'
 alias clearterraformcache='find . -type d -name ".terraform" -prune -exec rm -rf {} \;'
 alias clearawscreds='truncate -s 0 ~/.aws/credentials'
+alias getkubeconfig="pulumi stack output -j k8s-controllers | jq -r '.[].iam_kubeconfig'"
 alias kdump='kubectl get all --all-namespaces'
 alias kips='kubectl get nodes -o jsonpath={.items[*].status.addresses[?\(@.type==\"InternalIP\"\)].address}'
 # If you want to see where cpu/memory is being used at

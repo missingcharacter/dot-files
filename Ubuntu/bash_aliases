@@ -14,6 +14,7 @@ function upall () {
   sudo apt update && sudo apt dist-upgrade;
 
   msg_info 'brew update; brew upgrade; brew cleanup;'
+  msg_info 'if brew update fails you can try brew update-reset'
   brew update; brew upgrade; brew cleanup;
 
   #msg_info 'sudo snap refresh --list && sudo snap refresh;'

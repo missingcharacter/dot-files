@@ -340,6 +340,7 @@ map <F5> :%!xmllint --encode UTF-8 --format - <enter>
 "             └── opt
 
 " depend on https://github.com/junegunn/vim-easy-align
+" git clone https://github.com/junegunn/vim-easy-align ~/.vim/pack/plugins/start/vim-easy-align
 "" Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 

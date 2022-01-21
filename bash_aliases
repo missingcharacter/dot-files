@@ -147,6 +147,19 @@ function kube-run-in-node() {
     ricdros-test --image=quay.io/giantswarm/debug --overrides="${OVERRIDES}" -- bash
 }
 
+function check-ssl() {
+  local IP_OR_HOSTNAME="${1}"
+  local PORT="${2:-443}"
+  local CERT_INFO ISSUER VALID_UNTIL SUBJECT SAN
+  CERT_INFO="$(echo | openssl s_client -connect ${IP_OR_HOSTNAME}:${PORT} 2>/dev/null | openssl x509 -noout -text -certopt 'no_header,no_version,no_serial,no_signame,no_pubkey,no_sigdump,no_aux')"
+  ISSUER="$(grep 'Issuer:' <<<${CERT_INFO} | cut -d ' ' -f9-20)"
+  VALID_UNTIL="$(grep 'Not After :' <<<${CERT_INFO} | xargs)"
+  SUBJECT="$(grep 'Subject:' <<<${CERT_INFO} | xargs)"
+  SAN="$(grep 'DNS:' <<<${CERT_INFO} | xargs)"
+
+  printf "${ISSUER}\n${VALID_UNTIL}\n${SUBJECT}\n${SAN}\n"
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

@@ -5,23 +5,22 @@
       "alignment": "left",
       "segments": [
         {
-          "type": "os",
-          "style": "powerline",
-          "powerline_symbol": "\uE0B0",
-          "foreground": "#fff",
           "background": "#003543",
+          "foreground": "#fff",
+          "powerline_symbol": "\ue0b0",
           "properties": {
-            "windows": "\uF179",
-            "postfix": ""
-          }
+            "template": " {{ if .WSL }}WSL at {{ end }}{{.Icon}}",
+            "windows": "\uf179"
+          },
+          "style": "powerline",
+          "type": "os"
         },
         {
           "background": "#003543",
           "foreground": "#fff",
           "powerline_symbol": "\ue0b0",
           "properties": {
-            "postfix": "",
-            "prefix": " ",
+            "template": " {{ .CurrentDate | date .Format }}",
             "windows": "\uf179"
           },
           "style": "powerline",
@@ -33,8 +32,8 @@
           "powerline_symbol": "\ue0b0",
           "properties": {
             "folder_separator_icon": "/",
-            "prefix": " \ue5ff ",
-            "style": "full"
+            "style": "full",
+            "template": " \ue5ff {{ .Path }} "
           },
           "style": "powerline",
           "type": "path"
@@ -42,17 +41,18 @@
         {
           "background": "#d2ff5e",
           "foreground": "#193549",
+          "foreground_templates": [
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}#000000{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#000001{{ end }}",
+            "{{ if gt .Ahead 0 }}#000002{{ end }}",
+            "{{ if gt .Behind 0 }}#89d1dc{{ end }}"
+          ],
           "powerline_symbol": "\ue0b0",
           "properties": {
-            "ahead_and_behind_color": "#f26d50",
-            "ahead_color": "#89d1dc",
-            "behind_color": "#f17c37",
-            "display_stash_count": true,
-            "display_status": true,
-            "display_upstream_icon": true,
-            "local_changes_color": "#ff9248",
-            "stash_count_icon": "\uf692 ",
-            "status_colors_enabled": true
+            "fetch_stash_count": true,
+            "fetch_status": true,
+            "fetch_upstream_icon": true,
+            "template": " {{ .HEAD }} {{ .BranchStatus }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Staging.Changed) (.Working.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0}}\uf692 {{ .StashCount }}{{ end }}{{ if gt .WorktreeCount 0}} \uf1bb {{ .WorktreeCount }}{{ end }} "
           },
           "style": "powerline",
           "type": "git"
@@ -63,23 +63,23 @@
           "powerline_symbol": "\ue0b0",
           "properties": {
             "display_mode": "context",
-            "display_version": false,
-            "display_virtual_env": true,
-            "prefix": " \ue235 "
+            "fetch_version": false,
+            "fetch_virtual_env": true,
+            "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} "
           },
           "style": "powerline",
           "type": "python"
         },
         {
           "background": "#33DD2D",
+          "background_templates": [
+            "{{ if gt .Code 0 }}#f1184c{{ end }}"
+          ],
           "foreground": "#242424",
           "powerline_symbol": "\ue0b0",
           "properties": {
             "always_enabled": true,
-            "color_background": true,
-            "display_exit_code": false,
-            "error_color": "#f1184c",
-            "prefix": " \ufc8d"
+            "template": " \ufc8d "
           },
           "style": "powerline",
           "type": "exit"
@@ -94,7 +94,8 @@
         {
           "foreground": "#FFD700",
           "properties": {
-            "root_icon": "#"
+            "root_icon": "#",
+            "template": " \uf0e7 "
           },
           "style": "plain",
           "type": "root"
@@ -102,8 +103,7 @@
         {
           "foreground": "#ffffff",
           "properties": {
-            "prefix": "",
-            "text": "$"
+            "template": "$ "
           },
           "style": "plain",
           "type": "text"
@@ -115,5 +115,6 @@
   "console_title": true,
   "console_title_style": "template",
   "console_title_template": "{{ .Shell }} in {{ .Folder }}",
-  "final_space": true
+  "final_space": true,
+  "version": 1
 }

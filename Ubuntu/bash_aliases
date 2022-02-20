@@ -17,8 +17,8 @@ function upall () {
   msg_info 'if brew update fails you can try brew update-reset'
   brew update; brew upgrade; brew cleanup;
 
-  #msg_info 'sudo snap refresh --list && sudo snap refresh;'
-  #sudo snap refresh --list && sudo snap refresh;
+  msg_info 'sudo snap refresh --list && sudo snap refresh;'
+  sudo snap refresh --list && sudo snap refresh;
 
   msg_info 'flatpak update -y;'
   flatpak update -y;

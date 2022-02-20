@@ -82,6 +82,14 @@ function gitconfig() {
   fi
 }
 
+function clean-multipass() {
+  for i in $(multipass list | grep -v Name | awk '{ print $1 }'); do
+    msg_info "Cleaning up ${i}"
+    multipass delete "${i}"
+  done
+  multipass purge
+}
+
 function asdf-all () {
   awk '{ print $1 }' ~/.tool-versions
 }

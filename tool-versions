@@ -1,4 +1,5 @@
 # Programming languages
+dotnet-core 6.0.101
 java adoptopenjdk-8.0.252+9.1
 golang 1.17.6
 groovy 2.4.12

@@ -18,12 +18,13 @@ HISTFILESIZE=2000
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
+if [ -f ~/.bash_aliases ]; then
+  . ~/.bash_aliases
+fi
 
-#. ${HOME}/.asdf/asdf.sh
-#. ${HOME}/.asdf/completions/asdf.bash
-PATH="${PATH}:${HOME}/.asdf/bin"
-. "${HOME}/.asdf/lib/asdf.sh"
+# https://asdf-vm.com/guide/getting-started.html#_3-install-asdf
+. ${HOME}/.asdf/asdf.sh
+. ${HOME}/.asdf/completions/asdf.bash
 # Hook direnv into your shell.
 eval "$(asdf exec direnv hook bash)"
 # A shortcut for asdf managed direnv.

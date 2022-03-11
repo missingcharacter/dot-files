@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Enable bash's unofficial strict mode
 GITROOT=$(git rev-parse --show-toplevel)
-. ${GITROOT}/lib/strict-mode
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/strict-mode
 strictMode
 # Enabling utils
-. ${GITROOT}/lib/utils
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/utils
 
 function is_brew_installed() {
   local USER_REPLY="${1:-''}"
@@ -31,27 +33,73 @@ function is_brew_installed() {
 
 function are_basics_installed() {
   local USER_REPLY="${1:-''}"
-  local UBUNTU_BASICS=('apt-file' 'apt-transport-https' 'build-essential' 'curl' 'dirmngr' 'file' 'gawk' 'git-filter-repo' 'gnome-tweaks' 'gnupg' 'gnutls-bin' 'inetutils-tools' 'libxml2-utils' 'lsb-release' 'procps' 'python3-keyring' 'software-properties-common' 'wget' 'xclip' 'xz-utils' 'zlib1g-dev')
-  local BREW_BASICS=('asciidoc' 'awscli' 'fontconfig' 'gcc' 'git' 'jq' 'mackup' 'oh-my-posh' 'parallel' 'pssh' 'saml2aws' 'tree' 'vim' 'yq')
+  declare -a UBUNTU_BASICS BREW_BASICS
+  UBUNTU_BASICS=('apt-file'
+    'apt-transport-https'
+    'build-essential'
+    'curl'
+    'dirmngr'
+    'file'
+    'gawk'
+    'git-filter-repo'
+    'gnome-tweaks'
+    'gnupg'
+    'gnutls-bin'
+    'inetutils-tools'
+    'libxml2-utils'
+    'lsb-release'
+    'procps'
+    'python3-keyring'
+    'software-properties-common'
+    'wget'
+    'xclip'
+    'xz-utils'
+    'zlib1g-dev')
+  BREW_BASICS=('asciidoc'
+   'awscli'
+   'fontconfig'
+   'gcc'
+   'git'
+   'jq'
+   'mackup'
+   'oh-my-posh'
+   'parallel'
+   'pssh'
+   'saml2aws'
+   'tree'
+   'vim'
+   'yq')
   msg_info 'Will run apt update'
   sudo apt update
   msg_info 'Will try to install Ubuntu basics'
-  install_if_not_installed UBUNTU_BASICS 'apt' "${USER_REPLY}"
+  install_if_not_installed 'apt' "${USER_REPLY}" "${UBUNTU_BASICS[@]}"
   msg_info 'Will try to install brew if not installed'
   is_brew_installed "${USER_REPLY}"
-  install_if_not_installed BREW_BASICS 'brew' "${USER_REPLY}"
+  install_if_not_installed 'brew' "${USER_REPLY}" "${BREW_BASICS[@]}"
 }
 
 function is_asdf_installed() {
   local USER_REPLY="${1:-''}"
-  if [[ ! -x $(which asdf) ]]; then
+  if ! command -v asdf &> /dev/null; then
     # Ubuntu 18.04 `apt install -y libncurses-dev libxslt-dev` gives the output below
     # Note, selecting 'libncurses5-dev' instead of 'libncurses-dev'
     # Note, selecting 'libxslt1-dev' instead of 'libxslt-dev'
-    local ASDF_DEPS=('autoconf' 'automake' 'libbz2-dev' 'libffi-dev' 'libncurses5-dev' 'libreadline-dev' 'libsqlite3-dev' 'libssl-dev' 'libtool' 'libxslt1-dev' 'libyaml-dev' 'unixodbc-dev' 'unzip')
+    declare -a ASDF_DEPS=('autoconf'
+      'automake'
+      'libbz2-dev'
+      'libffi-dev'
+      'libncurses5-dev'
+      'libreadline-dev'
+      'libsqlite3-dev'
+      'libssl-dev'
+      'libtool'
+      'libxslt1-dev'
+      'libyaml-dev'
+      'unixodbc-dev'
+      'unzip')
     are_basics_installed "${USER_REPLY}"
     msg_info 'Will try to install asdf dependencies'
-    install_if_not_installed ASDF_DEPS 'apt' "${USER_REPLY}"
+    install_if_not_installed 'apt' "${USER_REPLY}" "${ASDF_DEPS[@]}"
     msg_info 'Will try to install asdf using git'
     git_install_asdf "${USER_REPLY}"
   fi

@@ -96,7 +96,7 @@ function asdf-all () {
 
 function asdf-all-versions () {
   for i in $(asdf plugin list); do
-    echo "Plugin ${i} and versions are $(asdf list ${i})"
+    echo "Plugin ${i} and versions are $(asdf list "${i}")"
   done
 }
 
@@ -159,13 +159,17 @@ function check-ssl() {
   local IP_OR_HOSTNAME="${1}"
   local PORT="${2:-443}"
   local CERT_INFO ISSUER VALID_UNTIL SUBJECT SAN
-  CERT_INFO="$(echo | openssl s_client -connect ${IP_OR_HOSTNAME}:${PORT} 2>/dev/null | openssl x509 -noout -text -certopt 'no_header,no_version,no_serial,no_signame,no_pubkey,no_sigdump,no_aux')"
-  ISSUER="$(grep 'Issuer:' <<<${CERT_INFO} | cut -d ' ' -f9-20)"
-  VALID_UNTIL="$(grep 'Not After :' <<<${CERT_INFO} | xargs)"
-  SUBJECT="$(grep 'Subject:' <<<${CERT_INFO} | xargs)"
-  SAN="$(grep 'DNS:' <<<${CERT_INFO} | xargs)"
+  CERT_INFO="$(echo | openssl s_client -connect "${IP_OR_HOSTNAME}:${PORT}" 2>/dev/null | openssl x509 -noout -text -certopt 'no_header,no_version,no_serial,no_signame,no_pubkey,no_sigdump,no_aux')"
+  ISSUER="$(grep 'Issuer:' <<<"${CERT_INFO}" | cut -d ' ' -f9-20)"
+  VALID_UNTIL="$(grep 'Not After :' <<<"${CERT_INFO}" | xargs)"
+  SUBJECT="$(grep 'Subject:' <<<"${CERT_INFO}" | xargs)"
+  SAN="$(grep 'DNS:' <<<"${CERT_INFO}" | xargs)"
 
-  printf "${ISSUER}\n${VALID_UNTIL}\n${SUBJECT}\n${SAN}\n"
+  printf "%s\n%s\n%s\n%s\n" "${ISSUER}" "${VALID_UNTIL}" "${SUBJECT}" "${SAN}"
+}
+
+function list-shellcheck-files() {
+  pre-commit run shellcheck --all-files 2>&1 | grep "^In " | awk '{ print $2 }' | sort -u
 }
 
 # Sourcing Operating System Specific bash_aliases

@@ -3,7 +3,6 @@ repos:
     rev: v4.1.0
     hooks:
       - id: trailing-whitespace
-        exclude: '^.docker/'
       - id: check-added-large-files
         args:
         - --maxkb=512
@@ -11,7 +10,6 @@ repos:
       - id: check-case-conflict
       - id: check-docstring-first
       - id: check-json
-        exclude: '^.docker/'
       - id: check-merge-conflict
       - id: check-symlinks
       - id: check-xml
@@ -19,9 +17,16 @@ repos:
       - id: debug-statements
       - id: detect-private-key
       - id: end-of-file-fixer
-        exclude: '^.docker/'
       - id: pretty-format-json
-        exclude: '^.docker/'
         args:
         - --autofix
       - id: requirements-txt-fixer
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.17
+    hooks:
+      - id: shellcheck
+        exclude: '.*\.sh\.j2'
+  - repo: git://github.com/igorshubovych/markdownlint-cli
+    rev: v0.31.1
+    hooks:
+      - id: markdownlint-fix

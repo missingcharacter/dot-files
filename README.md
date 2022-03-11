@@ -2,9 +2,9 @@
 
 Keep key configurations and share them among your computers
 
-# Packages to install based on OS
+## Packages to install based on OS
 
-## Ubuntu & MacOS
+### Ubuntu & MacOS
 
 - Installs:
   - [1password-cli](https://support.1password.com/command-line/)
@@ -41,7 +41,7 @@ Keep key configurations and share them among your computers
   - [wireshark](https://www.wireshark.org)
   - [xz](https://tukaani.org/xz/)
 
-## MacOS
+### MacOS
 
 - Installs:
   - [Homebrew](https://brew.sh/)
@@ -61,7 +61,7 @@ Keep key configurations and share them among your computers
     - [Greenshot](https://getgreenshot.org/downloads/)
     - [Keka](https://www.keka.io/en/)
 
-## Ubuntu
+### Ubuntu
 
 - Installs:
   - [Homebrew](https://brew.sh)
@@ -74,31 +74,42 @@ Keep key configurations and share them among your computers
     - [python3-keyring](https://pypi.org/project/keyring/)
     - [xclip](https://github.com/astrand/xclip)
 
-## Stuff I may replace
+### Stuff I may replace
 
-- Virtualbox with [multipass](https://multipass.run/) or [xhyve](https://github.com/machyve/xhyve), `xhyve` if I need windows hosts
+- Virtualbox with [multipass](https://multipass.run/) or
+  [xhyve](https://github.com/machyve/xhyve), `xhyve` if I need windows hosts
 
-# how I use mackup
+## how I use mackup
 
 - `~/.mackup.cfg` uses directory `~/.dot-files-rclone` with engine `file_system`
-- Contents of `~/.dot-files-rclone` are encrypted and then  backed up to google drive using `rclone`
+- Contents of `~/.dot-files-rclone` are encrypted and then  backed up to google
+  drive using `rclone`
 - `~/.config/rclone/rclone.conf` is encrypted
 
-## To restore other configs
+### To restore other configs
 
-- Files `~/.mackup.cfg`, `~/.mackup/my-files.cfg` and `~/.config/rclone/rclone.conf` should be in your system
+- Files `~/.mackup.cfg`, `~/.mackup/my-files.cfg` and
+  `~/.config/rclone/rclone.conf` should be in your system
 - Directory `~/.dot-files-rclone` should be created
-- Run `rclone copy -v --password-command "/path/to/script/that/outputs/password.sh" "dot-files:${MACHINE_OS}" ~/.dot-files-rclone/ # MACHINE_OS can be MacOS or Ubuntu`
+- Run
+
+  ```shell
+  rclone copy -v --password-command "/path/to/script/that/outputs/password.sh" \
+    "dot-files:${MACHINE_OS}" \
+    ~/.dot-files-rclone/ # MACHINE_OS can be MacOS or Ubuntu`
+  ```
+
 - Run `mackup restore`
 
-**Note:** I may try to replace `rclone copy/sync` with `rclone mount`, for the moment I did not want to add another dependency (`osxfuse`)
+**Note:** I may try to replace `rclone copy/sync` with `rclone mount`, for the
+moment I did not want to add another dependency (`osxfuse`)
 
-# Places I borrowed stuff from
+## Places I borrowed stuff from
 
-- https://gist.github.com/millermedeiros/6615994
-- https://gist.github.com/orlando/3991bd633b443078176f
-- https://github.com/mathiasbynens/dotfiles
-- https://github.com/nicolashery/mac-dev-setup
-- https://github.com/danvega/new-macbook-setup
-- https://github.com/geerlingguy/dotfiles
-- https://www.lifewire.com/use-macs-hidden-finder-path-bar-2260868
+- <https://gist.github.com/millermedeiros/6615994>
+- <https://gist.github.com/orlando/3991bd633b443078176f>
+- <https://github.com/mathiasbynens/dotfiles>
+- <https://github.com/nicolashery/mac-dev-setup>
+- <https://github.com/danvega/new-macbook-setup>
+- <https://github.com/geerlingguy/dotfiles>
+- <https://www.lifewire.com/use-macs-hidden-finder-path-bar-2260868>

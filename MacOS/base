@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 # Enable bash's unofficial strict mode
 GITROOT=$(git rev-parse --show-toplevel)
-. ${GITROOT}/lib/strict-mode
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/strict-mode
 strictMode
 # Enabling utils
-. ${GITROOT}/lib/utils
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/utils
+
 
 function is_brew_installed() {
   local USER_REPLY="${1:-''}"
@@ -36,21 +39,55 @@ function is_brew_installed() {
 function are_basics_installed() {
   local USER_REPLY="${1:-''}"
   # `awscli` https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
-  local BREW_BASICS=('awscli' 'bash' 'coreutils' 'curl' 'gawk' 'git' 'git-filter-repo' 'gnupg' 'gnutls' 'gnu-sed' 'inetutils' 'jq' 'lastpass-cli' 'mackup' 'mas' 'oh-my-posh' 'parallel' 'pssh' 'saml2aws' 'tree' 'vim' 'wget' 'xz' 'yq')
+  declare -a BREW_BASICS=('awscli'
+    'bash'
+    'coreutils'
+    'curl'
+    'gawk'
+    'git'
+    'git-filter-repo'
+    'gnupg'
+    'gnutls'
+    'gnu-sed'
+    'inetutils'
+    'jq'
+    'lastpass-cli'
+    'mackup'
+    'mas'
+    'oh-my-posh'
+    'parallel'
+    'pssh'
+    'saml2aws'
+    'tree'
+    'vim'
+    'wget'
+    'xz'
+    'yq')
   msg_info 'Will try to install brew if not installed'
   is_brew_installed "${USER_REPLY}"
   msg_info 'Will try to install basic packages with brew'
-  install_if_not_installed BREW_BASICS 'brew' "${USER_REPLY}"
+  install_if_not_installed 'brew' "${USER_REPLY}" "${BREW_BASICS[@]}"
 }
 
 function is_asdf_installed() {
   local USER_REPLY="${1:-''}"
-  if [[ ! -x $(which asdf) ]]; then
-    local ASDF_DEPS=('autoconf' 'automake' 'coreutils' 'gcc' 'libtool' 'libxslt' 'libyaml' 'openssl' 'make' 'readline' 'unixodbc' 'unzip')
+  if ! command -v asdf &> /dev/null; then
+    declare -a ASDF_DEPS=('autoconf'
+      'automake'
+      'coreutils'
+      'gcc'
+      'libtool'
+      'libxslt'
+      'libyaml'
+      'openssl'
+      'make'
+      'readline'
+      'unixodbc'
+      'unzip')
     msg_info 'Will try to install brew if not installed'
     are_basics_installed "${USER_REPLY}"
     msg_info 'Will try to install asdf dependencies'
-    install_if_not_installed ASDF_DEPS 'brew' "${USER_REPLY}"
+    install_if_not_installed 'brew' "${USER_REPLY}" "${ASDF_DEPS[@]}"
     msg_info 'Will try to install asdf using git'
     git_install_asdf "${USER_REPLY}"
   fi

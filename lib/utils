@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
 GITROOT=$(git rev-parse --show-toplevel)
-. ${GITROOT}/lib/strict-mode
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/strict-mode
 strictMode
 
 ANSI_NO_COLOR=$'\033[0m'
 
 function msg_info () {
   local GREEN=$'\033[0;32m'
-  printf "%s\n" "${GREEN}${*}${ANSI_NO_COLOR}"
+  printf "%s\n" "${GREEN}${*}${ANSI_NO_COLOR}" >&2
 }
 
 function msg_warn () {
   local YELLOW=$'\033[0;33m'
-  printf "%s\n" "${YELLOW}${*}${ANSI_NO_COLOR}"
+  printf "%s\n" "${YELLOW}${*}${ANSI_NO_COLOR}" >&2
 }
 
 function msg_fatal () {
   local RED=$'\033[0;31m'
-  printf "%s\n" "${RED}${*}${ANSI_NO_COLOR}"
+  printf "%s\n" "${RED}${*}${ANSI_NO_COLOR}" >&2
 }
 
 function retry_command() {
@@ -26,9 +27,9 @@ function retry_command() {
   # retry_command 10 some_command.sh
   # Command will retry with linear back-off
   local -r __tries="${1}"; shift
-  local -r __run="${@}"
+  declare -a __run=("${@}")
   local -i __backoff_delay=2
-  until ${__run}
+  until "${__run[@]}"
     do
       if (( __current_try == __tries ))
       then
@@ -72,7 +73,8 @@ function is_subarray_in_array() {
   local IN=0
   local ELEMENT
   for ELEMENT in "${!SUB_ARRAY}"; do
-    array_contains ${ARRAY} ${ELEMENT} && IN=0 || IN=1
+    # shellcheck disable=SC2086
+    array_contains ${ARRAY} "${ELEMENT}" && IN=0 || IN=1
     if [[ ${IN} -eq 1 ]]; then
       break
     fi
@@ -83,16 +85,18 @@ function is_subarray_in_array() {
 function install_if_not_installed() {
   # How to:
   # arr=('build-essential' 'curl' 'file' 'git')
-  # install_if_not_installed arr 'apt'
-  local -n EXTRA_TOOLS="${1}"
-  local EXPANDED_EXTRA_TOOLS="${EXTRA_TOOLS[@]}"
-  local COMMAND="${2}"
+  # install_if_not_installed 'apt' 'y' "${arr[@]}"
+  local COMMAND="${1}"
+  shift
+  local USER_REPLY="${1:-''}"
+  shift
+  declare -a EXPANDED_EXTRA_TOOLS=("${@}") INSTALLED_TOOLS=()
   local -A LIST_COMMAND=(
     ['apt']="sudo apt list --installed 2>/dev/null | grep -v 'Listing' | cut -d '/' -f1"
     ['brew']='brew list'
     ['brewcask']='brew list --cask'
     ['code']='code --list-extensions'
-    ['pip3']='pip3 list --format=freeze | cut -d '=' -f1')
+    ['pip3']="pip3 list --format=freeze | cut -d '=' -f1")
   local -A INSTALL_COMMAND=(
     ['apt']="sudo DEBIAN_FRONTEND='noninteractive' apt install -y"
     ['brew']='brew install'
@@ -105,11 +109,12 @@ function install_if_not_installed() {
     ['brewcask']='multiple'
     ['code']='single'
     ['pip3']='multiple')
-  local INSTALLED_TOOLS=( $(bash -c "${LIST_COMMAND[${COMMAND}]}") )
-  local USER_REPLY="${3:-''}"
+  # does not consider namerefs, see https://github.com/koalaman/shellcheck/issues/817
+  # shellcheck disable=SC2034
+  mapfile -t INSTALLED_TOOLS < <(bash -c "${LIST_COMMAND[${COMMAND}]}")
 
   # Check if extra tools are installed
-  if ! $(is_subarray_in_array INSTALLED_TOOLS EXTRA_TOOLS); then
+  if ! is_subarray_in_array INSTALLED_TOOLS EXTRA_TOOLS; then
     msg_info 'Seems like some (or all) the tools are missing'
     if [[ "${USER_REPLY}" == 'y' ]]; then
       msg_info 'I will install them righ away'
@@ -121,9 +126,11 @@ function install_if_not_installed() {
     echo
     if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
       if [[ "${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'multiple' ]]; then
-        bash -c "${INSTALL_COMMAND[${COMMAND}]} ${EXPANDED_EXTRA_TOOLS}"
-      elif [["${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'single'  ]]; then
-        bash -c "echo ${EXPANDED_EXTRA_TOOLS} | xargs -L1 ${INSTALL_COMMAND[${COMMAND}]}"
+        ${INSTALL_COMMAND[${COMMAND}]} "${EXPANDED_EXTRA_TOOLS[@]}"
+      elif [[ "${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'single'  ]]; then
+	for p in "${EXPANDED_EXTRA_TOOLS[@]}"; do
+	  ${INSTALL_COMMAND[${COMMAND}]} "${p}"
+	done
       fi
     fi
   fi
@@ -150,6 +157,7 @@ function git_install_asdf() {
   # only to be used within is_asdf_installed function
   # in ${GITROOT}/(Ubuntu|MacOS)/base
   local USER_REPLY="${1:-''}"
+  declare -a ASDF_TAGS=()
   msg_info 'Seems like asdf is not installed'
   if [[ "${USER_REPLY}" == 'y' ]]; then
     msg_info 'I will install it righ away'
@@ -161,11 +169,13 @@ function git_install_asdf() {
   echo
   if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
     local ASDF_REPO="https://github.com/asdf-vm/asdf.git"
-    local ASDF_TAGS=( $(get_git_tags ${ASDF_REPO}) )
+    mapfile -t ASDF_TAGS < <(get_git_tags ${ASDF_REPO})
     git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_TAGS[-1]}"
     disableStrictMode
-    . ${HOME}/.asdf/asdf.sh
-    . ${HOME}/.asdf/completions/asdf.bash
+    # shellcheck disable=SC1090
+    . "${HOME}"/.asdf/asdf.sh
+    # shellcheck disable=SC1090
+    . "${HOME}"/.asdf/completions/asdf.bash
     strictMode
   fi
 }
@@ -175,20 +185,21 @@ function install_asdf_tool_versions() {
   # only to be used after asdf has been installed and asdf's:
   # `${HOME}/.asdf/shims:${HOME}/.asdf/bin`
   # are in ${PATH}
-  local TOOLS_VERSIONS="${HOME}/.tool-versions"
+  local TOOLS_VERSIONS="${HOME}/.tool-versions" VERSION
+  declare -a PLUGINS=()
   msg_info 'Installing asdf plugins'
-  local PLUGINS=( $(awk '{ print $1 }' ${TOOLS_VERSIONS} | grep -v '#') )
+  mapfile -t PLUGINS < <(awk '{ print $1 }' "${TOOLS_VERSIONS}" | grep -v '#')
   for PLUGIN in "${PLUGINS[@]}"; do
     case "${PLUGIN}" in
       aws-iam-authenticator)
         install_asdf_tool "${PLUGIN}" 'https://github.com/stefansedich/asdf-aws-iam-authenticator' ;;
       nodejs)
         install_asdf_tool "${PLUGIN}"
-        bash ${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring ;;
+        bash "${HOME}"/.asdf/plugins/nodejs/bin/import-release-team-keyring ;;
       *)
         install_asdf_tool "${PLUGIN}" ;;
     esac
-    local VERSION="$(grep "${PLUGIN} " ${TOOLS_VERSIONS} | awk '{ print $2 }')"
+    VERSION="$(grep "${PLUGIN} " "${TOOLS_VERSIONS}" | awk '{ print $2 }')"
     install_asdf_tool_version "${PLUGIN}" "${VERSION}"
   done
 }
@@ -207,8 +218,9 @@ function install_asdf_tool() {
 function install_asdf_tool_version() {
   local PLUGIN="${1}"
   local VERSION="${2}"
-  local CATCH_OUTPUT=$(mktemp install_asdf_tool_versions.XXXXXXX)
-  if asdf install ${PLUGIN} ${VERSION} &> "${CATCH_OUTPUT}"; then
+  local CATCH_OUTPUT
+  CATCH_OUTPUT=$(mktemp install_asdf_tool_versions.XXXXXXX)
+  if asdf install "${PLUGIN}" "${VERSION}" &> "${CATCH_OUTPUT}"; then
     msg_info "Installed ${PLUGIN} version in ${TOOLS_VERSIONS}"
     rm -f "${CATCH_OUTPUT}"
   else
@@ -221,7 +233,7 @@ function install_asdf_tool_version() {
 
 function write_direnvrc() {
     msg_info 'Creating file ~/.config/direnv/direnvrc'
-  cat <<'EOF' > ${HOME}/.config/direnv/direnvrc
+  cat <<'EOF' > "${HOME}"/.config/direnv/direnvrc
 source "$(asdf direnv hook asdf)"
 
 # Uncomment the following line to make direnv silent by default.

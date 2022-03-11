@@ -1,24 +1,64 @@
 #!/usr/bin/env bash
 # Enable bash's unofficial strict mode
 GITROOT=$(git rev-parse --show-toplevel)
-. ${GITROOT}/lib/strict-mode
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/strict-mode
 strictMode
 # Enabling utils
-. ${GITROOT}/lib/utils
-. ${GITROOT}/MacOS/base
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/utils
+# shellcheck disable=SC1090
+. "${GITROOT}"/MacOS/base
 
 # Install stuff?
 
 function are_brew_basics_installed() {
-  local BREW_BASICS=('bfg' 'fpp' 'rclone' 'ripgrep' 'pandoc' 'shellcheck' 'shfmt' 'termshark' 'tmux' 'wireshark' 'fontconfig')
+  declare -a BREW_BASICS=('bfg'
+  'fpp'
+  'rclone'
+  'ripgrep'
+  'pandoc'
+  'shellcheck'
+  'shfmt'
+  'termshark'
+  'tmux'
+  'wireshark'
+  'fontconfig')
   is_brew_installed
-  install_if_not_installed BREW_BASICS 'brew' 'y'
+  install_if_not_installed 'brew' 'y' "${BREW_BASICS[@]}"
 }
 
 function are_cask_basics_installed() {
-  local BREW_CASK_BASICS=('1password' 'alfred' 'bartender' 'docker' 'firefox' 'font-hack-nerd-font' 'font-jetbrains-mono' 'gas-mask' 'google-backup-and-sync' 'google-chrome' 'iterm2' 'jdownloader' 'macdown' 'pinta' 'private-internet-access' 'proxyman' 'slack' 'rectangle' 'spotify' 'sublime-text' 'transmission' 'tripmode' 'tunnelblick' 'vagrant' 'virtualbox' 'virtualbox-extension-pack' 'visual-studio-code' 'vlc')
+  declare -a BREW_CASK_BASICS=('1password'
+    'alfred'
+    'bartender'
+    'docker'
+    'firefox'
+    'font-hack-nerd-font'
+    'font-jetbrains-mono'
+    'gas-mask'
+    'google-backup-and-sync'
+    'google-chrome'
+    'iterm2'
+    'jdownloader'
+    'macdown'
+    'pinta'
+    'private-internet-access'
+    'proxyman'
+    'slack'
+    'rectangle'
+    'spotify'
+    'sublime-text'
+    'transmission'
+    'tripmode'
+    'tunnelblick'
+    'vagrant'
+    'virtualbox'
+    'virtualbox-extension-pack'
+    'visual-studio-code'
+    'vlc')
   are_brew_basics_installed
-  install_if_not_installed BREW_CASK_BASICS 'brewcask' 'y'
+  install_if_not_installed 'brewcask' 'y' "${BREW_CASK_BASICS[@]}"
 }
 
 are_cask_basics_installed

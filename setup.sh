@@ -1,31 +1,30 @@
 #!/usr/bin/env bash
 # Enable bash's unofficial strict mode
 GITROOT=$(git rev-parse --show-toplevel)
-. ${GITROOT}/lib/strict-mode
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/strict-mode
 strictMode
-. ${GITROOT}/lib/utils
+# shellcheck disable=SC1090
+. "${GITROOT}"/lib/utils
 
-THIS_SCRIPT=$(basename $0)
-PADDING=$(printf %-${#THIS_SCRIPT}s " ")
+THIS_SCRIPT=$(basename "${0}")
+#PADDING=$(printf %-${#THIS_SCRIPT}s " ")
 
 function usage() {
     msg_info "Usage:"
     msg_info "${THIS_SCRIPT} -i <Optional, 'y' or 'n'>"
     echo
-    msg_info "Sets up base macOS and Ubuntu system" >&2
-    msg_info "-i avoids asking you every time if you want to install something or not" >&2
+    msg_info "Sets up base macOS and Ubuntu system"
+    msg_info "-i avoids asking you every time if you want to install something or not"
     exit 1
 }
 
-function check_dependencies() {
-  # Ensure dependencies are present
-  if [[ ! -x $(command -v git) ]]; then
-      msg_fatal "[-] Dependencies unmet. Please verify that the following are installed and in the PATH: git" >&2
-      exit 1
-  fi
-}
+# Ensure dependencies are present
+if ! command -v git &>/dev/null; then
+    msg_fatal "[-] Dependencies unmet. Please verify that the following are installed and in the PATH: git"
+    exit 1
+fi
 
-check_dependencies
 
 UNAME_OUTPUT=$(uname -s)
 case "${UNAME_OUTPUT}" in
@@ -33,13 +32,13 @@ case "${UNAME_OUTPUT}" in
       if grep -i ubuntu /etc/os-release &> /dev/null; then
         MACHINE_OS='Ubuntu'
       else
-        msg_fatal "Only Ubuntu is supported" >&2
+        msg_fatal "Only Ubuntu is supported"
         exit 1
       fi;;
     Darwin*)
       MACHINE_OS='MacOS';;
     *)
-      msg_fatal "UNKNOWN OS: ${UNAME_OUTPUT}" >&2
+      msg_fatal "UNKNOWN OS: ${UNAME_OUTPUT}"
       exit 1
 esac
 
@@ -59,7 +58,8 @@ while getopts ":i:" opt; do
 done
 
 # Installing basics
-. ${GITROOT}/${MACHINE_OS}/base
+# shellcheck disable=SC1090
+. "${GITROOT}/${MACHINE_OS}/base"
 is_asdf_installed "${INSTALL_EVERYTHING:-''}"
 
 # Setting up mackup
@@ -76,10 +76,21 @@ if [[ ! -L "${MACKUP_MY_FILES_CFG}" ]]; then
 fi
 
 # Actual dot-files
-cd ${MACHINE_OS}
-LINKS=('bashrc' 'bash_profile' 'bash_aliases' 'envrc' 'gitconfig' 'mackup.cfg' 'ohmyposh.json' 'tmux.conf' 'tool-versions' 'vimrc')
-OS_SPECIFIC_LINKS=( $(ls bash_*) )
-cd -
+cd ${MACHINE_OS} || exit 1
+declare -a OS_SPECIFIC_LINKS
+mapfile -t OS_SPECIFIC_LINKS < <(ls bash_*)
+cd - || exit 1
+
+declare -a LINKS=('bashrc'
+'bash_profile'
+'bash_aliases'
+'envrc'
+'gitconfig'
+'mackup.cfg'
+'ohmyposh.json'
+'tmux.conf'
+'tool-versions'
+'vimrc')
 
 function link_if_not_exists() {
   local FILE=${1}
@@ -88,24 +99,24 @@ function link_if_not_exists() {
   local TARGET_FILE="${HOME}/.${DOT_FILE}"
   if [[ -L "${TARGET_FILE}" || -e "${TARGET_FILE}" ]]; then
     local USER_REPLY
-    msg_warn "${TARGET_FILE} exists" >&2
+    msg_warn "${TARGET_FILE} exists"
     read -p "Want me to overwrite it? " -n 1 -r USER_REPLY
     echo
     if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
-      ln -sf ${SOURCE_FILE} ${TARGET_FILE}
+      ln -sf "${SOURCE_FILE}" "${TARGET_FILE}"
     fi
   else
     msg_info "Creating ${TARGET_FILE} symlink"
-    ln -s ${SOURCE_FILE} ${TARGET_FILE}
+    ln -s "${SOURCE_FILE}" "${TARGET_FILE}"
   fi
 }
 
-for LINK in ${LINKS[@]}; do
-  link_if_not_exists ${LINK}
+for LINK in "${LINKS[@]}"; do
+  link_if_not_exists "${LINK}"
 done
 
-for LINK in ${OS_SPECIFIC_LINKS[@]}; do
-  link_if_not_exists "${MACHINE_OS}/${LINK}" ${LINK//_/_os_}
+for LINK in "${OS_SPECIFIC_LINKS[@]}"; do
+  link_if_not_exists "${MACHINE_OS}/${LINK}" "${LINK//_/_os_}"
 done
 
 # Install everything else
@@ -116,11 +127,13 @@ function install_everything_else() {
 
   msg_info "Sourcing ${HOME}/.bashrc"
   disableStrictMode
-  . ${HOME}/.bashrc
+  # shellcheck disable=SC1090
+  . "${HOME}"/.bashrc
   strictMode
 
   # Running post-install steps
-  . ${GITROOT}/${MACHINE_OS}/post-install
+  # shellcheck disable=SC1090
+  . "${GITROOT}/${MACHINE_OS}/post-install"
 }
 
 if [[ "${INSTALL_EVERYTHING:-''}" == 'y' ]]; then

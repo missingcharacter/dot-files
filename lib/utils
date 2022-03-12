@@ -26,7 +26,6 @@ function msg_fatal() {
   exit 1
 }
 
-
 function check_ubuntu_dist() {
   if ! grep -i ubuntu /etc/os-release &> /dev/null; then
     msg_fatal "Only Ubuntu or Debian based linux distros are supported" >&2
@@ -58,16 +57,9 @@ function get_operatingsystem() {
   esac
 }
 
-function check_ulimit() {
-  if [[ "$(ulimit -Sn)" -le 1024 ]]; then
-    ulimit -S &> /dev/null
-  fi
-}
-
 function get_brew_location() {
   case "$(get_operatingsystem)" in
     Ubuntu)
-      check_ulimit
       echo -n '/home/linuxbrew/.linuxbrew/bin/brew'
       ;;
     MacOS)
@@ -281,10 +273,10 @@ function install_if_not_installed() {
     fi
     if [[ ${ANSWER} =~ ^[Yy]$ ]]; then
       if [[ "${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'multiple' ]]; then
-          bash -c "${INSTALL_COMMAND[${COMMAND}]} $(join_by ' ' "${EXTRA_TOOLS[@]}")"
+        retry_command '3' 'bash' '-c' "${INSTALL_COMMAND[${COMMAND}]} $(join_by ' ' "${EXTRA_TOOLS[@]}")"
       elif [[ "${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'single'  ]]; then
 	for p in "${EXTRA_TOOLS[@]}"; do
-	  bash -c "${INSTALL_COMMAND[${COMMAND}]} ${p}"
+	  retry_command '3' 'bash' '-c' "${INSTALL_COMMAND[${COMMAND}]} ${p}"
 	done
       fi
     fi

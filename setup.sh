@@ -89,7 +89,6 @@ for LINK in "${OS_SPECIFIC_LINKS[@]}"; do
   link_if_not_exists "${GITROOT}/${MACHINE_OS}/${LINK}" "${HOME}/.${LINK//_/_os_}"
 done
 
-
 if [[ "${INSTALL_EVERYTHING}" == 'y' ]]; then
   install_everything_else
 fi

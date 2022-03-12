@@ -68,6 +68,15 @@ function get_brew_location() {
   esac
 }
 
+function source_asdf() {
+  disableStrictMode
+  # shellcheck disable=SC1091
+  . "${HOME}"/.asdf/asdf.sh
+  # shellcheck disable=SC1091
+  . "${HOME}"/.asdf/completions/asdf.bash
+  strictMode
+}
+
 function source_brew() {
   local BREW
   BREW="$(get_brew_location)"
@@ -92,9 +101,8 @@ function brew_taps() {
 
 function is_brew_installed() {
   local ASK="${1:-'y'}"
-  local ANSWER='y' BREW_EXE
-  BREW_EXE="$(get_brew_location)"
-  if [[ ! -e "${BREW_EXE}" ]]; then
+  local ANSWER='y'
+  if [[ ! -e "$(get_brew_location)" ]]; then
     msg_info 'Seems like brew is not installed'
     if [[ "${ASK}" == 'y' ]]; then
       ANSWER="$(get_user_reply 'Want me to install brew?')"
@@ -115,7 +123,7 @@ function get_os_specific_links() {
   cd "${GITROOT}/${MACHINE_OS}" || return 1
   declare -a OS_SPECIFIC_LINKS
   mapfile -t OS_SPECIFIC_LINKS < <(ls bash_*)
-  cd - || return 1
+  cd - &> /dev/null || return 1
 
   return_non_empty_array "${OS_SPECIFIC_LINKS[@]}"
 }
@@ -139,9 +147,19 @@ function link_if_not_exists() {
       ln -sf "${FILE}" "${LINK}"
     fi
   else
-    msg_info "Creating ${TARGET_FILE} symlink"
+    msg_info "Creating ${FILE} symlink"
     ln -s "${FILE}" "${LINK}"
   fi
+}
+
+function get_user_reply() {
+  local QUESTION="${1}"
+  local RESET="\033[0m"
+  local BOLD="\033[1m"
+  local YELLOW="\033[38;5;11m"
+  local USER_REPLY
+  read -p "$(echo -e "${BOLD}${YELLOW}${QUESTION}${RESET}[Y or N] ")" -n 1 -r USER_REPLY
+  echo -n "${USER_REPLY}"
 }
 
 # Install everything else
@@ -316,12 +334,7 @@ function git_install_asdf() {
     local ASDF_REPO="https://github.com/asdf-vm/asdf.git"
     mapfile -t ASDF_TAGS < <(get_git_tags ${ASDF_REPO})
     git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_TAGS[-1]}"
-    disableStrictMode
-    # shellcheck disable=SC1091
-    . "${HOME}"/.asdf/asdf.sh
-    # shellcheck disable=SC1091
-    . "${HOME}"/.asdf/completions/asdf.bash
-    strictMode
+    source_asdf
   fi
 }
 
@@ -382,7 +395,7 @@ function configure_direnv() {
   local DIRENV_CONFIG_FOLDER="${HOME}/.config/direnv"
   if [[ ! -e "${DIRENV_CONFIG_FOLDER}" ]]; then
     msg_info "${DIRENV_CONFIG_FOLDER} does not exist, I will create it"
-    mkdir "${DIRENV_CONFIG_FOLDER}"
+    mkdir -p "${DIRENV_CONFIG_FOLDER}"
   fi
   if [[ ! -e "${DIRENV_CONFIG_FOLDER}/direnvrc" ]]; then
     msg_info "${DIRENV_CONFIG_FOLDER}/direnvrc does not exist, I'll create it now"

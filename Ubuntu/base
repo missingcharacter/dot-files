@@ -58,7 +58,7 @@ function are_basics_installed() {
 
 function is_asdf_installed() {
   local ASK="${1:-'y'}"
-  if ! command -v asdf &> /dev/null || ! command -v brew &> /dev/null; then
+  if [[ ! -e "${HOME}/.asdf/asdf.sh" ]] || [[ ! -e "$(get_brew_location)" ]]; then
     # Ubuntu 18.04 `apt install -y libncurses-dev libxslt-dev` gives the output below
     # Note, selecting 'libncurses5-dev' instead of 'libncurses-dev'
     # Note, selecting 'libxslt1-dev' instead of 'libxslt-dev'
@@ -81,4 +81,5 @@ function is_asdf_installed() {
     msg_info 'Will try to install asdf using git'
     git_install_asdf "${ASK}"
   fi
+  source_asdf
 }

@@ -60,7 +60,7 @@ function get_operatingsystem() {
 
 function check_ulimit() {
   if [[ "$(ulimit -Sn)" -le 1024 ]]; then
-    ulimit -S
+    ulimit -S &> /dev/null
   fi
 }
 

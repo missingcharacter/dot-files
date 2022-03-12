@@ -13,8 +13,8 @@ function test_arrays() {
   # does not consider namerefs, see https://github.com/koalaman/shellcheck/issues/817
   # shellcheck disable=SC2034
   declare -a arr=(a b c 'd e' f g) sub_arr=(b c) not_sub_arr=(g h)
-  array_contains arr 'a b' && echo yes || echo no # Should be no
-  array_contains arr 'd e' && echo yes || echo no # Should be yes
+  array_contains 'a b' "${arr[@]}" && echo yes || echo no      # Should be no
+  array_contains 'd e' "${arr[@]}" && echo yes || echo no      # Should be yes
   is_subarray_in_array arr sub_arr  && echo yes || echo no     # Should be yes
   is_subarray_in_array arr not_sub_arr  && echo yes || echo no # Should be no
 }
@@ -35,4 +35,4 @@ function test_latest_tag() {
   echo "latest tag from repo2 is: ${tags_from_repo2[-1]}"
 }
 
-test_latest_tag
+#test_latest_tag

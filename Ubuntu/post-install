@@ -28,7 +28,7 @@ function add_apt_key() {
   curl -fsSL "${URL}" | sudo apt-key add -
 }
 
-echo "Adding apt keys for docker, spotify, sublime-text, virtualbox"
+echo "Adding apt keys for docker, sublime-text, virtualbox"
 declare -a APT_KEYS=(
   'https://downloads.1password.com/linux/keys/1password.asc'
   'https://download.docker.com/linux/ubuntu/gpg'
@@ -81,7 +81,6 @@ function are_extra_tools_installed() {
     'wireshark-gtk')
   install_if_not_installed 'apt' 'y' "${EXTRA_UBUNTU_TOOLS[@]}"
   #local EXTRA_BREW_TOOLS=('bfg' 'fpp' 'lastpass-cli' 'mitmproxy' 'rclone' 'ripgrep' 'shellcheck' 'shfmt' 'termshark' 'tmux')
-  flatpak install -y com.spotify.Client
 }
 
 are_extra_tools_installed
@@ -114,65 +113,71 @@ function download_and_install_deb() {
   fi
 }
 
-echo "Installing visual studio code, Google Chrome Stable, Slack"
-LATEST_SLACK="$(curl -s 'https://slack.com/downloads/instructions/ubuntu' | xmllint --html --xpath 'string(/html/body/main/section[3]/div/p[1]/a[1]/@href)' - 2> /dev/null )"
-declare -A DEB_PACKAGES=(
-  ['1password']='https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb'
-  ['code']='https://go.microsoft.com/fwlink/?LinkID=760868'
-  ['google-chrome-stable']='https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
-  ['slack']="${LATEST_SLACK}")
+function install_desktop_apps() {
+  echo "Installing visual studio code, Google Chrome Stable, Slack"
+  LATEST_SLACK="$(curl -s 'https://slack.com/downloads/instructions/ubuntu' | xmllint --html --xpath 'string(/html/body/main/section[3]/div/p[1]/a[1]/@href)' - 2> /dev/null )"
+  declare -A DEB_PACKAGES=(
+    ['1password']='https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb'
+    ['code']='https://go.microsoft.com/fwlink/?LinkID=760868'
+    ['google-chrome-stable']='https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
+    ['slack']="${LATEST_SLACK}")
 
-for KEY in "${!DEB_PACKAGES[@]}"; do
-  download_and_install_deb "${DEB_PACKAGES[${KEY}]}" "${KEY}"
-done
+  for KEY in "${!DEB_PACKAGES[@]}"; do
+    download_and_install_deb "${DEB_PACKAGES[${KEY}]}" "${KEY}"
+  done
 
-TMP_DOT_FILES=$(mktemp -d dot-files.XXXX)
+  TMP_DOT_FILES=$(mktemp -d dot-files.XXXX)
 
-# needed for multiple apps
-mkdir -p "${HOME}/bin" || true
-HOME_BIN="${HOME}/bin"
+  # needed for multiple apps
+  mkdir -p "${HOME}/bin" || true
+  HOME_BIN="${HOME}/bin"
 
-if ! grep -q 'Oracle VM VirtualBox Extension Pack' <(sudo VBoxManage list extpacks); then
-  echo 'Installing virtualbox Extension pack'
-  LATEST_EXT_PACK=$(curl 'https://www.virtualbox.org/wiki/Downloads' | xmllint --html --xpath 'string(//html/body/div[4]/div[3]/div[3]/div/div[2]/ul[3]/li/a/@href)' - 2> /dev/null)
-  curl -Lv "${LATEST_EXT_PACK}" -o "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
-  sudo VBoxManage extpack install --replace "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
+  if ! grep -q 'Oracle VM VirtualBox Extension Pack' <(sudo VBoxManage list extpacks); then
+    echo 'Installing virtualbox Extension pack'
+    LATEST_EXT_PACK=$(curl 'https://www.virtualbox.org/wiki/Downloads' | xmllint --html --xpath 'string(//html/body/div[4]/div[3]/div[3]/div/div[2]/ul[3]/li/a/@href)' - 2> /dev/null)
+    curl -Lv "${LATEST_EXT_PACK}" -o "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
+    sudo VBoxManage extpack install --replace "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
+  fi
+
+  if ! grep -q 'JetBrains Mono' <(fc-list); then
+    echo 'Installing Jetbrains Font'
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
+    fc-cache -f -v
+  fi
+
+  if ! grep -q 'Nerd Font' <(fc-list); then
+    echo 'Installing Nerd Fonts'
+    git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${HOME}/src/nerd-fonts"
+    cd "${HOME}/src/nerd-fonts" || exit 1
+    ./install.sh -q -A
+    cd - || exit 1
+    fc-cache -f -v
+  fi
+
+  if ! piactl --version &>/dev/null; then
+    echo "Installing Private Internet Access"
+    LATEST_PIA_INSTALLER=$(curl 'https://www.privateinternetaccess.com/installer/x/download_installer_linux' | xmllint --html --xpath '//html/head/meta[5]/@content' - 2> /dev/null | cut -d '"' -f2 | cut -d '=' -f2)
+    curl -Lv "${LATEST_PIA_INSTALLER}" -o "${TMP_DOT_FILES}/pia-linux.run"
+    sh "${TMP_DOT_FILES}/pia-linux.run"
+  fi
+
+  if ! jetbrains-toolbox --version &>/dev/null; then
+    echo "Installing JetBrains Toolbox"
+    LATEST_JETBRAINS_TOOLBOX=$(curl -sL 'https://data.services.jetbrains.com//products/releases?code=TBA&latest=true&type=release' | jq -r '.TBA[].downloads.linux.link')
+    curl -Lv "${LATEST_JETBRAINS_TOOLBOX}" -o "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz"
+    tar -xzvf "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz" -C "${TMP_DOT_FILES}"
+    mv "${TMP_DOT_FILES}/jetbrains-toolbox-*/jetbrains-toolbox" "${HOME_BIN}/"
+  fi
+
+  if ! grep -q 'Bourne-Again shell' <(file ~/.tmux/plugins/tpm/tpm); then
+    echo "tmux plugin manager"
+    mkdir -p ~/.tmux/plugins/tpm
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  fi
+
+  rm -rf "${TMP_DOT_FILES}"
+}
+
+if ! grep -q 'virtual' <(dmesg -T); then
+  install_desktop_apps
 fi
-
-if ! grep -q 'JetBrains Mono' <(fc-list); then
-  echo 'Installing Jetbrains Font'
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
-  fc-cache -f -v
-fi
-
-if ! grep -q 'Nerd Font' <(fc-list); then
-  echo 'Installing Nerd Fonts'
-  git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${HOME}/src/nerd-fonts"
-  cd "${HOME}/src/nerd-fonts" || exit 1
-  ./install.sh -q -A
-  cd - || exit 1
-  fc-cache -f -v
-fi
-
-if ! piactl --version &>/dev/null; then
-  echo "Installing Private Internet Access"
-  LATEST_PIA_INSTALLER=$(curl 'https://www.privateinternetaccess.com/installer/x/download_installer_linux' | xmllint --html --xpath '//html/head/meta[5]/@content' - 2> /dev/null | cut -d '"' -f2 | cut -d '=' -f2)
-  curl -Lv "${LATEST_PIA_INSTALLER}" -o "${TMP_DOT_FILES}/pia-linux.run"
-  sh "${TMP_DOT_FILES}/pia-linux.run"
-fi
-
-if ! jetbrains-toolbox --version &>/dev/null; then
-  echo "Installing JetBrains Toolbox"
-  LATEST_JETBRAINS_TOOLBOX=$(curl -sL 'https://data.services.jetbrains.com//products/releases?code=TBA&latest=true&type=release' | jq -r '.TBA[].downloads.linux.link')
-  curl -Lv "${LATEST_JETBRAINS_TOOLBOX}" -o "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz"
-  tar -xzvf "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz" -C "${TMP_DOT_FILES}"
-  mv "${TMP_DOT_FILES}/jetbrains-toolbox-*/jetbrains-toolbox" "${HOME_BIN}/"
-fi
-
-if ! grep -q 'Bourne-Again shell' <(file ~/.tmux/plugins/tpm/tpm); then
-  echo "tmux plugin manager"
-  mkdir -p ~/.tmux/plugins/tpm
-  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-fi
-
-rm -rf "${TMP_DOT_FILES}"

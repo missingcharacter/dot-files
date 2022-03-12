@@ -47,7 +47,7 @@ function are_cask_basics_installed() {
     'proxyman'
     'slack'
     'rectangle'
-    'spotify'
+    'tidal'
     'sublime-text'
     'transmission'
     'tripmode'

@@ -22,6 +22,8 @@ function is_brew_installed() {
     echo
     if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      hash -r
       # Source: https://github.com/Homebrew/homebrew-bundle#install
       #brew bundle # maybe later when I have a Brewfile
       # Note: Brew cask is not support on homebrew for linux
@@ -29,6 +31,7 @@ function is_brew_installed() {
     fi
   fi
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  hash -r
 }
 
 function are_basics_installed() {
@@ -41,7 +44,6 @@ function are_basics_installed() {
     'dirmngr'
     'file'
     'gawk'
-    'git-filter-repo'
     'gnome-tweaks'
     'gnupg'
     'gnutls-bin'
@@ -60,6 +62,7 @@ function are_basics_installed() {
    'fontconfig'
    'gcc'
    'git'
+   'git-filter-repo'
    'jq'
    'mackup'
    'oh-my-posh'
@@ -80,7 +83,7 @@ function are_basics_installed() {
 
 function is_asdf_installed() {
   local USER_REPLY="${1:-''}"
-  if ! command -v asdf &> /dev/null; then
+  if ! command -v asdf &> /dev/null || ! command -v brew &> /dev/null; then
     # Ubuntu 18.04 `apt install -y libncurses-dev libxslt-dev` gives the output below
     # Note, selecting 'libncurses5-dev' instead of 'libncurses-dev'
     # Note, selecting 'libxslt1-dev' instead of 'libxslt-dev'

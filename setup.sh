@@ -124,6 +124,7 @@ function install_everything_else() {
   # Install asdf plugins and tools' versions
   install_asdf_tool_versions
   configure_direnv
+  hash -r
 
   msg_info "Sourcing ${HOME}/.bashrc"
   disableStrictMode

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 GITROOT=$(git rev-parse --show-toplevel)
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "${GITROOT}"/lib/strict-mode
 strictMode
 
@@ -153,12 +153,12 @@ function install_everything_else() {
 
   msg_info "Sourcing ${HOME}/.bashrc"
   disableStrictMode
-  # shellcheck disable=SC1090
+  # shellcheck disable=SC1091
   . "${HOME}"/.bashrc
   strictMode
 
   # Running post-install steps
-  # shellcheck disable=SC1090
+  # shellcheck disable=SC1090,SC1091
   . "${GITROOT}/${MACHINE_OS}/post-install"
 }
 
@@ -171,6 +171,7 @@ function retry_command() {
   local -r __tries="${1}"; shift
   declare -a __run=("${@}")
   local -i __backoff_delay=2
+  local __current_try=0
   until "${__run[@]}"
     do
       if (( __current_try == __tries ))
@@ -316,9 +317,9 @@ function git_install_asdf() {
     mapfile -t ASDF_TAGS < <(get_git_tags ${ASDF_REPO})
     git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_TAGS[-1]}"
     disableStrictMode
-    # shellcheck disable=SC1090
+    # shellcheck disable=SC1091
     . "${HOME}"/.asdf/asdf.sh
-    # shellcheck disable=SC1090
+    # shellcheck disable=SC1091
     . "${HOME}"/.asdf/completions/asdf.bash
     strictMode
   fi

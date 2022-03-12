@@ -28,7 +28,7 @@ function strictMode() {
     set -eEu -o pipefail
     shopt -s extdebug
     IFS=$'\n\t'
-    # shellcheck disable=SC1090
+    # shellcheck disable=SC1091
     . "${GITROOT}"/lib/strict-mode-fail
     trap 'strictModeFail $?' ERR
 }

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Enable bash's unofficial strict mode
 GITROOT=$(git rev-parse --show-toplevel)
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "${GITROOT}"/lib/strict-mode
 strictMode
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "${GITROOT}"/lib/utils
 
 THIS_SCRIPT=$(basename "${0}")
@@ -55,7 +55,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Installing basics
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC1091
 . "${GITROOT}/${MACHINE_OS}/base"
 is_asdf_installed "${ASK}"
 

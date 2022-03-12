@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Enable bash's unofficial strict mode
 GITROOT=$(git rev-parse --show-toplevel)
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "${GITROOT}"/lib/strict-mode
 strictMode
 # Enabling utils
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "${GITROOT}"/lib/utils
 
 
@@ -13,10 +13,14 @@ function test_arrays() {
   # does not consider namerefs, see https://github.com/koalaman/shellcheck/issues/817
   # shellcheck disable=SC2034
   declare -a arr=(a b c 'd e' f g) sub_arr=(b c) not_sub_arr=(g h)
-  array_contains 'a b' "${arr[@]}" && echo yes || echo no      # Should be no
-  array_contains 'd e' "${arr[@]}" && echo yes || echo no      # Should be yes
-  is_subarray_in_array arr sub_arr  && echo yes || echo no     # Should be yes
-  is_subarray_in_array arr not_sub_arr  && echo yes || echo no # Should be no
+  echo 'Testing an array that does NOT contain an item'
+  array_contains 'a b' "${arr[@]}" && echo 'yes' || echo 'no'      # Should be no
+  echo 'Testing an array that DOES contain an item'
+  array_contains 'd e' "${arr[@]}" && echo 'yes' || echo 'no'      # Should be yes
+  echo 'Testing a sub-array IN an array'
+  is_subarray_in_array arr sub_arr  && echo 'yes' || echo 'no'     # Should be yes
+  echo 'Testing an array that is NOT in another array'
+  is_subarray_in_array arr not_sub_arr  && echo 'yes' || echo 'no' # Should be no
 }
 
 test_arrays
@@ -24,15 +28,45 @@ test_arrays
 function test_latest_tag() {
   local repo1="https://github.com/JetBrains/kotlin"
   local repo2="https://github.com/asdf-vm/asdf.git"
-  echo "getting tags for ${repo1}"
+  echo "Getting tags for ${repo1}"
   declare -a tags_from_repo1 tags_from_repo2
   mapfile -t tags_from_repo1 < <(get_git_tags "${repo1}")
-  echo "tags from repo1 are: ${tags_from_repo1[*]}"
-  echo "latest tag from repo1 is: ${tags_from_repo1[-1]}"
-  echo "getting tags for ${repo2}"
+  echo "Number of tags from repo1 are: ${#tags_from_repo1[@]}"
+  echo "Latest tag from repo1 is: ${tags_from_repo1[-1]}"
+  echo "Getting tags for ${repo2}"
   mapfile -t tags_from_repo2 < <(get_git_tags "${repo2}")
-  echo "tags from repo2 are: ${tags_from_repo2[*]}"
-  echo "latest tag from repo2 is: ${tags_from_repo2[-1]}"
+  echo "Number of tags from repo2 are: ${#tags_from_repo2[@]}"
+  echo "Latest tag from repo2 is: ${tags_from_repo2[-1]}"
 }
 
-#test_latest_tag
+test_latest_tag
+
+# Setting up retry
+
+function always_return_1() {
+  return 1
+}
+
+export -f always_return_1
+
+export FAIL_COUNT=0
+
+function fail_twice() {
+  local RETVAL=1
+  if [[ "${FAIL_COUNT}" -ge 2 ]]; then
+    RETVAL=0
+  fi
+  ((FAIL_COUNT=FAIL_COUNT+1))
+  return "${RETVAL}"
+}
+
+export -f fail_twice
+
+function test_retry() {
+  echo 'Retrying a only 3 times a command that will always fail'
+  retry_command '3' 'always_return_1' && echo 'yes' || echo 'no' # should be no
+  echo 'Retrying twice and then succeeds'
+  retry_command '3' 'fail_twice' && echo 'yes' || echo 'no'      # should be yes
+}
+
+test_retry

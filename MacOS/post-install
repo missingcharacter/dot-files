@@ -25,7 +25,7 @@ function are_brew_basics_installed() {
   'wireshark'
   'fontconfig')
   is_brew_installed
-  install_if_not_installed 'brew' 'y' "${BREW_BASICS[@]}"
+  install_if_not_installed 'brew' 'n' "${BREW_BASICS[@]}"
 }
 
 function are_cask_basics_installed() {
@@ -58,7 +58,7 @@ function are_cask_basics_installed() {
     'visual-studio-code'
     'vlc')
   are_brew_basics_installed
-  install_if_not_installed 'brewcask' 'y' "${BREW_CASK_BASICS[@]}"
+  install_if_not_installed 'brewcask' 'n' "${BREW_CASK_BASICS[@]}"
 }
 
 are_cask_basics_installed

@@ -40,7 +40,7 @@ function are_extra_cli_tools_installed() {
     'pandoc'
     'pkg-config'
     'tshark')
-  install_if_not_installed 'apt' 'y' "${EXTRA_CLI_TOOLS[@]}"
+  install_if_not_installed 'apt' 'n' "${EXTRA_CLI_TOOLS[@]}"
 }
 
 function are_extra_tools_installed() {
@@ -56,7 +56,7 @@ function are_extra_tools_installed() {
     'virtualbox-6.1'
     'wireguard'
     'wireshark-gtk')
-  install_if_not_installed 'apt' 'y' "${EXTRA_UBUNTU_TOOLS[@]}"
+  install_if_not_installed 'apt' 'n' "${EXTRA_UBUNTU_TOOLS[@]}"
   #local EXTRA_BREW_TOOLS=('bfg' 'fpp' 'lastpass-cli' 'mitmproxy' 'rclone' 'ripgrep' 'shellcheck' 'shfmt' 'termshark' 'tmux')
 }
 
@@ -67,7 +67,7 @@ function is_docker_installed() {
       'ca-certificates'
       'curl'
       'gnupg-agent')
-    install_if_not_installed 'apt' 'y' "${DOCKER_DEPS[@]}"
+    install_if_not_installed 'apt' 'n' "${DOCKER_DEPS[@]}"
     sudo apt -y install docker-ce docker-ce-cli containerd.io
   fi
 }

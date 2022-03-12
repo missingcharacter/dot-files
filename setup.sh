@@ -8,14 +8,14 @@ strictMode
 . "${GITROOT}"/lib/utils
 
 THIS_SCRIPT=$(basename "${0}")
-#PADDING=$(printf %-${#THIS_SCRIPT}s " ")
+PADDING=$(printf %-${#THIS_SCRIPT}s " ")
 
 function usage() {
     msg_info "Usage:"
-    msg_info "${THIS_SCRIPT} -i <Optional, 'y' or 'n'>"
+    msg_info "${THIS_SCRIPT} -i, --install-everything <Use this flag to install everything>"
+    msg_info "${PADDING} -y, --yes <Use this flag to answer yes to all questions>"
     echo
     msg_info "Sets up base macOS and Ubuntu system"
-    msg_info "-i avoids asking you every time if you want to install something or not"
     exit 1
 }
 
@@ -26,61 +26,47 @@ if ! command -v git &>/dev/null; then
 fi
 
 
-UNAME_OUTPUT=$(uname -s)
-case "${UNAME_OUTPUT}" in
-    Linux*)
-      if grep -i ubuntu /etc/os-release &> /dev/null; then
-        MACHINE_OS='Ubuntu'
-      else
-        msg_fatal "Only Ubuntu is supported"
-        exit 1
-      fi;;
-    Darwin*)
-      MACHINE_OS='MacOS';;
-    *)
-      msg_fatal "UNKNOWN OS: ${UNAME_OUTPUT}"
-      exit 1
-esac
+MACHINE_OS="$(get_operatingsystem)"
 
-while getopts ":i:" opt; do
-  case ${opt} in
-    i)
-      if [[ "$OPTARG" == "y" || "$OPTARG" == "n" ]]; then
-        INSTALL_EVERYTHING=${OPTARG}
-      else
-        usage
-      fi ;;
-    \?)
-      usage ;;
-    :)
-      usage ;;
+if [[ "${MACHINE_OS}" == 'Ubuntu' ]]; then
+  export DEBIAN_FRONTEND='noninteractive'
+fi
+
+INSTALL_EVERYTHING='n'
+ASK='y'
+while [[ $# -gt 0 ]]; do
+  case "${1}" in
+    -i|--install-everything)
+      INSTALL_EVERYTHING='y'
+      shift # past argument
+      ;;
+    -y|--yes)
+      ASK='n'
+      shift # past argument
+      ;;
+    -h|--help)
+      usage
+      ;;
+    -*)
+      echo "Unknown option ${1}"
+      usage
+      ;;
   esac
 done
 
 # Installing basics
 # shellcheck disable=SC1090
 . "${GITROOT}/${MACHINE_OS}/base"
-is_asdf_installed "${INSTALL_EVERYTHING:-''}"
+is_asdf_installed "${ASK}"
 
 # Setting up mackup
 MACKUP_CUSTOM_APPS_DIR="${HOME}/.mackup"
-if [[ ! -d "${MACKUP_CUSTOM_APPS_DIR}" ]]; then
-  msg_info "Creating ${MACKUP_CUSTOM_APPS_DIR} dir"
-  mkdir "${MACKUP_CUSTOM_APPS_DIR}"
-fi
+create_dir_if_not_exists "${MACKUP_CUSTOM_APPS_DIR}"
 
-MACKUP_MY_FILES_CFG="${MACKUP_CUSTOM_APPS_DIR}/my-files.cfg"
-if [[ ! -L "${MACKUP_MY_FILES_CFG}" ]]; then
-  echo "Force symbolic link source: ${GITROOT}/my-files.cfg target: ${MACKUP_MY_FILES_CFG}"
-  ln -sf "${GITROOT}/my-files.cfg" "${MACKUP_MY_FILES_CFG}"
-fi
+MY_MACKUP_CFG="my-files.cfg"
+link_if_not_exists "${GITROOT}/${MY_MACKUP_CFG}" "${MACKUP_CUSTOM_APPS_DIR}/${MY_MACKUP_CFG}"
 
 # Actual dot-files
-cd ${MACHINE_OS} || exit 1
-declare -a OS_SPECIFIC_LINKS
-mapfile -t OS_SPECIFIC_LINKS < <(ls bash_*)
-cd - || exit 1
-
 declare -a LINKS=('bashrc'
 'bash_profile'
 'bash_aliases'
@@ -92,62 +78,20 @@ declare -a LINKS=('bashrc'
 'tool-versions'
 'vimrc')
 
-function link_if_not_exists() {
-  local FILE=${1}
-  local DOT_FILE=${2:-"${FILE}"}
-  local SOURCE_FILE="${GITROOT}/${FILE}"
-  local TARGET_FILE="${HOME}/.${DOT_FILE}"
-  if [[ -L "${TARGET_FILE}" || -e "${TARGET_FILE}" ]]; then
-    local USER_REPLY
-    msg_warn "${TARGET_FILE} exists"
-    read -p "Want me to overwrite it? " -n 1 -r USER_REPLY
-    echo
-    if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
-      ln -sf "${SOURCE_FILE}" "${TARGET_FILE}"
-    fi
-  else
-    msg_info "Creating ${TARGET_FILE} symlink"
-    ln -s "${SOURCE_FILE}" "${TARGET_FILE}"
-  fi
-}
-
 for LINK in "${LINKS[@]}"; do
-  link_if_not_exists "${LINK}"
+  link_if_not_exists "${GITROOT}/${LINK}" "${HOME}/.${LINK}"
 done
+
+declare -a OS_SPECIFIC_LINKS=()
+mapfile -t OS_SPECIFIC_LINKS < <(get_os_specific_links "${MACHINE_OS}")
 
 for LINK in "${OS_SPECIFIC_LINKS[@]}"; do
-  link_if_not_exists "${MACHINE_OS}/${LINK}" "${LINK//_/_os_}"
+  link_if_not_exists "${GITROOT}/${MACHINE_OS}/${LINK}" "${HOME}/.${LINK//_/_os_}"
 done
 
-# Install everything else
-function install_everything_else() {
-  # Install asdf plugins and tools' versions
-  install_asdf_tool_versions
-  configure_direnv
-  hash -r
 
-  msg_info "Sourcing ${HOME}/.bashrc"
-  disableStrictMode
-  # shellcheck disable=SC1090
-  . "${HOME}"/.bashrc
-  strictMode
-
-  # Running post-install steps
-  # shellcheck disable=SC1090
-  . "${GITROOT}/${MACHINE_OS}/post-install"
-}
-
-if [[ "${INSTALL_EVERYTHING:-''}" == 'y' ]]; then
+if [[ "${INSTALL_EVERYTHING}" == 'y' ]]; then
   install_everything_else
-  msg_info "I'm done!"
-elif [[ "${INSTALL_EVERYTHING:-''}" == 'n' ]]; then
-  msg_info "I'm done!"
-else
-  read -p "Want me to install everything else? " -n 1 -r USER_REPLY
-  echo
-  if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
-    install_everything_else
-  else
-    msg_info "I'm done!"
-  fi
 fi
+
+msg_info "I'm done!"

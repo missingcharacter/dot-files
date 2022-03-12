@@ -9,35 +9,8 @@ strictMode
 . "${GITROOT}"/lib/utils
 
 
-function is_brew_installed() {
-  local USER_REPLY="${1:-''}"
-  if [[ ! -x $(command -v brew &> /dev/null) ]]; then
-    msg_info 'Seems like brew is not installed'
-    if [[ "${USER_REPLY}" == 'y' ]]; then
-      msg_info 'I will install it righ away'
-    elif [[ "${USER_REPLY}" == 'n' ]]; then
-      msg_warn 'You already said no, I will not install it'
-    else
-      read -p 'Want me to install it? ' -n 1 -r USER_REPLY
-    fi
-    echo
-    if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
-      sudo softwareupdate -i -a
-      xcode-select --install
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      # Source: https://github.com/Homebrew/homebrew-bundle#install
-      #brew bundle # maybe later when I have a Brewfile
-      eval "$(/usr/local/bin/brew shellenv)"
-      # Source: https://github.com/buo/homebrew-cask-upgrade
-      brew tap buo/cask-upgrade
-      brew tap homebrew/cask-fonts
-      brew tap jandedobbeleer/oh-my-posh
-    fi
-  fi
-}
-
 function are_basics_installed() {
-  local USER_REPLY="${1:-''}"
+  local ASK="${1:-'y'}"
   # `awscli` https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
   declare -a BREW_BASICS=('awscli'
     'bash'
@@ -64,13 +37,13 @@ function are_basics_installed() {
     'xz'
     'yq')
   msg_info 'Will try to install brew if not installed'
-  is_brew_installed "${USER_REPLY}"
+  is_brew_installed "${ASK}"
   msg_info 'Will try to install basic packages with brew'
-  install_if_not_installed 'brew' "${USER_REPLY}" "${BREW_BASICS[@]}"
+  install_if_not_installed 'brew' "${ASK}" "${BREW_BASICS[@]}"
 }
 
 function is_asdf_installed() {
-  local USER_REPLY="${1:-''}"
+  local ASK="${1:-'y'}"
   if ! command -v asdf &> /dev/null || ! command -v brew &> /dev/null; then
     declare -a ASDF_DEPS=('autoconf'
       'automake'
@@ -85,10 +58,10 @@ function is_asdf_installed() {
       'unixodbc'
       'unzip')
     msg_info 'Will try to install brew if not installed'
-    are_basics_installed "${USER_REPLY}"
+    are_basics_installed "${ASK}"
     msg_info 'Will try to install asdf dependencies'
-    install_if_not_installed 'brew' "${USER_REPLY}" "${ASDF_DEPS[@]}"
+    install_if_not_installed 'brew' "${ASK}" "${ASDF_DEPS[@]}"
     msg_info 'Will try to install asdf using git'
-    git_install_asdf "${USER_REPLY}"
+    git_install_asdf "${ASK}"
   fi
 }

@@ -6,20 +6,170 @@ strictMode
 
 ANSI_NO_COLOR=$'\033[0m'
 
-function msg_info () {
+function msg_info() {
   local GREEN=$'\033[0;32m'
   printf "%s\n" "${GREEN}${*}${ANSI_NO_COLOR}" >&2
 }
 
-function msg_warn () {
+function msg_warn() {
   local YELLOW=$'\033[0;33m'
   printf "%s\n" "${YELLOW}${*}${ANSI_NO_COLOR}" >&2
 }
 
-function msg_fatal () {
+function msg_error() {
   local RED=$'\033[0;31m'
   printf "%s\n" "${RED}${*}${ANSI_NO_COLOR}" >&2
 }
+
+function msg_fatal() {
+  msg_error "${*}"
+  exit 1
+}
+
+
+function check_ubuntu_dist() {
+  if ! grep -i ubuntu /etc/os-release &> /dev/null; then
+    msg_fatal "Only Ubuntu or Debian based linux distros are supported" >&2
+  fi
+}
+
+function create_dir_if_not_exists() {
+  local DIR="${1}"
+  if [[ ! -d "${DIR}" ]]; then
+    msg_info "Creating ${DIR} dir"
+    mkdir "${DIR}"
+  fi
+}
+
+function get_operatingsystem() {
+  local kernel_name
+  kernel_name="$(uname)"
+  case "${kernel_name}" in
+    Linux)
+      check_ubuntu_dist
+      echo -n 'Ubuntu'
+      ;;
+    Darwin)
+      echo -n 'MacOS'
+      ;;
+    *)
+      msg_fatal "Sorry, ${kernel_name} is not supported."
+      ;;
+  esac
+}
+
+function check_ulimit() {
+  if [[ "$(ulimit -Sn)" -le 1024 ]]; then
+    ulimit -S
+  fi
+}
+
+function get_brew_location() {
+  case "$(get_operatingsystem)" in
+    Ubuntu)
+      check_ulimit
+      echo -n '/home/linuxbrew/.linuxbrew/bin/brew'
+      ;;
+    MacOS)
+      echo -n '/usr/local/bin/brew'
+      ;;
+  esac
+}
+
+function source_brew() {
+  local BREW
+  BREW="$(get_brew_location)"
+  eval "$("${BREW}" shellenv)"
+  hash -r
+}
+
+function brew_taps() {
+  source_brew
+  case "$(get_operatingsystem)" in
+    MacOS)
+      # Note: Brew cask is not support on homebrew for linux
+      brew tap buo/cask-upgrade
+      brew tap homebrew/cask-fonts
+      ;;
+    *)
+      msg_info 'There are no OS specific taps for you'
+      ;;
+  esac
+  brew tap jandedobbeleer/oh-my-posh
+}
+
+function is_brew_installed() {
+  local ASK="${1:-'y'}"
+  local ANSWER='y' BREW_EXE
+  BREW_EXE="$(get_brew_location)"
+  if [[ ! -e "${BREW_EXE}" ]]; then
+    msg_info 'Seems like brew is not installed'
+    if [[ "${ASK}" == 'y' ]]; then
+      ANSWER="$(get_user_reply 'Want me to install brew?')"
+    fi
+    echo
+    if [[ ${ANSWER} =~ ^[Yy]$ ]]; then
+      msg_info 'I will install brew now'
+      echo | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      brew_taps
+    fi
+  fi
+  source_brew
+}
+
+function get_os_specific_links() {
+  local MACHINE_OS="${1}"
+
+  cd "${GITROOT}/${MACHINE_OS}" || return 1
+  declare -a OS_SPECIFIC_LINKS
+  mapfile -t OS_SPECIFIC_LINKS < <(ls bash_*)
+  cd - || return 1
+
+  return_non_empty_array "${OS_SPECIFIC_LINKS[@]}"
+}
+
+function return_non_empty_array() {
+  declare -a INPUT
+  INPUT=("${@}")
+  if [[ ${#INPUT[@]} -ne 0 ]]; then
+    printf "%s\n" "${INPUT[@]}"
+  fi
+}
+
+function link_if_not_exists() {
+  local FILE="${1}"
+  local LINK="${2}"
+  if [[ -L "${LINK}" || -e "${LINK}" ]]; then
+    local ASK_OVERWRITE
+    ASK_OVERWRITE="$(get_user_reply "${LINK} exists, Want me to overwrite it?")"
+    echo
+    if [[ ${ASK_OVERWRITE} =~ ^[Yy]$ ]]; then
+      ln -sf "${FILE}" "${LINK}"
+    fi
+  else
+    msg_info "Creating ${TARGET_FILE} symlink"
+    ln -s "${FILE}" "${LINK}"
+  fi
+}
+
+# Install everything else
+function install_everything_else() {
+  # Install asdf plugins and tools' versions
+  install_asdf_tool_versions
+  configure_direnv
+  hash -r
+
+  msg_info "Sourcing ${HOME}/.bashrc"
+  disableStrictMode
+  # shellcheck disable=SC1090
+  . "${HOME}"/.bashrc
+  strictMode
+
+  # Running post-install steps
+  # shellcheck disable=SC1090
+  . "${GITROOT}/${MACHINE_OS}/post-install"
+}
+
 
 function retry_command() {
   # Source: https://github.com/aws-quickstart/quickstart-linux-utilities/blob/master/quickstart-cfn-tools.source#L413-L433
@@ -96,9 +246,10 @@ function install_if_not_installed() {
   # install_if_not_installed 'apt' 'y' "${arr[@]}"
   local COMMAND="${1}"
   shift
-  local USER_REPLY="${1:-''}"
+  local ASK="${1:-'y'}"
   shift
   declare -a EXTRA_TOOLS=("${@}") INSTALLED_TOOLS=()
+  local ANSWER='y'
   local -A LIST_COMMAND=(
     ['apt']="sudo apt list --installed 2>/dev/null | grep -v 'Listing' | cut -d '/' -f1"
     ['brew']='brew list'
@@ -106,7 +257,7 @@ function install_if_not_installed() {
     ['code']='code --list-extensions'
     ['pip3']="pip3 list --format=freeze | cut -d '=' -f1")
   local -A INSTALL_COMMAND=(
-    ['apt']="sudo DEBIAN_FRONTEND='noninteractive' apt install -y"
+    ['apt']="sudo apt install -y"
     ['brew']='brew install'
     ['brewcask']='brew install --cask'
     ['code']='code --install-extension'
@@ -124,15 +275,11 @@ function install_if_not_installed() {
   # Check if extra tools are installed
   if ! is_subarray_in_array INSTALLED_TOOLS EXTRA_TOOLS; then
     msg_info 'Seems like some (or all) the tools are missing'
-    if [[ "${USER_REPLY}" == 'y' ]]; then
-      msg_info 'I will install them righ away'
-    elif [[ "${USER_REPLY}" == 'n' ]]; then
-      msg_warn 'You already said no, I will not install them'
-    else
-      read -p 'Want me to install them? ' -n 1 -r USER_REPLY
+    if [[ "${ASK}" == 'y' ]]; then
+      ANSWER="$(get_user_reply 'Want me to install them?')"
+      echo
     fi
-    echo
-    if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
+    if [[ ${ANSWER} =~ ^[Yy]$ ]]; then
       if [[ "${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'multiple' ]]; then
           bash -c "${INSTALL_COMMAND[${COMMAND}]} $(join_by ' ' "${EXTRA_TOOLS[@]}")"
       elif [[ "${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'single'  ]]; then
@@ -164,18 +311,15 @@ function git_install_asdf() {
   # How to:
   # only to be used within is_asdf_installed function
   # in ${GITROOT}/(Ubuntu|MacOS)/base
-  local USER_REPLY="${1:-''}"
+  local ASK="${1:-'y'}"
+  local ANSWER='y'
   declare -a ASDF_TAGS=()
   msg_info 'Seems like asdf is not installed'
-  if [[ "${USER_REPLY}" == 'y' ]]; then
-    msg_info 'I will install it righ away'
-  elif [[ "${USER_REPLY}" == 'n' ]]; then
-    msg_warn 'You already said no, I will not install it'
-  else
-    read -p 'Want me to install it? ' -n 1 -r USER_REPLY
+  if [[ "${ASK}" == 'y' ]]; then
+    ANSWER="$(get_user_reply 'Want me to install asdf?')"
+    echo
   fi
-  echo
-  if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
+  if [[ ${ANSWER} =~ ^[Yy]$ ]]; then
     local ASDF_REPO="https://github.com/asdf-vm/asdf.git"
     mapfile -t ASDF_TAGS < <(get_git_tags ${ASDF_REPO})
     git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_TAGS[-1]}"

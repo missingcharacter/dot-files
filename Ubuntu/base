@@ -8,34 +8,9 @@ strictMode
 # shellcheck disable=SC1090
 . "${GITROOT}"/lib/utils
 
-function is_brew_installed() {
-  local USER_REPLY="${1:-''}"
-  if [[ ! -e /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-    msg_info "Seem like \"brew\" is not installed"
-    if [[ "${USER_REPLY}" == 'y' ]]; then
-      msg_info 'I will install it righ away'
-    elif [[ "${USER_REPLY}" == 'n' ]]; then
-      msg_warn 'You already said no, I will not install it'
-    else
-      read -p 'Want me to install it? ' -n 1 -r USER_REPLY
-    fi
-    echo
-    if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      hash -r
-      # Source: https://github.com/Homebrew/homebrew-bundle#install
-      #brew bundle # maybe later when I have a Brewfile
-      # Note: Brew cask is not support on homebrew for linux
-      brew tap jandedobbeleer/oh-my-posh
-    fi
-  fi
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  hash -r
-}
 
 function are_basics_installed() {
-  local USER_REPLY="${1:-''}"
+  local ASK="${1:-'y'}"
   declare -a UBUNTU_BASICS BREW_BASICS
   UBUNTU_BASICS=('apt-file'
     'apt-transport-https'
@@ -75,14 +50,14 @@ function are_basics_installed() {
   msg_info 'Will run apt update'
   sudo apt update
   msg_info 'Will try to install Ubuntu basics'
-  install_if_not_installed 'apt' "${USER_REPLY}" "${UBUNTU_BASICS[@]}"
+  install_if_not_installed 'apt' "${ASK}" "${UBUNTU_BASICS[@]}"
   msg_info 'Will try to install brew if not installed'
-  is_brew_installed "${USER_REPLY}"
-  install_if_not_installed 'brew' "${USER_REPLY}" "${BREW_BASICS[@]}"
+  is_brew_installed "${ASK}"
+  install_if_not_installed 'brew' "${ASK}" "${BREW_BASICS[@]}"
 }
 
 function is_asdf_installed() {
-  local USER_REPLY="${1:-''}"
+  local ASK="${1:-'y'}"
   if ! command -v asdf &> /dev/null || ! command -v brew &> /dev/null; then
     # Ubuntu 18.04 `apt install -y libncurses-dev libxslt-dev` gives the output below
     # Note, selecting 'libncurses5-dev' instead of 'libncurses-dev'
@@ -100,10 +75,10 @@ function is_asdf_installed() {
       'libyaml-dev'
       'unixodbc-dev'
       'unzip')
-    are_basics_installed "${USER_REPLY}"
+    are_basics_installed "${ASK}"
     msg_info 'Will try to install asdf dependencies'
-    install_if_not_installed 'apt' "${USER_REPLY}" "${ASDF_DEPS[@]}"
+    install_if_not_installed 'apt' "${ASK}" "${ASDF_DEPS[@]}"
     msg_info 'Will try to install asdf using git'
-    git_install_asdf "${USER_REPLY}"
+    git_install_asdf "${ASK}"
   fi
 }

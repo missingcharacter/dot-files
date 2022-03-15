@@ -63,7 +63,7 @@ function fail_twice() {
 export -f fail_twice
 
 function test_retry() {
-  echo 'Retrying a only 3 times a command that will always fail'
+  echo 'Retrying only 3 times a command that will always fail'
   retry_command '3' 'always_return_1' && echo 'yes' || echo 'no' # should be no
   echo 'Retrying twice and then succeeds'
   retry_command '3' 'fail_twice' && echo 'yes' || echo 'no'      # should be yes

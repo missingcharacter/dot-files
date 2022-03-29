@@ -9,10 +9,10 @@
           "foreground": "#fff",
           "powerline_symbol": "\ue0b0",
           "properties": {
-            "template": " {{ if .WSL }}WSL at {{ end }}{{.Icon}}",
             "windows": "\uf179"
           },
           "style": "powerline",
+          "template": " {{ if .WSL }}WSL at {{ end }}{{.Icon}}",
           "type": "os"
         },
         {
@@ -20,10 +20,10 @@
           "foreground": "#fff",
           "powerline_symbol": "\ue0b0",
           "properties": {
-            "template": " {{ .CurrentDate | date .Format }}",
             "windows": "\uf179"
           },
           "style": "powerline",
+          "template": " {{ .CurrentDate | date .Format }}",
           "type": "time"
         },
         {
@@ -32,10 +32,10 @@
           "powerline_symbol": "\ue0b0",
           "properties": {
             "folder_separator_icon": "/",
-            "style": "full",
-            "template": " \ue5ff {{ .Path }} "
+            "style": "full"
           },
           "style": "powerline",
+          "template": " \ue5ff {{ .Path }} ",
           "type": "path"
         },
         {
@@ -51,10 +51,10 @@
           "properties": {
             "fetch_stash_count": true,
             "fetch_status": true,
-            "fetch_upstream_icon": true,
-            "template": " {{ .HEAD }} {{ .BranchStatus }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Staging.Changed) (.Working.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0}}\uf692 {{ .StashCount }}{{ end }}{{ if gt .WorktreeCount 0}} \uf1bb {{ .WorktreeCount }}{{ end }} "
+            "fetch_upstream_icon": true
           },
           "style": "powerline",
+          "template": " {{ .HEAD }} {{ .BranchStatus }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Staging.Changed) (.Working.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0}}\uf692 {{ .StashCount }}{{ end }}{{ if gt .WorktreeCount 0}} \uf1bb {{ .WorktreeCount }}{{ end }} ",
           "type": "git"
         },
         {
@@ -64,10 +64,10 @@
           "properties": {
             "display_mode": "context",
             "fetch_version": false,
-            "fetch_virtual_env": true,
-            "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} "
+            "fetch_virtual_env": true
           },
           "style": "powerline",
+          "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} ",
           "type": "python"
         },
         {
@@ -78,10 +78,10 @@
           "foreground": "#242424",
           "powerline_symbol": "\ue0b0",
           "properties": {
-            "always_enabled": true,
-            "template": " \ufc8d "
+            "always_enabled": true
           },
           "style": "powerline",
+          "template": " \ufc8d ",
           "type": "exit"
         }
       ],
@@ -94,27 +94,23 @@
         {
           "foreground": "#FFD700",
           "properties": {
-            "root_icon": "#",
-            "template": " \uf0e7 "
+            "root_icon": "#"
           },
           "style": "plain",
+          "template": " \uf0e7 ",
           "type": "root"
         },
         {
           "foreground": "#ffffff",
-          "properties": {
-            "template": "$ "
-          },
           "style": "plain",
+          "template": "$ ",
           "type": "text"
         }
       ],
       "type": "prompt"
     }
   ],
-  "console_title": true,
-  "console_title_style": "template",
   "console_title_template": "{{ .Shell }} in {{ .Folder }}",
   "final_space": true,
-  "version": 1
+  "version": 2
 }

@@ -103,7 +103,7 @@
         {
           "foreground": "#ffffff",
           "style": "plain",
-          "template": "$ ",
+          "template": "$",
           "type": "text"
         }
       ],

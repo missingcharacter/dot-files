@@ -29,5 +29,5 @@ kops v1.17.1
 aws-iam-authenticator 0.5.5
 # misc tools
 rclone 1.57.0
-direnv 2.30.3
+direnv 2.31.0
 1password-cli 1.12.4

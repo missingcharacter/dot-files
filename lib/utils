@@ -425,6 +425,10 @@ function configure_direnv() {
     msg_info "${DIRENV_CONFIG_FOLDER}/lib/use_asdf.sh does not exist, I'll create it now"
     write_use_asdf_sh
   fi
+  if [[ ! -e "${CONFIG_FOLDER}/asdf-direnv" ]]; then
+    msg_info "${CONFIG_FOLDER}/asdf-direnv does not exist, I'll create it now"
+    mkdir -p "${CONFIG_FOLDER}/asdf-direnv"
+  fi
   if [[ ! -e "${CONFIG_FOLDER}/asdf-direnv/bashrc" ]]; then
     msg_info "${CONFIG_FOLDER}/asdf-direnv/bashrc does not exist, I'll create it now"
     write_use_asdf_direnv_bashrc

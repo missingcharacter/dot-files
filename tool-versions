@@ -3,7 +3,7 @@ dotnet-core 6.0.101
 java adoptopenjdk-8.0.252+9.1
 golang 1.17.6
 groovy 2.4.12
-nodejs 16.13.2
+nodejs 16.13.0
 ocaml 4.12.0
 opam 2.0.8
 python 3.10.0

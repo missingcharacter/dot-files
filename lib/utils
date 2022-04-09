@@ -385,7 +385,7 @@ function write_direnvrc() {
   msg_info 'Creating file ~/.config/direnv/direnvrc'
   cat <<'EOF' > "${HOME}"/.config/direnv/direnvrc
 # Uncomment the following line to make direnv silent by default.
-export DIRENV_LOG_FORMAT=""
+#export DIRENV_LOG_FORMAT=""
 EOF
 }
 

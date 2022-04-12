@@ -23,6 +23,8 @@ function are_basics_installed() {
     'gnutls'
     'gnu-sed'
     'inetutils'
+    'jc'
+    'jless'
     'jq'
     'lastpass-cli'
     'mackup'

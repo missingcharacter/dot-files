@@ -13,7 +13,10 @@ strictMode
 # Install stuff?
 
 function are_brew_basics_installed() {
-  declare -a BREW_BASICS=('bfg'
+  declare -a BREW_BASICS=('bat'
+  'bfg'
+  'exa'
+  'fd'
   'fpp'
   'rclone'
   'ripgrep'

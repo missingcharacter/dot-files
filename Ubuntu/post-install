@@ -57,7 +57,20 @@ function are_extra_tools_installed() {
     'wireguard'
     'wireshark-gtk')
   install_if_not_installed 'apt' 'n' "${EXTRA_UBUNTU_TOOLS[@]}"
-  #local EXTRA_BREW_TOOLS=('bfg' 'fpp' 'lastpass-cli' 'mitmproxy' 'rclone' 'ripgrep' 'shellcheck' 'shfmt' 'termshark' 'tmux')
+  declare -a EXTRA_BREW_TOOLS=('bat'
+    'bfg'
+    'exa'
+    'fd'
+    'fpp'
+    'lastpass-cli'
+    'mitmproxy'
+    'rclone'
+    'ripgrep'
+    'shellcheck'
+    'shfmt'
+    'termshark'
+    'tmux')
+  install_if_not_installed 'brew' 'n' "${EXTRA_BREW_TOOLS[@]}"
 }
 
 

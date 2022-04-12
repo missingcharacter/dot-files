@@ -38,6 +38,8 @@ function are_basics_installed() {
    'gcc'
    'git'
    'git-filter-repo'
+   'jc'
+   'jless'
    'jq'
    'mackup'
    'oh-my-posh'

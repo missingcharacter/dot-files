@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 # macOS and Ubuntu compatible aliases and functions
 # ricdros' custom aliases
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+alias grep='rg'
+#alias grep='grep --color=auto'
+#alias fgrep='fgrep --color=auto'
+#alias egrep='egrep --color=auto'
+alias cat='bat'
+alias ls='exa'
+alias find='fd'
+#alias ll='ls -alF'
+#alias la='ls -A'
+#alias l='ls -CF'
 alias tmuxs='tmux source-file ~/.tmux.conf'
 alias tmuxn='echo "Name the tmux session: "; read SESSION; tmux new -s ${SESSION}'
 alias gitamendresetauthor='git commit --amend --reset-author --no-edit'

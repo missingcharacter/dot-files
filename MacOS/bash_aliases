@@ -1,6 +1,6 @@
 # MacOS only aliases and functions
 # ricdros' custom aliases
-alias ls='ls -G'
+#alias ls='ls -G'
 alias brewupgrade='brew update && brew upgrade && echo "You may want to run brew cleanup -n or just brew cleanup, also if pyenv was upgraded you will need to reinstall python"'
 alias ldd='otool -L'
 alias update='softwareupdate -l'

@@ -63,6 +63,7 @@ fi
 
 # https://ohmyposh.dev/
 # load oh-my-posh prompt
+#eval "$(oh-my-posh --init --shell bash --config "$(fd --type f -F -- 'dracula.omp.json' "$(brew --cellar)/oh-my-posh")")"
 eval "$(oh-my-posh --init --shell bash --config ${HOME}/.ohmyposh.json)"
 
 # opam configuration

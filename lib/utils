@@ -96,7 +96,6 @@ function brew_taps() {
       msg_info 'There are no OS specific taps for you'
       ;;
   esac
-  brew tap jandedobbeleer/oh-my-posh
 }
 
 function is_brew_installed() {

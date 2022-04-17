@@ -16,8 +16,6 @@ sbt 1.3.6
 # Infrastructure as code tools
 pulumi 3.29.1
 terraform 0.13.7
-terragrunt 0.29.1
-terraform-docs 0.13.0
 tflint 0.28.0
 # K8s related tools
 kompose 1.22.0
@@ -25,8 +23,6 @@ kubectl 1.23.3
 helm 3.8.0
 helm-ct 3.3.1
 helm-docs 1.5.0
-kops v1.17.1
-aws-iam-authenticator 0.5.5
 # misc tools
 rclone 1.57.0
 direnv 2.31.0

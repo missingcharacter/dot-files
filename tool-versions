@@ -1,7 +1,7 @@
 # Programming languages
 dotnet-core 6.0.101
 java adoptopenjdk-8.0.252+9.1
-golang 1.17.6
+golang 1.18.1
 groovy 2.4.12
 nodejs 16.13.0
 ocaml 4.12.0

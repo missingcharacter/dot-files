@@ -26,7 +26,7 @@ function are_basics_installed() {
     'jc'
     'jless'
     'jq'
-    'lastpass-cli'
+    'bitwarden-cli'
     'mackup'
     'mas'
     'oh-my-posh'

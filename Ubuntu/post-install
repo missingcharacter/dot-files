@@ -62,7 +62,7 @@ function are_extra_tools_installed() {
     'exa'
     'fd'
     'fpp'
-    'lastpass-cli'
+    'bitwarden-cli'
     'mitmproxy'
     'rclone'
     'ripgrep'

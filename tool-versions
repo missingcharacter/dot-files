@@ -22,7 +22,7 @@ kompose 1.22.0
 kubectl 1.23.3
 helm 3.8.0
 helm-ct 3.3.1
-helm-docs 1.5.0
+helm-docs 1.9.1
 # misc tools
 rclone 1.57.0
 direnv 2.31.0

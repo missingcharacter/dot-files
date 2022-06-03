@@ -77,6 +77,8 @@
     ###########################################
     # My aliases
     ###########################################
+    # List git aliases
+    aliases = config --get-regexp '^alias\\.'
     # Pull before pushing
     safepush = ! git pull --rebase && git push
     # show merge tree + commits info

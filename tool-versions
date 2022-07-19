@@ -4,7 +4,7 @@ java adoptopenjdk-8.0.252+9.1
 golang 1.18.1
 groovy 2.4.12
 nodejs 16.13.2
-opam 2.0.8
+opam 2.1.2
 python 3.10.5
 ruby 3.1.0
 rust 1.58.1
@@ -23,6 +23,6 @@ helm 3.8.0
 helm-ct 3.3.1
 helm-docs 1.10.0
 # misc tools
-rclone 1.57.0
+rclone 1.59.0
 direnv 2.31.0
 1password-cli 2.3.1

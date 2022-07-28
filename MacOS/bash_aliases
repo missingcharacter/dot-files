@@ -63,7 +63,7 @@ function fixlens() {
   msg_warn "Try to remove /Applications/Lens.app/Contents/Resources/extensions/lenscloud-lens-extension"
   rm -rf rm -rf /Applications/Lens.app/Contents/Resources/extensions/lenscloud-lens-extension
   msg_warn "Try to remove ~/Library/Application\ Support/Lens/node_modules/lenscloud-lens-extension"
-  rm ~/Library/Application\ Support/Lens/node_modules/lenscloud-lens-extension
+  rm -rf ~/Library/Application\ Support/Lens/node_modules/lenscloud-lens-extension
   msg_warn "Try to remove line matching 'lenscloud-lens-extension' in file ~/Library/Application\ Support/Lens/package.json"
   sed -i '' '/lenscloud-lens-extension/d' ~/Library/Application\ Support/Lens/package.json
 }

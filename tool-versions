@@ -6,7 +6,7 @@ groovy 2.4.12
 nodejs 16.13.2
 opam 2.1.2
 python 3.10.5
-ruby 3.1.0
+ruby 3.1.2
 rust 1.58.1
 kotlin 1.6.10
 gradle 6.8.1

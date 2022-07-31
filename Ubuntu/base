@@ -19,6 +19,7 @@ function are_basics_installed() {
     'dirmngr'
     'file'
     'gawk'
+    'gir1.2-gtop-2.0'
     'gnome-tweaks'
     'gnupg'
     'gnutls-bin'

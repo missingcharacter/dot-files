@@ -90,6 +90,25 @@ function gitgrepreplace () {
   git grep -l "${OLD_TEXT}" "${GREP_PATH}" | xargs sed -i "${REPLACE}"
 }
 
+function fixlens() {
+  # Temporary fix to remove non FOSS extensions from lens
+  # Works on `.deb` file
+  local LENS_BASE_DIR="${HOME}/.config/Lens"
+  declare -a TO_DELETE=(
+    'lenscloud-lens-extension'
+    'lens-license-extension'
+  )
+  for i in "${TO_DELETE[@]}"; do
+    msg_warn "Try to remove ${LENS_BASE_DIR}/extensions/${i}"
+    rm -rf "${LENS_BASE_DIR}/extensions/${i}"
+    sudo rm -rf /opt/Lens/resources/extensions/"${i}"
+    msg_warn "Try to remove ${LENS_BASE_DIR}/node_modules/${i}"
+    rm -rf "${LENS_BASE_DIR}/node_modules/${i}"
+    msg_warn "Try to remove line matching '${i}' in file ${LENS_BASE_DIR}/package.json"
+    sed -i "/${i}/d" "${HOME}"/.config/Lens/package.json
+  done
+}
+
 function cleancontainers() {
   sudo docker rm $(sudo docker ps -qa -f status=exited);
   sudo docker rmi $(sudo docker images -qa -f dangling=true)

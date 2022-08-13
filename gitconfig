@@ -21,6 +21,7 @@
     ; "simple" avoid headaches, specially if you use `--force` w/o specifying branch
     ; see: http://stackoverflow.com/questions/13148066/warning-push-default-is-unset-its-implicit-value-is-changing-in-git-2-0
     default = simple
+    autoSetupRemote = true
 [core]
     editor = vim
     whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
@@ -103,6 +104,6 @@
     dc = diff --cached
     pt = !git tag -l | xargs git tag -d && git fetch -t
 [pull]
-	rebase = true
+    rebase = true
 [init]
-	defaultBranch = main
+    defaultBranch = main

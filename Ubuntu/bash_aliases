@@ -10,8 +10,8 @@ alias showversion="neofetch"
 alias xclip='xclip -selection c'
 
 function upall () {
-  msg_info 'sudo apt update && sudo apt dist-upgrade;'
-  sudo apt update && sudo apt dist-upgrade;
+  msg_info 'sudo nala upgrade;'
+  sudo nala upgrade;
 
   msg_info 'brew update; brew upgrade; brew cleanup;'
   msg_info 'if brew update fails you can try brew update-reset'
@@ -107,6 +107,12 @@ function fixlens() {
     msg_warn "Try to remove line matching '${i}' in file ${LENS_BASE_DIR}/package.json"
     sed -i "/${i}/d" "${HOME}"/.config/Lens/package.json
   done
+}
+
+function aptlistinrepo() {
+  local REPO="${1:-ppa.launchpad}"
+  grep ^Package \
+    /var/lib/apt/lists/"${REPO}"*_Packages | awk '{print $2}' | sort -u
 }
 
 function cleancontainers() {

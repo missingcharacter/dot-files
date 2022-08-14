@@ -49,6 +49,7 @@ function are_extra_cli_tools_installed() {
 
 function are_extra_tools_installed() {
   declare -a EXTRA_UBUNTU_TOOLS=('ghostwriter'
+    'nala'
     'network-manager-openvpn-gnome'
     'openvpn-systemd-resolved'
     'pinta'
@@ -112,6 +113,7 @@ function install_desktop_apps() {
   declare -A APT_KEYS=(
     ['docker']='https://download.docker.com/linux/ubuntu/gpg'
     ['sublime']='https://download.sublimetext.com/sublimehq-pub.gpg'
+    ['volian-scar-unstable']='https://deb.volian.org/volian/scar.key'
   )
 
   for KEY_NAME in "${!APT_KEYS[@]}"; do
@@ -120,11 +122,12 @@ function install_desktop_apps() {
 
   echo "Adding repositories: docker, GhostWriter, sublime-text, virtualbox"
   declare -a REPOSITORIES=(
-    "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     'ppa:wereturtle/ppa'
     'ppa:gerardpuig/ppa'
-    'deb https://download.sublimetext.com/ apt/stable/'
+    'deb [signed-by=/etc/apt/trusted.gpg.d/sublime.gpg] https://download.sublimetext.com/ apt/stable/'
     "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
+    'deb [signed-by=/etc/apt/trusted.gpg.d/volian-scar-unstable.gpg] https://deb.volian.org/volian/ scar main'
   )
 
   for REPOSITORY in "${REPOSITORIES[@]}"; do
@@ -178,7 +181,9 @@ function install_desktop_apps() {
 
   if ! piactl --version &>/dev/null; then
     echo "Installing Private Internet Access"
-    LATEST_PIA_INSTALLER=$(curl 'https://www.privateinternetaccess.com/installer/x/download_installer_linux' | xmllint --html --xpath '//html/head/meta[5]/@content' - 2> /dev/null | cut -d '"' -f2 | cut -d '=' -f2)
+    LATEST_PIA_INSTALLER=$(curl \
+        'https://www.privateinternetaccess.com/installer/x/download_installer_linux' | \
+        xmllint --html --xpath '//html/head/meta[5]/@content' - 2> /dev/null | cut -d '"' -f2 | cut -d '=' -f2)
     curl -Lv "${LATEST_PIA_INSTALLER}" -o "${TMP_DOT_FILES}/pia-linux.run"
     sh "${TMP_DOT_FILES}/pia-linux.run"
   fi

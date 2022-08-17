@@ -86,3 +86,13 @@ function cleancontainers() {
 function cleandockervolumes() {
   docker volume rm $(docker volume ls -f dangling=true -q)
 }
+
+function base64encodestring() {
+  local TEXT="${1}"
+  base64 <<<"${TEXT}"
+}
+
+function base64decodestring() {
+  local TEXT="${1}"
+  base64 -D <<<"${TEXT}"
+}

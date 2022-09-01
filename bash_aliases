@@ -176,6 +176,10 @@ function list-shellcheck-files() {
   pre-commit run shellcheck --all-files 2>&1 | grep "^In " | awk '{ print $2 }' | sort -u
 }
 
+function print-python-path() {
+  python -c 'import sys;print(sys.path)'
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

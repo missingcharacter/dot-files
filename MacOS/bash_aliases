@@ -9,8 +9,8 @@ function upall () {
   msg_info 'sudo softwareupdate -i -a;'
   sudo softwareupdate -i -a;
 
-  msg_info 'mas upgrade;'
-  mas upgrade;
+  #msg_info 'mas upgrade;'
+  #mas upgrade;
 
   msg_info 'brew cu -y;'
   brew cu -y;

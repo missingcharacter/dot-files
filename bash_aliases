@@ -134,6 +134,15 @@ function virtualenv3() {
   python3 -m venv "${1}"
 }
 
+function youtube-dl-best() {
+  local YOUTUBE_URL="${1}"
+  # Assumes `ffmpeg` and/or `avconv` are in your path
+  # `brew install ffmpeg`
+  youtube-dl \
+    -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' \
+    --merge-output-format mp4 "${YOUTUBE_URL}"
+}
+
 function gitgrepdiff() {
   local STRING="${1}"
   local DEFAULT_BRANCH="${2:-$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')}"

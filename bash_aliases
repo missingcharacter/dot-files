@@ -154,6 +154,16 @@ function gitgrepdiff() {
   git grep -l "${STRING}" $(git diff "${DEFAULT_BRANCH}"..."${BRANCH}" --name-status --diff-filter="${DIFF_FILTERS}" | awk '{ print $2 }')
 }
 
+function gitdiscardbranch() {
+  local BRANCH_TO_DISCARD="${1}"
+  local DEFAULT_BRANCH
+  DEFAULT_BRANCH="$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+  git checkout "${DEFAULT_BRANCH}"
+  git branch -D "${BRANCH_TO_DISCARD}"
+  git pull
+  git remote prune origin
+}
+
 function argodiff() {
   local APP_TO_CHECK
   APP_TO_CHECK="${1}"

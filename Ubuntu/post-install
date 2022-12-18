@@ -58,7 +58,7 @@ function are_extra_tools_installed() {
     'transmission-gtk'
     'ubuntu-cleaner'
     'vlc'
-    'virtualbox-6.1'
+    'virtualbox-7.0'
     'wireguard'
     'wireshark-gtk')
   install_if_not_installed 'apt' 'n' "${EXTRA_UBUNTU_TOOLS[@]}"

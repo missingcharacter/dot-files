@@ -8,7 +8,7 @@ opam 2.1.2
 python 3.11.0
 R 4.2.1
 ruby 3.1.2
-rust 1.65.0
+rust 1.66.0
 kotlin 1.7.22
 gradle 6.8.1
 maven 3.6.3
@@ -20,7 +20,7 @@ terraform-docs 0.16.0
 tflint 0.28.0
 # K8s related tools
 kompose 1.22.0
-kubectl 1.23.3
+kubectl 1.26.0
 helm 3.10.3
 helm-ct 3.3.1
 helm-docs 1.10.0

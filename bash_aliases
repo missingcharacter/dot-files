@@ -154,6 +154,15 @@ function gitgrepdiff() {
   git grep -l "${STRING}" $(git diff "${DEFAULT_BRANCH}"..."${BRANCH}" --name-status --diff-filter="${DIFF_FILTERS}" | awk '{ print $2 }')
 }
 
+function gitgrepwithinfiles() {
+  local LIMIT_WORD="${1}"
+  local SPECIFIC_WORD="${2}"
+  while IFS= read -r line; do
+    echo "filename: ${line}"
+    grep -i "${SPECIFIC_WORD}" "${line}"
+  done < <(git grep -li "${LIMIT_WORD}")
+}
+
 function gitdiscardbranch() {
   local BRANCH_TO_DISCARD="${1}"
   local DEFAULT_BRANCH

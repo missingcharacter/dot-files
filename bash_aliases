@@ -190,8 +190,17 @@ function kube-run-in-node() {
 function check-ssl() {
   local IP_OR_HOSTNAME="${1}"
   local PORT="${2:-443}"
-  local CERT_INFO ISSUER VALID_UNTIL SUBJECT SAN
-  CERT_INFO="$(echo | openssl s_client -connect "${IP_OR_HOSTNAME}:${PORT}" 2>/dev/null | openssl x509 -noout -text -certopt 'no_header,no_version,no_serial,no_signame,no_pubkey,no_sigdump,no_aux')"
+  local CERT_INFO ISSUER VALID_UNTIL SUBJECT SAN OPENSSL_BIN
+  declare -a OPENSSL_BINS=()
+  mapfile -t OPENSSL_BINS < <(type -a openssl | awk '{ print $3 }')
+  OPENSSL_BIN="${OPENSSL_BINS[0]}"
+  for i in /usr/local/Cellar/openssl*/*/bin/openssl; do
+    OPENSSL_BIN="${i}"
+    break
+  done
+  CERT_INFO="$(echo | "${OPENSSL_BIN}" s_client \
+      -connect "${IP_OR_HOSTNAME}:${PORT}" 2>/dev/null | "${OPENSSL_BIN}" x509 \
+      -noout -text -certopt 'no_header,no_version,no_serial,no_signame,no_pubkey,no_sigdump,no_aux')"
   ISSUER="$(grep 'Issuer:' <<<"${CERT_INFO}" | cut -d ' ' -f9-20)"
   VALID_UNTIL="$(grep 'Not After :' <<<"${CERT_INFO}" | xargs)"
   SUBJECT="$(grep 'Subject:' <<<"${CERT_INFO}" | xargs)"

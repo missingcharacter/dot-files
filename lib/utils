@@ -179,7 +179,6 @@ function install_everything_else() {
   . "${GITROOT}/${MACHINE_OS}/post-install"
 }
 
-
 function retry_command() {
   # Source: https://github.com/aws-quickstart/quickstart-linux-utilities/blob/master/quickstart-cfn-tools.source#L413-L433
   # $1 = NumberOfRetries $2 = Command

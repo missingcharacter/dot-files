@@ -163,6 +163,24 @@ function gitgrepwithinfiles() {
   done < <(git grep -li "${LIMIT_WORD}")
 }
 
+# from https://gist.github.com/lonnen/3101795 {
+
+function gitgrepblame() {
+  # runs git grep on a pattern, and then uses git blame to who did it
+  local PATTERN="${1}"
+  # shellcheck disable=SC2162
+  git grep -n "${PATTERN}" | while IFS=: read i j k; do git blame -L "${j}","${j}" "${i}" | cat; done
+}
+
+function gitegrepblame() {
+  # small modification for git egrep bash
+  local PATTERN="${1}"
+  # shellcheck disable=SC2162,SC2034
+  git grep -E -n "${PATTERN}" | while IFS=: read i j k; do git blame -L  "${j}","${j}" "${i}"| cat; done
+}
+
+# }
+
 function gitdiscardbranch() {
   local BRANCH_TO_DISCARD="${1}"
   local DEFAULT_BRANCH

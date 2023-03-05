@@ -142,7 +142,7 @@ function install_desktop_apps() {
   echo "Installing visual studio code, Google Chrome Stable, Slack"
   LATEST_SLACK="$(curl -s 'https://slack.com/downloads/instructions/ubuntu' | xmllint --html --xpath 'string(/html/body/main/section[3]/div/p[1]/a[1]/@href)' - 2> /dev/null )"
   declare -A DEB_PACKAGES=(
-    ['1password']='https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb'
+    ['1password']='https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb' # pragma: allowlist secret
     ['code']='https://go.microsoft.com/fwlink/?LinkID=760868'
     ['google-chrome-stable']='https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
     ['slack']="${LATEST_SLACK}")

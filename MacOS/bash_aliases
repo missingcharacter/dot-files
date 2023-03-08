@@ -77,6 +77,11 @@ function cleandockervolumes() {
   docker volume rm $(docker volume ls -f dangling=true -q)
 }
 
+function cleancolima() {
+  colima stop
+  rm -rf ~/.colima ~/.lima ~/Library/Caches/colima ~/Library/Caches/lima
+}
+
 function base64encodestring() {
   local TEXT="${1}"
   base64 <<<"${TEXT}"

@@ -12,7 +12,7 @@ strictMode
 function test_arrays() {
   # does not consider namerefs, see https://github.com/koalaman/shellcheck/issues/817
   # shellcheck disable=SC2034
-  declare -a arr=(a b c 'd e' f g) sub_arr=(b c) not_sub_arr=(g h)
+  declare -a arr=(a b c 'd e' f g) sub_arr=(b c) not_sub_arr=(g h i)
   echo 'Testing an array that does NOT contain an item'
   array_contains 'a b' "${arr[@]}" && echo 'yes' || echo 'no'      # Should be no
   echo 'Testing an array that DOES contain an item'
@@ -21,6 +21,24 @@ function test_arrays() {
   is_subarray_in_array arr sub_arr  && echo 'yes' || echo 'no'     # Should be yes
   echo 'Testing an array that is NOT in another array'
   is_subarray_in_array arr not_sub_arr  && echo 'yes' || echo 'no' # Should be no
+  declare -a should_be_empty=() should_not_be_empty=()
+  while IFS= read -r i; do
+    if [[ -n ${i} ]]; then
+      should_be_empty+=("${i}")
+    fi
+  done < <(return_elements_not_in_array arr sub_arr)
+  while IFS= read -r i; do
+    if [[ -n ${i} ]]; then
+      should_not_be_empty+=("${i}")
+    fi
+  done < <(return_elements_not_in_array arr not_sub_arr)
+  if [[ ${#should_be_empty[@]} -eq 0 ]]; then
+    echo "array that should_be_empty is of length: ${#should_be_empty[@]}"
+  fi
+  if [[ ${#should_not_be_empty[@]} -gt 0 ]]; then
+    echo "array that should_not_be_empty is of length: ${#should_not_be_empty[@]}"
+    echo "and has elements: ${should_not_be_empty[*]}"
+  fi
 }
 
 test_arrays

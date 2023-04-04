@@ -124,7 +124,8 @@ function get_os_specific_links() {
   mapfile -t OS_SPECIFIC_LINKS < <(ls bash_*)
   cd - &> /dev/null || return 1
 
-  return_non_empty_array "${OS_SPECIFIC_LINKS[@]}"
+  # https://stackoverflow.com/questions/7577052/bash-empty-array-expansion-with-set-u
+  return_non_empty_array "${OS_SPECIFIC_LINKS[@]+"${OS_SPECIFIC_LINKS[@]}"}"
 }
 
 function return_non_empty_array() {
@@ -214,6 +215,7 @@ function array_contains() {
   # array_contains 'a b' "${arr[@]}" && echo yes || echo no # no
   # array_contains 'd e' "${arr[@]}" && echo yes || echo no # yes
   local SEEKING="${1}"
+  local ELEMENT
   shift
   declare -a ARRAY=("${@}")
   local IN=1
@@ -249,6 +251,30 @@ function is_subarray_in_array() {
   return ${IN}
 }
 
+function return_elements_not_in_array() {
+  # How to:
+  # arr=(a b c 'd e' f g)
+  # sub_arr=(b c)
+  # not_sub_arr=(g h)
+  # return_elements_not_in_array arr sub_arr # nothing
+  # return_elements_not_in_array arr not_sub_arr # h
+  # does not consider namerefs, see https://github.com/koalaman/shellcheck/issues/817
+  # shellcheck disable=SC2178
+  local -n ARRAY="${1}"
+  local SUB_ARRAY="$2[@]"
+  local IN=0
+  local ELEMENT
+  declare MISSING_ELEMENTS=()
+  for ELEMENT in "${!SUB_ARRAY}"; do
+    if ! array_contains "${ELEMENT}" "${ARRAY[@]}"; then
+      MISSING_ELEMENTS+=("${ELEMENT}")
+    fi
+  done
+
+  # https://stackoverflow.com/questions/7577052/bash-empty-array-expansion-with-set-u
+  return_non_empty_array "${MISSING_ELEMENTS[@]+"${MISSING_ELEMENTS[@]}"}"
+}
+
 function install_if_not_installed() {
   # How to:
   # arr=('build-essential' 'curl' 'file' 'git')
@@ -257,7 +283,7 @@ function install_if_not_installed() {
   shift
   local ASK="${1:-'y'}"
   shift
-  declare -a EXTRA_TOOLS=("${@}") INSTALLED_TOOLS=()
+  declare -a EXTRA_TOOLS=("${@}") INSTALLED_TOOLS=() TOOLS_TO_INSTALL=()
   local ANSWER='y'
   local -A LIST_COMMAND=(
     ['apt']="sudo apt list --installed 2>/dev/null | grep -v 'Listing' | cut -d '/' -f1"
@@ -280,9 +306,14 @@ function install_if_not_installed() {
   # does not consider namerefs, see https://github.com/koalaman/shellcheck/issues/817
   # shellcheck disable=SC2034
   mapfile -t INSTALLED_TOOLS < <(bash -c "${LIST_COMMAND[${COMMAND}]}")
+  while IFS= read -r tool; do
+    if [[ -n ${tool} ]]; then
+      TOOLS_TO_INSTALL+=("${tool}")
+    fi
+  done < <(return_elements_not_in_array INSTALLED_TOOLS EXTRA_TOOLS)
 
   # Check if extra tools are installed
-  if ! is_subarray_in_array INSTALLED_TOOLS EXTRA_TOOLS; then
+  if [[ ${#TOOLS_TO_INSTALL[@]} -gt 0 ]]; then
     msg_info 'Seems like some (or all) the tools are missing'
     if [[ "${ASK}" == 'y' ]]; then
       ANSWER="$(get_user_reply 'Want me to install them?')"
@@ -290,11 +321,11 @@ function install_if_not_installed() {
     fi
     if [[ ${ANSWER} =~ ^[Yy]$ ]]; then
       if [[ "${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'multiple' ]]; then
-        retry_command '3' 'bash' '-c' "${INSTALL_COMMAND[${COMMAND}]} $(join_by ' ' "${EXTRA_TOOLS[@]}")"
+        retry_command '3' 'bash' '-c' "${INSTALL_COMMAND[${COMMAND}]} $(join_by ' ' "${TOOLS_TO_INSTALL[@]}")"
       elif [[ "${INSTALL_COMMAND_TYPE[${COMMAND}]}" == 'single'  ]]; then
-	for p in "${EXTRA_TOOLS[@]}"; do
-	  retry_command '3' 'bash' '-c' "${INSTALL_COMMAND[${COMMAND}]} ${p}"
-	done
+        for p in "${TOOLS_TO_INSTALL[@]}"; do
+          retry_command '3' 'bash' '-c' "${INSTALL_COMMAND[${COMMAND}]} ${p}"
+        done
       fi
     fi
   fi
@@ -372,10 +403,10 @@ function install_asdf_tool_version() {
     msg_info "Installed ${PLUGIN} version ${VERSION} from ${TOOLS_VERSIONS}"
     rm -f "${CATCH_OUTPUT}"
   else
-    msg_warn "I was not able to ${PLUGIN} version ${VERSION} from ${TOOLS_VERSIONS}, error is below:"
-    msg_warn "$(cat "${CATCH_OUTPUT}")"
+    msg_error "I was not able to ${PLUGIN} version ${VERSION} from ${TOOLS_VERSIONS}, error is below:"
+    msg_error "$(cat "${CATCH_OUTPUT}")"
     rm -f "${CATCH_OUTPUT}"
-    return 1
+    msg_error 'Will move on'
   fi
 }
 

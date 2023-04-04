@@ -283,6 +283,7 @@ function install_if_not_installed() {
   shift
   local ASK="${1:-'y'}"
   shift
+  # shellcheck disable=SC2034
   declare -a EXTRA_TOOLS=("${@}") INSTALLED_TOOLS=() TOOLS_TO_INSTALL=()
   local ANSWER='y'
   local -A LIST_COMMAND=(

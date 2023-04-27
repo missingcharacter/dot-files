@@ -140,13 +140,16 @@ if $COLORTERM == 'gnome-terminal'
 endif
 
 try
-    packadd! dracula_pro
-    let g:dracula_colorterm = 0
-    colorscheme dracula_pro_van_helsing
+    colorscheme evening
 catch
 endtry
 
 set background=dark
+
+" Use different colorscheme when using `vimdiff`
+"if &diff
+"    colorscheme some_other_scheme
+"endif
 
 " Set extra options when running in GUI mode
 if has("gui_running")

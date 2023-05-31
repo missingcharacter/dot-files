@@ -15,7 +15,6 @@ sbt 1.3.6
 # Infrastructure as code tools
 pulumi 3.55.0
 terraform 1.3.9
-terraform-docs 0.16.0
 tflint 0.45.0
 # K8s related tools
 kompose 1.22.0

@@ -19,6 +19,7 @@ tflint 0.45.0
 # K8s related tools
 kompose 1.22.0
 kubectl 1.26.0
+kustomize 5.0.3
 helm 3.11.0
 helm-ct 3.3.1
 helm-docs 1.10.0

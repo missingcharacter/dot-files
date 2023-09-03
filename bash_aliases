@@ -95,7 +95,7 @@ function clean-multipass() {
 }
 
 function asdf-all () {
-  awk '{ print $1 }' ~/.tool-versions
+  awk '{ print $1 }' ~/.tool-versions | grep -v '^#'
 }
 
 function asdf-all-versions () {

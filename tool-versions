@@ -26,4 +26,4 @@ helm-docs 1.10.0
 # misc tools
 rclone 1.61.0
 direnv 2.32.2
-1password-cli 2.12.0
+1password-cli 2.21.0

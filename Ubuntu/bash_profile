@@ -30,4 +30,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH="${PATH}:${HOME}/src/gopath/bin:${HOME}/.local/bin:${HOME}/bin:/snap/bin"
+# Mojo specific env vars
+export MODULAR_HOME="${HOME}/.modular"
+
+export PATH="${HOME}/.modular/pkg/packages.modular.com_mojo/bin:${PATH}:${HOME}/src/gopath/bin:${HOME}/.local/bin:${HOME}/bin:/snap/bin"

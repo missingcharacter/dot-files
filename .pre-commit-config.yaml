@@ -12,7 +12,7 @@ repos:
           - --baseline
           - .secrets.baseline
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
       - id: check-added-large-files
@@ -40,6 +40,10 @@ repos:
       - id: shellcheck
         exclude: '.*\.sh\.j2'
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.35.0
+    rev: v0.37.0
     hooks:
       - id: markdownlint-fix
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.6.26
+    hooks:
+      - id: actionlint-system

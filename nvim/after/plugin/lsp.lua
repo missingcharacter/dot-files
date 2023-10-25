@@ -53,6 +53,7 @@ require("mason-lspconfig").setup {
     'cmake',
     'docker_compose_language_service',
     'eslint',
+    'gopls',
     'html',
     'jsonls',
     'kotlin_language_server',

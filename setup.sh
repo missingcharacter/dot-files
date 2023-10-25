@@ -75,12 +75,14 @@ declare -a LINKS=('bashrc'
 'mackup.cfg'
 'ohmyposh.json'
 'tmux.conf'
-'tool-versions'
-'vimrc')
+'tool-versions')
 
 for LINK in "${LINKS[@]}"; do
   link_if_not_exists "${GITROOT}/${LINK}" "${HOME}/.${LINK}"
 done
+
+# neovim
+link_if_not_exists "${GITROOT}/nvim" "${HOME}/.config/nvim"
 
 declare -a OS_SPECIFIC_LINKS=()
 mapfile -t OS_SPECIFIC_LINKS < <(get_os_specific_links "${MACHINE_OS}")

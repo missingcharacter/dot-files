@@ -45,3 +45,6 @@ vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
+
+-- F3 toggles paste mode
+vim.keymap.set("n", "<F3>", "<cmd>set paste!<CR>")

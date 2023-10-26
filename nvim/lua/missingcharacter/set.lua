@@ -32,3 +32,8 @@ vim.opt.updatetime = 50
 vim.opt.colorcolumn = "80"
 
 vim.g.mapleader = " "
+-- Add `eol` and `extendes` to `listchars`
+vim.opt.listchars:append({
+  eol = "$",
+  extends = "#",
+})

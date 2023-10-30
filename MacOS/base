@@ -34,7 +34,7 @@ function are_basics_installed() {
     'pssh'
     'saml2aws'
     'tree'
-    'vim'
+    'neovim'
     'wget'
     'xz'
     'yq')

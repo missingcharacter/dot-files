@@ -55,7 +55,7 @@ function are_basics_installed() {
    'pssh'
    'saml2aws'
    'tree'
-   'vim'
+   'neovim'
    'yq')
   msg_info 'Will run apt update'
   sudo apt update

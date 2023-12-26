@@ -2,7 +2,8 @@
 
 export EDITOR=vim
 # git can now ask for gpg key passphrase
-export GPG_TTY=$(tty)
+GPG_TTY=$(tty)
+export GPG_TTY
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -18,13 +19,13 @@ HISTFILESIZE=2000
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
+if [ -f "${HOME}"/.bash_aliases ]; then
+  . "${HOME}"/.bash_aliases
 fi
 
 # https://asdf-vm.com/guide/getting-started.html#_3-install-asdf
-. ${HOME}/.asdf/asdf.sh
-. ${HOME}/.asdf/completions/asdf.bash
+. "${HOME}"/.asdf/asdf.sh
+. "${HOME}"/.asdf/completions/asdf.bash
 # Hook direnv into your shell.
 source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
 
@@ -33,12 +34,14 @@ source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
 #export LANG=en_US.UTF-8
 
 # Go specific env vars
-export GOPATH="${HOME}/src/gopath"
-export GOROOT="$(asdf where golang)/go"
+GOPATH="${HOME}/src/gopath"
+GOROOT="$(asdf where golang)/go"
+export GOPATH GOROOT
 
 # Java specific env vars
-export JDK_HOME="$(asdf where java)"
-export JAVA_HOME="$(asdf where java)/jre"
+JDK_HOME="$(asdf where java)"
+JAVA_HOME="$(asdf where java)/jre"
+export JDK_HOME JAVA_HOME
 
 # Verbose terraform stderr
 # export TF_LOG="TRACE"
@@ -57,17 +60,19 @@ export JAVA_HOME="$(asdf where java)/jre"
 #source <(kubectl completion bash)
 
 # Sourcing Operating System specific bash_profile settings
-if [ -f ~/.bash_os_profile ]; then
-    . ~/.bash_os_profile
+if [ -f "${HOME}"/.bash_os_profile ]; then
+    . "${HOME}"/.bash_os_profile
+fi
+
+# Sourcing Work specific bash_profile settings
+if [ -f "${HOME}"/.bash_work_profile ]; then
+    . "${HOME}"/.bash_work_profile
 fi
 
 # https://ohmyposh.dev/
 # load oh-my-posh prompt
 #eval "$(oh-my-posh --init --shell bash --config "$(fd --type f -F -- 'dracula.omp.json' "$(brew --cellar)/oh-my-posh")")"
-eval "$(oh-my-posh --init --shell bash --config ${HOME}/.ohmyposh.json)"
+eval "$(oh-my-posh --init --shell bash --config "${HOME}"/.ohmyposh.json)"
 
 # opam configuration
-test -r "${HOME}/.opam/opam-init/init.sh" && . "${HOME}/.opam/opam-init/init.sh" > /dev/null 2> /dev/null || true
-
-# added by travis gem
-[ ! -s ${HOME}/.travis/travis.sh ] || source ${HOME}/.travis/travis.sh
+test -r "${HOME}/.opam/opam-init/init.sh" && . "${HOME}/.opam/opam-init/init.sh" &> /dev/null || true

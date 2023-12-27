@@ -44,9 +44,14 @@ function upall () {
 }
 
 function watch () {
-  local COMMAND=${1}
-  local SECONDS=${2}
-  while true ; do clear && echo "Watching ${COMMAND} every ${SECONDS} seconds" && ${COMMAND} && sleep ${SECONDS} ; done
+  local SECONDS=${1}
+  shift
+  declare -a COMMANDS=()
+  # https://stackoverflow.com/questions/7577052/bash-empty-array-expansion-with-set-u
+  COMMANDS=("${@+"${@}"}")
+  while true ; do
+    clear && echo "Watching ${COMMAND} every ${SECONDS} seconds" && "${COMMANDS[@]+"${COMMANDS[@]}"}" && sleep "${SECONDS}"
+  done
 }
 
 function gitgrepreplace () {

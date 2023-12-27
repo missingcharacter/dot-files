@@ -238,6 +238,28 @@ function print-python-path() {
   python -c 'import sys;print(sys.path)'
 }
 
+function print-bundle-cert-info() {
+  local BUNDLE_PATH="${1}"
+  local TMP_PATH="" FNAME="cert_file_" PATTERN=""
+  echo "Bundle path: ${BUNDLE_PATH}"
+
+  if [[ 'Linux' == "$(uname)" ]]; then
+    TMP_PATH="$(mktemp -d cert-bundle.XXXXXX)"
+  else
+    TMP_PATH="$(mktemp -dt cert-bundle)"
+  fi
+
+  PATTERN="${TMP_PATH}/${FNAME}"
+  echo "Created temporary directory: ${TMP_PATH}"
+  split -p "-+BEGIN CERTIFICATE-+" "${BUNDLE_PATH}" "${PATTERN}"
+
+  for cert in "${PATTERN}"*; do
+    echo "Certificate: ${cert}"
+    openssl x509 -noout -subject -enddate -in "${cert}"
+  done
+  rm -rf "${TMP_PATH}"
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

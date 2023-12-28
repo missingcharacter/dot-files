@@ -238,20 +238,27 @@ function print-python-path() {
   python -c 'import sys;print(sys.path)'
 }
 
+function create-temp-dir() {
+  if [[ 'Linux' == "$(uname)" ]]; then
+    mktemp -d cert-bundle.XXXXXX
+  else
+    mktemp -dt cert-bundle
+  fi
+}
+
 function print-bundle-cert-info() {
   local BUNDLE_PATH="${1}"
-  local TMP_PATH="" FNAME="cert_file_" PATTERN=""
+  local FNAME='cert_file_'
+  local TMP_PATH="" PATTERN=""
   echo "Bundle path: ${BUNDLE_PATH}"
-
-  if [[ 'Linux' == "$(uname)" ]]; then
-    TMP_PATH="$(mktemp -d cert-bundle.XXXXXX)"
-  else
-    TMP_PATH="$(mktemp -dt cert-bundle)"
-  fi
-
-  PATTERN="${TMP_PATH}/${FNAME}"
+  TMP_PATH="$(create-temp-dir)"
   echo "Created temporary directory: ${TMP_PATH}"
-  split -p "-+BEGIN CERTIFICATE-+" "${BUNDLE_PATH}" "${PATTERN}"
+  PATTERN="${TMP_PATH}/${FNAME}"
+  if [[ 'Linux' == "$(uname)" ]]; then
+    csplit -sz -f "${PATTERN}" "${BUNDLE_PATH}" '/\-*BEGIN CERTIFICATE\-*/' '{*}'
+  else
+    split -p "-+BEGIN CERTIFICATE-+" "${BUNDLE_PATH}" "${PATTERN}"
+  fi
 
   for cert in "${PATTERN}"*; do
     echo "Certificate: ${cert}"

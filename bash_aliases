@@ -239,32 +239,33 @@ function print-python-path() {
 }
 
 function create-temp-dir() {
+  local pattern="${1:-tmpdirnoname}"
   if [[ 'Linux' == "$(uname)" ]]; then
-    mktemp -d cert-bundle.XXXXXX
+    mktemp -d "${pattern}.XXXXXX"
   else
-    mktemp -dt cert-bundle
+    mktemp -dt "${pattern}"
   fi
 }
 
 function print-bundle-cert-info() {
-  local BUNDLE_PATH="${1}"
-  local FNAME='cert_file_'
-  local TMP_PATH="" PATTERN=""
-  echo "Bundle path: ${BUNDLE_PATH}"
-  TMP_PATH="$(create-temp-dir)"
-  echo "Created temporary directory: ${TMP_PATH}"
-  PATTERN="${TMP_PATH}/${FNAME}"
+  local bundle_path="${1}"
+  local fname='cert_file_'
+  local tmp_path="" pattern=""
+  echo "Bundle path: ${bundle_path}"
+  tmp_path="$(create-temp-dir 'cert-bundle')"
+  echo "Created temporary directory: ${tmp_path}"
+  pattern="${tmp_path}/${fname}"
   if [[ 'Linux' == "$(uname)" ]]; then
-    csplit -sz -f "${PATTERN}" "${BUNDLE_PATH}" '/\-*BEGIN CERTIFICATE\-*/' '{*}'
+    csplit -sz -f "${pattern}" "${bundle_path}" '/\-*BEGIN CERTIFICATE\-*/' '{*}'
   else
-    split -p "-+BEGIN CERTIFICATE-+" "${BUNDLE_PATH}" "${PATTERN}"
+    split -p "-+BEGIN CERTIFICATE-+" "${bundle_path}" "${pattern}"
   fi
 
-  for cert in "${PATTERN}"*; do
+  for cert in "${pattern}"*; do
     echo "Certificate: ${cert}"
     openssl x509 -noout -subject -enddate -in "${cert}"
   done
-  rm -rf "${TMP_PATH}"
+  rm -rf "${tmp_path}"
 }
 
 # Sourcing Operating System Specific bash_aliases

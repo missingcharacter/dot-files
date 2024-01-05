@@ -6,6 +6,7 @@ return {
     -- refer to the configuration section below
   },
   config = function ()
+    local mcutils = require("missingcharacter.utils")
     vim.keymap.set("n", "<leader>zz", function()
         require("zen-mode").setup {
             window = {
@@ -17,7 +18,7 @@ return {
         vim.wo.wrap = false
         vim.wo.number = true
         vim.wo.rnu = true
-        --ColorMyPencils()
+        mcutils.ColorMyPencils()
     end)
 
 
@@ -33,7 +34,7 @@ return {
         vim.wo.number = false
         vim.wo.rnu = false
         vim.opt.colorcolumn = "0"
-        --ColorMyPencils()
+        mcutils.ColorMyPencils()
     end)
   end
 }

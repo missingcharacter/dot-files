@@ -1,7 +1,7 @@
 local M = {}
 
 function M.ColorMyPencils(color)
-  color = color or "noctis"
+  color = color or "rose-pine"
   vim.cmd.colorscheme(color)
 end
 

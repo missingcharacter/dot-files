@@ -1,13 +1,5 @@
 ---
 repos:
-  - repo: local
-    hooks:
-      - id: luaformatter
-        name: LuaFormatter
-        description: Format Lua code to a set style
-        entry: lua-format -i
-        language: lua
-        types: [lua]
   - repo: https://github.com/lyz-code/yamlfix/
     rev: 1.16.0
     hooks:
@@ -55,3 +47,7 @@ repos:
     rev: v1.6.26
     hooks:
       - id: actionlint-system
+  - repo: https://github.com/JohnnyMorganz/StyLua
+    rev: v0.19.1
+    hooks:
+      - id: stylua-system

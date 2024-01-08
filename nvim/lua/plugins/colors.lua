@@ -8,21 +8,22 @@ return {
                 transparent = true,
                 terminal_colors = true,
                 styles = {
-                    comments = {italic = false},
-                    keywords = {italic = false},
+                    comments = { italic = false },
+                    keywords = { italic = false },
                     sidebars = "dark",
-                    floats = "dark"
-                }
+                    floats = "dark",
+                },
             })
-        end
-    }, {
+        end,
+    },
+    {
         "rose-pine/neovim",
         name = "rose-pine",
         config = function()
-            require("rose-pine").setup({disable_background = true})
+            require("rose-pine").setup({ disable_background = true })
 
             vim.cmd("colorscheme rose-pine")
             mcutils.ColorMyPencils()
-        end
-    }
+        end,
+    },
 }

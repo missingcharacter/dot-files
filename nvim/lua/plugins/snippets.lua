@@ -5,26 +5,26 @@ return {
     -- install jsregexp (optional!).
     build = "make install_jsregexp",
 
-    dependencies = {"rafamadriz/friendly-snippets"},
+    dependencies = { "rafamadriz/friendly-snippets" },
 
     config = function()
         local ls = require("luasnip")
-        ls.filetype_extend("javascript", {"jsdoc"})
+        ls.filetype_extend("javascript", { "jsdoc" })
 
-        vim.keymap.set({"i"}, "<C-K>", function()
+        vim.keymap.set({ "i" }, "<C-K>", function()
             ls.expand()
-        end, {silent = true})
-        vim.keymap.set({"i", "s"}, "<leader>;", function()
+        end, { silent = true })
+        vim.keymap.set({ "i", "s" }, "<leader>;", function()
             ls.jump(1)
-        end, {silent = true})
-        vim.keymap.set({"i", "s"}, "<ledaer>,", function()
+        end, { silent = true })
+        vim.keymap.set({ "i", "s" }, "<ledaer>,", function()
             ls.jump(-1)
-        end, {silent = true})
+        end, { silent = true })
 
-        vim.keymap.set({"i", "s"}, "<C-E>", function()
+        vim.keymap.set({ "i", "s" }, "<C-E>", function()
             if ls.choice_active() then
                 ls.change_choice(1)
             end
-        end, {silent = true})
-    end
+        end, { silent = true })
+    end,
 }

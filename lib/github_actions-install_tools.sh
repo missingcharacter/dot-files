@@ -51,15 +51,22 @@ OS="$(get_os)"
 echo "Install shellcheck"
 SHELLCHECK_VERSION="$(get_latest_github_tag 'koalaman' 'shellcheck' 'true')"
 wget -qO- "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.${OS}.$(uname -m).tar.xz" | tar -xJf -
-cp "shellcheck-v${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
+mv "shellcheck-v${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
+rm -rf "shellcheck-v${SHELLCHECK_VERSION}"
 
 echo "Install actionlint"
 mkdir actionlint-download
 ACTIONLINT_VERSION="$(get_latest_github_tag 'rhysd' 'actionlint' 'true')"
 wget -qO- "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_${OS}_$(get_arch).tar.gz" | tar -C actionlint-download -xzf -
-cp actionlint-download/actionlint /usr/local/bin
+mv actionlint-download/actionlint /usr/local/bin
+rm -rf actionlint-download
 
-echo "Install https://github.com/Koihik/LuaFormatter"
-luarocks install --server=https://luarocks.org/dev luaformatter
+# from `unzip` man page
+# `Archives read from standard input are not yet supported`
+echo "Install StyLua"
+STYLUA_VERSION="$(get_latest_github_tag 'JohnnyMorganz' 'StyLua' 'true')"
+curl -sL "https://github.com/JohnnyMorganz/StyLua/releases/download/v${STYLUA_VERSION}/stylua-${OS}-$(uname -m).zip" -o stylua.zip
+unzip -d /usr/local/bin stylua.zip
+rm stylua.zip
 
 hash -r

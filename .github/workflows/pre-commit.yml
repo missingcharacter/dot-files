@@ -17,10 +17,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - uses: leafo/gh-actions-lua@v10
-        with:
-          luaVersion: "5.1"
-      - uses: leafo/gh-actions-luarocks@v4
       - name: Install tools
         shell: bash
         run: |

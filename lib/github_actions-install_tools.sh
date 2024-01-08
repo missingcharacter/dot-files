@@ -59,4 +59,7 @@ ACTIONLINT_VERSION="$(get_latest_github_tag 'rhysd' 'actionlint' 'true')"
 wget -qO- "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_${OS}_$(get_arch).tar.gz" | tar -C actionlint-download -xzf -
 cp actionlint-download/actionlint /usr/local/bin
 
+echo "Install https://github.com/Koihik/LuaFormatter"
+luarocks install --server=https://luarocks.org/dev luaformatter
+
 hash -r

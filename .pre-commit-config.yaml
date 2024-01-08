@@ -1,5 +1,13 @@
 ---
 repos:
+  - repo: local
+    hooks:
+      - id: luaformatter
+        name: LuaFormatter
+        description: Format Lua code to a set style
+        entry: lua-format -i
+        language: lua
+        types: [lua]
   - repo: https://github.com/lyz-code/yamlfix/
     rev: 1.16.0
     hooks:

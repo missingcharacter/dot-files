@@ -20,7 +20,9 @@ function upall () {
   brew update; brew upgrade; brew cleanup;
 
   msg_info 'cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -'
-  cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -
+  cd ~/.asdf/plugins/python/pyenv/ || return 1
+  git pull
+  cd - || return 1
 
   msg_info 'asdf update; asdf plugin-update --all'
   asdf update; asdf plugin-update --all
@@ -50,7 +52,7 @@ function watch () {
   # https://stackoverflow.com/questions/7577052/bash-empty-array-expansion-with-set-u
   COMMANDS=("${@+"${@}"}")
   while true ; do
-    clear && echo "Watching ${COMMAND} every ${SECONDS} seconds" && "${COMMANDS[@]+"${COMMANDS[@]}"}" && sleep "${SECONDS}"
+    clear && echo "Watching ${COMMANDS[*]} every ${SECONDS} seconds" && "${COMMANDS[@]+"${COMMANDS[@]}"}" && sleep "${SECONDS}"
   done
 }
 
@@ -70,16 +72,21 @@ function getent() {
   local CATEGORY=${1:-host}
   local QUERY_KEY=${3:-name}
   local QUERY_VALUE=${2}
-  dscacheutil -q ${CATEGORY} -a ${QUERY_KEY} ${QUERY_VALUE}
+  dscacheutil -q "${CATEGORY}" -a "${QUERY_KEY}" "${QUERY_VALUE}"
 }
 
 function cleancontainers() {
-  docker rm $(docker ps -qa -f status=exited);
-  docker rmi $(docker images -qa -f dangling=true)
+  declare -a exited_containers=() dangling_images=()
+  read -ra exited_containers < <(docker ps -qa -f status=exited)
+  docker rm "${exited_containers[@]}"
+  read -ra dangling_images < <(docker images -qa -f dangling=true)
+  docker rmi "${dangling_images[@]}"
 }
 
 function cleandockervolumes() {
-  docker volume rm $(docker volume ls -f dangling=true -q)
+  declare -a dangling_volumes=()
+  read -ra dangling_volumes < <(docker volume ls -f dangling=true -q)
+  docker volume rm "${dangling_volumes[@]}"
 }
 
 function cleancolima() {

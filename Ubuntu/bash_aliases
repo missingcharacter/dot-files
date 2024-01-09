@@ -25,7 +25,9 @@ function upall () {
   flatpak update -y;
 
   msg_info 'cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -'
-  cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -
+  cd ~/.asdf/plugins/python/pyenv/ || return 1
+  git pull
+  cd - || return 1
 
   msg_info 'asdf update; asdf plugin-update --all'
   asdf update; asdf plugin-update --all
@@ -53,16 +55,21 @@ function upall () {
 
 # Add key to ssh-agent
 function addkeys () {
-  local SSH_KEYS=( $(ls ~/.ssh/id_* | xargs -n1 file | grep 'private key' | cut -d ':' -f 1) )
-  if ! ps aux | grep "$(whoami)" | grep ssh-agent | grep -v grep > /dev/null; then
+  declare -a SSH_KEYS=()
+  for file in ~/.ssh/id_*; do
+    if grep -q 'private key'; then
+      SSH_KEYS+=("${file}")
+    fi
+  done
+  if ! pgrep -u "$(id -u)" 'ssh-agent' &> /dev/null; then
     eval "$(ssh-agent -s)"
   fi
-  if [[ ! -n "${SSH_AUTH_SOCK}" ]]; then
+  if [[ -z "${SSH_AUTH_SOCK}" ]]; then
     SSH_AUTH_SOCK="$(ls /tmp/ssh*/agent.*)"
   fi
   export SSH_AUTH_SOCK
   for KEY in "${SSH_KEYS[@]}"; do
-    if ssh-add -L | grep -q "$(awk '{ print $2 }' ${KEY}.pub)" &> /dev/null; then
+    if ssh-add -L | grep -q "$(awk '{ print $2 }' "${KEY}".pub)" &> /dev/null; then
       msg_info "You already have ${KEY} in ssh-add"
     else
       msg_info "You already have a ssh-agent session running, we will now add ${KEY}"
@@ -76,10 +83,10 @@ function cleansshagent () {
   unset SSH_AUTH_SOCK && \
   unset SSH_AGENT_PID && \
   echo 'list ssh-agent PIDs before pkill' && \
-  pgrep -U $(whoami) 'ssh-agent' && \
-  pkill -U $(whoami) 'ssh-agent' && \
+  pgrep -u "$(id -u)" 'ssh-agent' && \
+  pkill -u "$(id -u)" 'ssh-agent' && \
   echo 'list ssh-agent PIDs after pkill' && \
-  pgrep -U $(whoami) 'ssh-agent'
+  pgrep -u "$(id -u)" 'ssh-agent'
 }
 
 function gitgrepreplace () {
@@ -98,12 +105,17 @@ function aptlistinrepo() {
 }
 
 function cleancontainers() {
-  sudo docker rm $(sudo docker ps -qa -f status=exited);
-  sudo docker rmi $(sudo docker images -qa -f dangling=true)
+  declare -a exited_containers=() dangling_images=()
+  read -ra exited_containers < <(sudo docker ps -qa -f status=exited)
+  sudo docker rm "${exited_containers[@]}"
+  read -ra dangling_images < <(sudo docker images -qa -f dangling=true)
+  sudo docker rmi "${dangling_images[@]}"
 }
 
 function cleandockervolumes() {
-  sudo docker volume rm $(sudo docker volume ls -f dangling=true -q)
+  declare -a dangling_volumes=()
+  read -ra dangling_volumes < <(sudo docker volume ls -f dangling=true -q)
+  sudo docker volume rm "${dangling_volumes[@]}"
 }
 
 function base64encodestring() {

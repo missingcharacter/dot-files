@@ -1,5 +1,3 @@
-# Manually created by rrosales
-
 export EDITOR=vim
 # git can now ask for gpg key passphrase
 GPG_TTY=$(tty)
@@ -20,14 +18,18 @@ HISTFILESIZE=2000
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f "${HOME}"/.bash_aliases ]; then
+  # shellcheck disable=SC1091
   . "${HOME}"/.bash_aliases
 fi
 
 # https://asdf-vm.com/guide/getting-started.html#_3-install-asdf
+# shellcheck disable=SC1091
 . "${HOME}"/.asdf/asdf.sh
+# shellcheck disable=SC1091
 . "${HOME}"/.asdf/completions/asdf.bash
 # Hook direnv into your shell.
-source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
+# shellcheck disable=SC1091
+. "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
 
 # Change Pinta Language back to english
 #export LANG=en_GB
@@ -61,11 +63,13 @@ export JDK_HOME JAVA_HOME
 
 # Sourcing Operating System specific bash_profile settings
 if [ -f "${HOME}"/.bash_os_profile ]; then
+    # shellcheck disable=SC1091
     . "${HOME}"/.bash_os_profile
 fi
 
 # Sourcing Work specific bash_profile settings
 if [ -f "${HOME}"/.bash_work_profile ]; then
+    # shellcheck disable=SC1091
     . "${HOME}"/.bash_work_profile
 fi
 
@@ -75,4 +79,5 @@ fi
 eval "$(oh-my-posh --init --shell bash --config "${HOME}"/.ohmyposh.json)"
 
 # opam configuration
-test -r "${HOME}/.opam/opam-init/init.sh" && . "${HOME}/.opam/opam-init/init.sh" &> /dev/null || true
+# shellcheck disable=SC1091
+(test -r "${HOME}/.opam/opam-init/init.sh" && . "${HOME}/.opam/opam-init/init.sh" &> /dev/null) || true

@@ -22,7 +22,6 @@ function usage() {
 # Ensure dependencies are present
 if ! command -v git &>/dev/null; then
     msg_fatal "[-] Dependencies unmet. Please verify that the following are installed and in the PATH: git"
-    exit 1
 fi
 
 

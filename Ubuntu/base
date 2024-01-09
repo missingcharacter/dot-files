@@ -11,8 +11,9 @@ strictMode
 
 function are_basics_installed() {
   local ASK="${1:-'y'}"
-  declare -a UBUNTU_BASICS BREW_BASICS
-  UBUNTU_BASICS=('apt-file'
+  declare -a UBUNTU_BASICS=() BREW_BASICS=()
+  UBUNTU_BASICS=(
+    'apt-file'
     'apt-transport-https'
     'build-essential'
     'curl'
@@ -40,7 +41,9 @@ function are_basics_installed() {
     'xclip'
     'xz-utils'
     'zlib1g-dev')
-  BREW_BASICS=('asciidoc'
+  BREW_BASICS=(
+   'actionlint'
+   'asciidoc'
    'awscli'
    'fontconfig'
    'gcc'
@@ -54,6 +57,7 @@ function are_basics_installed() {
    'parallel'
    'pssh'
    'saml2aws'
+   'stylua'
    'tree'
    'neovim'
    'yq')

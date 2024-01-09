@@ -12,7 +12,9 @@ strictMode
 function are_basics_installed() {
   local ASK="${1:-'y'}"
   # `awscli` https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
-  declare -a BREW_BASICS=('awscli'
+  declare -a BREW_BASICS=(
+    'actionlint'
+    'awscli'
     'bash'
     'coreutils'
     'curl'
@@ -35,6 +37,7 @@ function are_basics_installed() {
     'saml2aws'
     'tree'
     'neovim'
+    'stylua'
     'wget'
     'xz'
     'yq')

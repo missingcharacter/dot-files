@@ -10,49 +10,6 @@ alias bw='OPENSSL_CONF=/dev/null bw'
 # http://www.briandolhansky.com/blog/2014/8/5/linux-snippets-using-xclip-to-pipe-to-the-system-clipboard
 alias xclip='xclip -selection c'
 
-function upall () {
-  msg_info 'sudo nala upgrade;'
-  sudo nala upgrade;
-
-  msg_info 'brew update; brew upgrade; brew cleanup;'
-  msg_info 'if brew update fails you can try brew update-reset'
-  brew update; brew upgrade; brew cleanup;
-
-  msg_info 'sudo snap refresh --list && sudo snap refresh;'
-  sudo snap refresh --list && sudo snap refresh;
-
-  msg_info 'flatpak update -y;'
-  flatpak update -y;
-
-  msg_info 'cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -'
-  cd ~/.asdf/plugins/python/pyenv/ || return 1
-  git pull
-  cd - || return 1
-
-  msg_info 'asdf update; asdf plugin-update --all'
-  asdf update; asdf plugin-update --all
-
-  msg_info 'npm install npm -g; npm update -g;'
-  npm install npm -g; npm update -g;
-
-  #msg_info 'yarn global upgrade;'
-  #yarn global upgrade;
-
-  msg_info 'gem update --system; gem update;'
-  gem update --system; gem update;
-
-  msg_info "pip3 list --outdated --local --format=json | jq -r '.[] | \"\(.name)==\(.latest_version)\"' | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip3 install -U"
-  pip3 list --outdated --local --format=json | jq -r '.[] | "\(.name)==\(.latest_version)"' | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip3 install -U;
-
-  msg_info 'hash -r'
-  hash -r
-
-  msg_info 'mackup backup; rclone sync to dot-files and dot-files-dropbox'
-  mackup backup;
-  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:PopOS;
-  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:PopOS;
-}
-
 # Add key to ssh-agent
 function addkeys () {
   declare -a SSH_KEYS=()

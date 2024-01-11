@@ -30,6 +30,7 @@ alias kips='kubectl get nodes -o jsonpath={.items[*].status.addresses[?\(@.type=
 # If you want to see where cpu/memory is being used at
 alias kpodscpu='kubectl top pods --containers --sort-by=cpu'
 alias vim='nvim'
+alias brewupgrade='brew update && brew upgrade && echo "You may want to run brew cleanup -n or just brew cleanup, also if pyenv was upgraded you will need to reinstall python"'
 
 export ANSI_NO_COLOR=$'\033[0m'
 function msg_info () {
@@ -267,6 +268,126 @@ function print-bundle-cert-info() {
   done
   rm -rf "${tmp_path}"
 }
+
+function pkg_update() {
+  declare -a supported_pkgs=() pkgs=()
+  supported_pkgs=(
+    "system"
+    "mas"
+    "brew"
+    "asdf"
+    "nodejs"
+    "gem"
+    "pip3"
+    "mackup"
+  )
+  pkgs=("${@}")
+  while IFS= read -r line; do
+    if [[ -n ${line} ]]; then
+      if [[ "${line}" == 'all' ]]; then
+        pkgs=("${supported_pkgs[@]}")
+      fi
+    fi
+  done < <(printf '%s\n' "${pkgs[@]}")
+  msg_info "Packages to update: ${pkgs[*]}"
+  for pkg in "${pkgs[@]}"; do
+    case "${pkg}" in
+      system|mas|brew|asdf|nodejs|gem|pip3|mackup)
+        pkg_update_"${pkg}"
+        ;;
+      *)
+        msg_error "Package ${pkg} is not supported"
+        ;;
+    esac
+  done
+}
+
+function pkg_update_system() {
+  case "$(uname)" in
+    Darwin)
+      msg_info 'sudo softwareupdate -i -a;'
+      sudo softwareupdate -i -a;
+      ;;
+    Linux)
+      msg_info 'sudo nala upgrade;'
+      sudo nala upgrade;
+
+      msg_info 'sudo snap refresh --list && sudo snap refresh;'
+      sudo snap refresh --list && sudo snap refresh;
+
+      msg_info 'flatpak update -y;'
+      flatpak update -y;
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+}
+
+function pkg_update_mas() {
+  case "$(uname)" in
+    Darwin)
+      msg_info 'mas upgrade;'
+      mas upgrade;
+      ;;
+    *)
+      msg_info "mas only works on macOS"
+      ;;
+  esac
+}
+
+function pkg_update_brew() {
+  case "$(uname)" in
+    Darwin)
+      msg_info 'brew cu -y;'
+      brew cu -y;
+      ;;
+    *)
+      msg_info "'brew cu' only works on macOS"
+      ;;
+  esac
+
+  msg_info 'brew update; brew upgrade; brew cleanup;'
+  msg_info 'if brew update fails you can try brew update-reset'
+  brew update; brew upgrade; brew cleanup;
+}
+
+function pkg_update_asdf() {
+  msg_info 'cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -'
+  cd ~/.asdf/plugins/python/pyenv/ || return 1
+  git pull
+  cd - || return 1
+
+  msg_info 'asdf update; asdf plugin-update --all'
+  asdf update; asdf plugin-update --all
+}
+
+function pkg_update_nodejs() {
+  msg_info 'npm install -g npm; npm update -g;'
+  npm install -g npm; npm update -g;
+}
+
+function pkg_update_gem() {
+  msg_info 'gem update --system; gem update;'
+  gem update --system; gem update;
+}
+
+function pkg_update_pip3() {
+  msg_info 'pip3 list --outdated --local --format=json | jq -r ".[] | \"\(.name)==\(.latest_version)\"" | grep -v "^\-e" | cut -d = -f 1  | xargs -n1 pip3 install -U'
+  pip3 list --outdated --local --format=json | jq -r '.[] | "\(.name)==\(.latest_version)"' | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip3 install -U;
+}
+
+function pkg_update_mackup() {
+  msg_info 'hash -r'
+  hash -r
+
+  msg_info 'mackup backup;'
+  mackup backup;
+  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:MacOS;
+  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:MacOS;
+}
+
+
 
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then

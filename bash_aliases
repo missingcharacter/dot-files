@@ -378,13 +378,26 @@ function pkg_update_pip3() {
 }
 
 function pkg_update_mackup() {
+  local folder=''
+  case "$(uname)" in
+    Darwin)
+      folder='MacOS'
+      ;;
+    Linux)
+      folder='PopOS'
+      ;;
+    *)
+      msg_fatal "Operating System $(uname) is not supported"
+      ;;
+  esac
+
   msg_info 'hash -r'
   hash -r
 
-  msg_info 'mackup backup;'
+  msg_info "mackup backup; folder is ${folder}"
   mackup backup;
-  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:MacOS;
-  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:MacOS;
+  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:"${folder}";
+  rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:"${folder}";
 }
 
 

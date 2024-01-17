@@ -1,9 +1,4 @@
 ---
-# Examples from:
-# - https://github.com/tmcdonell/config-alacritty/blob/master/alacritty.yml
-# - https://github.com/numToStr/dotfiles/blob/master/alacritty/.config/alacritty/alacritty.yml
-# env:
-#  TERM: alacritty-direct
 window:
   dynamic_padding: false
   decorations: full
@@ -17,31 +12,7 @@ cursor:
     shape: Beam
     blinking: Always
 live_config_reload: true
-shell:
-  program: /usr/bin/bash
-  # args:
-  #   - --command=tmux
 font:
   size: 12
   normal:
     family: JetBrainsMono Nerd Font Mono
-# debug:
-# Display the time it takes to redraw each frame.
-# render_timer: false
-
-# Keep the log file after quitting Alacritty.
-# persistent_logging: false
-
-# Log level
-#
-# Values for `log_level`:
-#   - 'Off'
-#   - Error
-#   - Warn
-#   - Info
-#   - Debug
-#   - Trace
-# log_level: Warn
-
-# Print all received window events.
-# print_events: false

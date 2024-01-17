@@ -33,6 +33,7 @@ function are_brew_basics_installed() {
 
 function are_cask_basics_installed() {
   declare -a BREW_CASK_BASICS=('1password'
+    'alacritty'
     'alfred'
     'firefox'
     'font-hack-nerd-font'

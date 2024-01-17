@@ -49,6 +49,7 @@ function are_extra_cli_tools_installed() {
 
 function are_extra_tools_installed() {
   declare -a EXTRA_UBUNTU_TOOLS=('ghostwriter'
+    'alacritty'
     'nala'
     'network-manager-openvpn-gnome'
     'openvpn-systemd-resolved'

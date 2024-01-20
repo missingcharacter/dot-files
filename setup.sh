@@ -86,9 +86,7 @@ done
 link_if_not_exists "${GITROOT}/nvim" "${HOME}/.config/nvim"
 
 # alacritty
-create_dir_if_not_exists "${HOME}/.config/alacritty"
-link_if_not_exists "${GITROOT}/alacritty.yml" "${HOME}/.config/alacritty/alacritty.yml"
-link_if_not_exists "${GITROOT}/alacritty.toml" "${HOME}/.config/alacritty/alacritty.toml"
+link_if_not_exists "${GITROOT}/alacritty" "${HOME}/.config/alacritty"
 
 declare -a OS_SPECIFIC_LINKS=()
 mapfile -t OS_SPECIFIC_LINKS < <(get_os_specific_links "${MACHINE_OS}")

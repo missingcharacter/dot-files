@@ -11,6 +11,8 @@ cursor:
   style:
     shape: Beam
     blinking: Always
+shell:
+  program: /usr/bin/bash
 live_config_reload: true
 font:
   size: 12

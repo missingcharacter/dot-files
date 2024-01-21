@@ -2,7 +2,7 @@ live_config_reload = true
 
 [cursor.style]
 blinking = "Always"
-shape = "Beam"
+shape = "Underline"
 
 [font]
 size = 12
@@ -19,3 +19,6 @@ dynamic_padding = false
 dynamic_title = false
 opacity = 0.9
 startup_mode = "Maximized"
+
+[shell]
+program = "bash"

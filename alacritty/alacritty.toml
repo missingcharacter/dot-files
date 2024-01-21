@@ -20,5 +20,8 @@ dynamic_title = false
 opacity = 0.9
 startup_mode = "Maximized"
 
+[env]
+TERM = "alacritty-direct"
+
 [shell]
 program = "bash"

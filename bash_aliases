@@ -400,7 +400,42 @@ function pkg_update_mackup() {
   rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:"${folder}";
 }
 
+function delete_line_before_after() {
+  local base_word="${1}"
+  local word="${2}"
+  local lines_before="${3:-0}"
+  local lines_after="${4:-0}"
+  local IFS=$'\n\t'
 
+  declare -A files_and_lines=()
+  declare -a grep_args=('-n')
+  declare -a sed_args=('-i')
+
+  if [[ "${lines_before}" -gt 0 ]]; then
+    grep_args+=("-B${lines_before}")
+  fi
+
+  if [[ "${lines_after}" -gt 0 ]]; then
+    grep_args+=("-A${lines_after}")
+  fi
+
+  if [[ "$(uname)" == 'Darwin' ]]; then
+    sed_args+=('')
+  fi
+
+  # I use `git grep` on purpose because if I do something dumb I can
+  # always revert the changes with `git checkout -- .`
+  for i in $(git grep "${grep_args[@]}" "${base_word}" | grep "${word}"); do
+    file="$(echo "${i}" | rev | cut -d '-' -f3- | rev)"
+    line="$(echo "${i}" | rev | cut -d '-' -f2 | rev)"
+    files_and_lines["${file}"]+="${line}d;"
+  done
+
+  for file in "${!files_and_lines[@]}"; do
+    echo "Deleting lines ${files_and_lines[${file}]} from ${file}"
+    sed "${sed_args[@]}" "${files_and_lines[${file}]}" "${file}"
+  done
+}
 
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then

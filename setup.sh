@@ -87,6 +87,8 @@ link_if_not_exists "${GITROOT}/nvim" "${HOME}/.config/nvim"
 
 # alacritty
 link_if_not_exists "${GITROOT}/alacritty" "${HOME}/.config/alacritty"
+link_if_not_exists "${HOME}/.config/alacritty/alacritty_${MACHINE_OS}.toml" "${HOME}/.config/alacritty/alacritty.toml"
+
 
 declare -a OS_SPECIFIC_LINKS=()
 mapfile -t OS_SPECIFIC_LINKS < <(get_os_specific_links "${MACHINE_OS}")

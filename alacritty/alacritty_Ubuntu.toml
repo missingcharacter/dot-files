@@ -2,7 +2,7 @@ live_config_reload = true
 
 [cursor.style]
 blinking = "Always"
-shape = "Underline"
+shape = "Beam"
 
 [font]
 size = 12

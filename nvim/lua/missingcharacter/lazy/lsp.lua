@@ -27,6 +27,7 @@ return {
                 "docker_compose_language_service",
                 "eslint",
                 "gopls",
+                "helm_ls",
                 "html",
                 "htmx",
                 "jsonls",
@@ -52,6 +53,18 @@ return {
                     lspconfig.lua_ls.setup({
                         capabilities = capabilities,
                         settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+                    })
+                end,
+                ["helm_ls"] = function()
+                    lspconfig.lua_ls.setup({
+                        capabilities = capabilities,
+                        settings = {
+                            ["helm-ls"] = {
+                                yamlls = {
+                                    path = "yaml-language-server",
+                                },
+                            },
+                        },
                     })
                 end,
                 ["pylsp"] = function()

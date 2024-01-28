@@ -67,6 +67,7 @@ link_if_not_exists "${GITROOT}/${MY_MACKUP_CFG}" "${MACKUP_CUSTOM_APPS_DIR}/${MY
 
 # Actual dot-files
 declare -a LINKS=(
+  'asdfrc'
   'bashrc'
   'bash_profile'
   'bash_aliases'

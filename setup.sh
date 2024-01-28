@@ -70,6 +70,7 @@ declare -a LINKS=(
   'bashrc'
   'bash_profile'
   'bash_aliases'
+  'default-python-packages'
   'envrc'
   'gitconfig'
   'mackup.cfg'

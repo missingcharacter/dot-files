@@ -3,6 +3,7 @@ return {
     branch = "0.1.x",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
+        require("telescope").load_extension("noice")
         local builtin = require("telescope.builtin")
         vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
         vim.keymap.set("n", "<C-p>", builtin.git_files, {})

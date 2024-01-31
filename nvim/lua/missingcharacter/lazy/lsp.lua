@@ -53,7 +53,26 @@ return {
                 ["lua_ls"] = function()
                     lspconfig.lua_ls.setup({
                         capabilities = capabilities,
-                        settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+                        settings = {
+                            Lua = {
+                                runtime = {
+                                    -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                                    version = "LuaJIT",
+                                },
+                                diagnostics = {
+                                    -- Get the language server to recognize the `vim` global
+                                    globals = { "vim" },
+                                },
+                                workspace = {
+                                    -- Make the server aware of Neovim runtime files
+                                    library = vim.api.nvim_get_runtime_file("", true),
+                                },
+                                -- Do not send telemetry data containing a randomized but unique identifier
+                                telemetry = {
+                                    enable = false,
+                                },
+                            },
+                        },
                     })
                 end,
                 ["helm_ls"] = function()
@@ -102,6 +121,25 @@ return {
         -- Set up nvim-cmp.
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
+        cmp.setup.cmdline("/", {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = {
+                { name = "buffer" },
+            },
+        })
+        cmp.setup.cmdline(":", {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = cmp.config.sources({
+                { name = "path" },
+            }, {
+                {
+                    name = "cmdline",
+                    option = {
+                        ignore_cmds = { "Man", "!" },
+                    },
+                },
+            }),
+        })
         cmp.setup({
             snippet = {
                 -- REQUIRED - you must specify a snippet engine

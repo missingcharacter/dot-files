@@ -76,7 +76,7 @@ return {
                     })
                 end,
                 ["helm_ls"] = function()
-                    lspconfig.lua_ls.setup({
+                    lspconfig.helm_ls.setup({
                         capabilities = capabilities,
                         settings = {
                             ["helm-ls"] = {

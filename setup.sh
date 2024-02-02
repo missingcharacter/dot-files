@@ -71,6 +71,8 @@ declare -a LINKS=(
   'bashrc'
   'bash_profile'
   'bash_aliases'
+  'default-gems'
+  'default-npm-packages'
   'default-python-packages'
   'envrc'
   'gitconfig'

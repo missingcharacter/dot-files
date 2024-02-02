@@ -66,6 +66,7 @@ return {
                                 workspace = {
                                     -- Make the server aware of Neovim runtime files
                                     library = vim.api.nvim_get_runtime_file("", true),
+                                    checkThirdParty = false,
                                 },
                                 -- Do not send telemetry data containing a randomized but unique identifier
                                 telemetry = {
@@ -121,6 +122,25 @@ return {
         -- Set up nvim-cmp.
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
+        --@diagnostic disable-next-line: redundant-parameter
+        cmp.setup({
+            snippet = {
+                -- REQUIRED - you must specify a snippet engine
+                expand = function(args)
+                    require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+                end,
+            },
+            mapping = cmp.mapping.preset.insert({
+                ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
+                ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
+                ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+                ["<C-Space>"] = cmp.mapping.complete(),
+            }),
+            sources = cmp.config.sources({
+                { name = "nvim_lsp" },
+                { name = "luasnip" }, -- For luasnip users.
+            }, { { name = "buffer" } }),
+        })
         cmp.setup.cmdline("/", {
             mapping = cmp.mapping.preset.cmdline(),
             sources = {
@@ -139,24 +159,6 @@ return {
                     },
                 },
             }),
-        })
-        cmp.setup({
-            snippet = {
-                -- REQUIRED - you must specify a snippet engine
-                expand = function(args)
-                    require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
-                end,
-            },
-            mapping = cmp.mapping.preset.insert({
-                ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-                ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-                ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-                ["<C-Space>"] = cmp.mapping.complete(),
-            }),
-            sources = cmp.config.sources({
-                { name = "nvim_lsp" },
-                { name = "luasnip" }, -- For luasnip users.
-            }, { { name = "buffer" } }),
         })
         vim.diagnostic.config({
             update_in_insert = true,

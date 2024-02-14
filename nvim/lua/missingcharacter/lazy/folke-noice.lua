@@ -32,6 +32,9 @@ return {
                 lsp_doc_border = false, -- add a border to hover docs and signature help
             },
         })
+        require("notify").setup({
+            background_colour = "#FFFFFF",
+        })
         -- Dismiss Noice Message
         vim.keymap.set("n", "<leader>nd", "<cmd>NoiceDismiss<CR>", { desc = "Dismiss Noice Message" })
     end,

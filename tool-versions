@@ -1,14 +1,14 @@
 # Programming languages
 dotnet-core 8.0.100
 java adoptopenjdk-8.0.252+9.1
-golang 1.21.5
+golang 1.22.0
 groovy 2.4.12
 lua 5.4.6
 nodejs 20.10.0
 opam 2.1.2
-python 3.12.1
+python 3.12.2
 ruby 3.1.2
-rust 1.75.0
+rust 1.76.0
 kotlin 1.9.22
 gradle 6.8.1
 maven 3.6.3
@@ -25,6 +25,6 @@ helm 3.13.3
 helm-ct 3.3.1
 helm-docs 1.10.0
 # misc tools
-rclone 1.65.0
+rclone 1.65.2
 direnv 2.33.0
 1password-cli 2.24.0

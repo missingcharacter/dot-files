@@ -1,3 +1,5 @@
 keyring
 poetry
 pynvim
+uv
+ruff

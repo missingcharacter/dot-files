@@ -80,6 +80,7 @@ declare -a LINKS=(
   'ohmyposh.json'
   'tmux.conf'
   'tool-versions'
+  'wezterm.lua'
 )
 
 for LINK in "${LINKS[@]}"; do

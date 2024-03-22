@@ -437,6 +437,73 @@ function delete_line_before_after() {
   done
 }
 
+function cleancontainers() {
+  declare -a docker_cmds=()
+  case "$(uname)" in
+    Darwin)
+      docker_cmds+=('docker')
+      ;;
+    Linux)
+      docker_cmds+=('sudo' 'docker')
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+  "${docker_cmds[@]}" ps -qa -f status=exited | xargs "${docker_cmds[@]}" rm
+  "${docker_cmds[@]}" images -qa -f dangling=true | xargs "${docker_cmds[@]}" rmi
+}
+
+function cleandockervolumes() {
+  declare -a docker_cmds=()
+  case "$(uname)" in
+    Darwin)
+      docker_cmds+=('docker')
+      ;;
+    Linux)
+      docker_cmds+=('sudo' 'docker')
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+  "${docker_cmds[@]}" volume ls -f dangling=true -q | xargs "${docker_cmds[@]}" volume rm
+}
+
+function base64encodestring() {
+  local TEXT="${1}"
+  declare -a base64_cmds=()
+  case "$(uname)" in
+    Darwin)
+      base64_cmds+=('base64')
+      ;;
+    Linux)
+      base64_cmds+=('base64' '-w' '0')
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+  "${base64_cmds[@]}" <<<"${TEXT}"
+}
+
+function base64decodestring() {
+  local TEXT="${1}"
+  declare -a base64_cmds=()
+  case "$(uname)" in
+    Darwin)
+      base64_cmds+=('base64' '-D')
+      ;;
+    Linux)
+      base64_cmds+=('base64' '-d' '-w' '0')
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+  "${base64_cmds[@]}" <<<"${TEXT}"
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

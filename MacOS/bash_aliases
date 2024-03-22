@@ -34,31 +34,7 @@ function getent() {
   dscacheutil -q "${CATEGORY}" -a "${QUERY_KEY}" "${QUERY_VALUE}"
 }
 
-function cleancontainers() {
-  declare -a exited_containers=() dangling_images=()
-  read -ra exited_containers < <(docker ps -qa -f status=exited)
-  docker rm "${exited_containers[@]}"
-  read -ra dangling_images < <(docker images -qa -f dangling=true)
-  docker rmi "${dangling_images[@]}"
-}
-
-function cleandockervolumes() {
-  declare -a dangling_volumes=()
-  read -ra dangling_volumes < <(docker volume ls -f dangling=true -q)
-  docker volume rm "${dangling_volumes[@]}"
-}
-
 function cleancolima() {
   colima stop
   rm -rf ~/.colima ~/.lima ~/Library/Caches/colima ~/Library/Caches/lima
-}
-
-function base64encodestring() {
-  local TEXT="${1}"
-  base64 <<<"${TEXT}"
-}
-
-function base64decodestring() {
-  local TEXT="${1}"
-  base64 -D <<<"${TEXT}"
 }

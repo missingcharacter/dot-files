@@ -60,27 +60,3 @@ function aptlistinrepo() {
   grep ^Package \
     /var/lib/apt/lists/"${REPO}"*_Packages | awk '{print $2}' | sort -u
 }
-
-function cleancontainers() {
-  declare -a exited_containers=() dangling_images=()
-  read -ra exited_containers < <(sudo docker ps -qa -f status=exited)
-  sudo docker rm "${exited_containers[@]}"
-  read -ra dangling_images < <(sudo docker images -qa -f dangling=true)
-  sudo docker rmi "${dangling_images[@]}"
-}
-
-function cleandockervolumes() {
-  declare -a dangling_volumes=()
-  read -ra dangling_volumes < <(sudo docker volume ls -f dangling=true -q)
-  sudo docker volume rm "${dangling_volumes[@]}"
-}
-
-function base64encodestring() {
-  local TEXT="${1}"
-  base64 -w 0 <<<"${TEXT}"
-}
-
-function base64decodestring() {
-  local TEXT="${1}"
-  base64 -d -w 0 <<<"${TEXT}"
-}

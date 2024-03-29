@@ -50,6 +50,7 @@ end)
 vim.keymap.set("n", "<F3>", "<cmd>set paste!<CR>")
 
 -- Disable arrow keys in normal and insert mode
+-- Source: https://www.mailslurp.com/blog/vim-hard-mode/
 local hardmode = true
 if hardmode then
     -- Show an error message if a disabled key is pressed

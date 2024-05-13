@@ -40,7 +40,7 @@ return {
                 "lua_ls",
                 "powershell_es",
                 "pylsp",
-                "ruby_ls",
+                "ruby_lsp",
                 "rust_analyzer",
                 "tailwindcss",
                 "terraformls",

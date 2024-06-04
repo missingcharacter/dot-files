@@ -31,6 +31,7 @@ alias kips='kubectl get nodes -o jsonpath={.items[*].status.addresses[?\(@.type=
 alias kpodscpu='kubectl top pods --containers --sort-by=cpu'
 alias vim='nvim'
 alias brewupgrade='brew update && brew upgrade && echo "You may want to run brew cleanup -n or just brew cleanup, also if pyenv was upgraded you will need to reinstall python"'
+alias cleanneovim='rm -rf ~/.local/share/nvim ~/.cache/nvim'
 
 export ANSI_NO_COLOR=$'\033[0m'
 function msg_info () {

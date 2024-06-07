@@ -81,3 +81,8 @@ eval "$(oh-my-posh --init --shell bash --config "${HOME}"/.ohmyposh.json)"
 # opam configuration
 # shellcheck disable=SC1091
 (test -r "${HOME}/.opam/opam-init/init.sh" && . "${HOME}/.opam/opam-init/init.sh" &> /dev/null) || true
+
+# Load Fabric configuration
+if [ -f "${HOME}/.config/fabric/fabric-bootstrap.inc" ]; then
+    . "${HOME}/.config/fabric/fabric-bootstrap.inc"
+fi

@@ -215,12 +215,6 @@ function check-ssl() {
   declare -a OPENSSL_BINS=()
   mapfile -t OPENSSL_BINS < <(type -a openssl | awk '{ print $3 }')
   OPENSSL_BIN="${OPENSSL_BINS[0]}"
-  if test -e /usr/local/Cellar/openssl*/*/bin/openssl; then
-    for i in /usr/local/Cellar/openssl*/*/bin/openssl; do
-      OPENSSL_BIN="${i}"
-      break
-    done
-  fi
   CERT_INFO="$(echo | "${OPENSSL_BIN}" s_client \
       -connect "${IP_OR_HOSTNAME}:${PORT}" 2>/dev/null | "${OPENSSL_BIN}" x509 \
       -noout -text -certopt 'no_header,no_version,no_serial,no_signame,no_pubkey,no_sigdump,no_aux')"

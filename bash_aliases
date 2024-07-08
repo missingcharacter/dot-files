@@ -465,6 +465,24 @@ function cleandockervolumes() {
   "${docker_cmds[@]}" volume ls -f dangling=true -q | xargs "${docker_cmds[@]}" volume rm
 }
 
+function dockerip() {
+  local container_name_or_id="${1}"
+  declare -a docker_cmds=()
+  case "$(uname)" in
+    Darwin)
+      docker_cmds+=('docker')
+      ;;
+    Linux)
+      docker_cmds+=('sudo' 'docker')
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+  "${docker_cmds[@]}" inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${container_name_or_id}"
+}
+
+
 function base64encodestring() {
   local TEXT="${1}"
   declare -a base64_cmds=()

@@ -517,6 +517,15 @@ function base64decodestring() {
   "${base64_cmds[@]}" <<<"${TEXT}"
 }
 
+function has_files() {
+  local directory="${1}"
+  retval=1
+  if [ -n "$(ls -A "${directory}" 2>/dev/null)" ]; then
+    retval=0
+  fi
+  return "${retval}"
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

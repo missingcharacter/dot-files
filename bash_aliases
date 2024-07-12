@@ -482,6 +482,22 @@ function dockerip() {
   "${docker_cmds[@]}" inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${container_name_or_id}"
 }
 
+function dockerprune() {
+  declare -a docker_cmds=()
+  case "$(uname)" in
+    Darwin)
+      docker_cmds+=('docker')
+      ;;
+    Linux)
+      docker_cmds+=('sudo' 'docker')
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+  "${docker_cmds[@]}" system prune -af
+  "${docker_cmds[@]}" volume prune -af
+}
 
 function base64encodestring() {
   local TEXT="${1}"

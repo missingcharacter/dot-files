@@ -432,69 +432,44 @@ function delete_line_before_after() {
   done
 }
 
-function cleancontainers() {
-  declare -a docker_cmds=()
+function get_docker_cmds() {
+  local -n cmds=$1
   case "$(uname)" in
     Darwin)
-      docker_cmds+=('docker')
+      cmds+=('docker')
       ;;
     Linux)
-      docker_cmds+=('sudo' 'docker')
+      cmds+=('sudo' 'docker')
       ;;
     *)
       msg_error "Operating System $(uname) is not supported"
       ;;
   esac
+}
+
+function cleancontainers() {
+  local docker_cmds
+  get_docker_cmds docker_cmds
   "${docker_cmds[@]}" ps -qa -f status=exited | xargs "${docker_cmds[@]}" rm
   "${docker_cmds[@]}" images -qa -f dangling=true | xargs "${docker_cmds[@]}" rmi
 }
 
 function cleandockervolumes() {
-  declare -a docker_cmds=()
-  case "$(uname)" in
-    Darwin)
-      docker_cmds+=('docker')
-      ;;
-    Linux)
-      docker_cmds+=('sudo' 'docker')
-      ;;
-    *)
-      msg_error "Operating System $(uname) is not supported"
-      ;;
-  esac
+  local docker_cmds
+  get_docker_cmds docker_cmds
   "${docker_cmds[@]}" volume ls -f dangling=true -q | xargs "${docker_cmds[@]}" volume rm
 }
 
 function dockerip() {
   local container_name_or_id="${1}"
-  declare -a docker_cmds=()
-  case "$(uname)" in
-    Darwin)
-      docker_cmds+=('docker')
-      ;;
-    Linux)
-      docker_cmds+=('sudo' 'docker')
-      ;;
-    *)
-      msg_error "Operating System $(uname) is not supported"
-      ;;
-  esac
+  local docker_cmds
+  get_docker_cmds docker_cmds
   "${docker_cmds[@]}" inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${container_name_or_id}"
 }
 
 function dockerprune() {
-  declare -a docker_cmds=()
-  case "$(uname)" in
-    Darwin)
-      docker_cmds+=('docker')
-      ;;
-    Linux)
-      docker_cmds+=('sudo' 'docker')
-      ;;
-    *)
-      msg_error "Operating System $(uname) is not supported"
-      ;;
-  esac
+  local docker_cmds
+  get_docker_cmds docker_cmds
   "${docker_cmds[@]}" system prune -af
   "${docker_cmds[@]}" volume prune -af
 }

@@ -49,17 +49,15 @@ function are_extra_cli_tools_installed() {
 
 function are_extra_tools_installed() {
   declare -a EXTRA_UBUNTU_TOOLS=('ghostwriter'
-    'alacritty'
     'nala'
     'network-manager-openvpn-gnome'
     'openvpn-systemd-resolved'
     'pinta'
     'sublime-text'
-    'termshark'
     'transmission-gtk'
     'ubuntu-cleaner'
     'vlc'
-    'virtualbox-7.0'
+    'wezterm'
     'wireguard'
     'wireshark-gtk')
   install_if_not_installed 'apt' 'n' "${EXTRA_UBUNTU_TOOLS[@]}"
@@ -69,8 +67,6 @@ function are_extra_tools_installed() {
     'fd'
     'fpp'
     'bitwarden-cli'
-    'mitmproxy'
-    'rclone'
     'ripgrep'
     'shellcheck'
     'shfmt'
@@ -110,25 +106,26 @@ function download_and_install_deb() {
 function install_desktop_apps() {
   TMP_DOT_FILES=$(mktemp -d dot-files.XXXX)
 
-  echo "Adding apt keys for docker, sublime-text, virtualbox"
+  echo "Adding apt keys for docker, sublime-text"
   declare -A APT_KEYS=(
     ['docker']='https://download.docker.com/linux/ubuntu/gpg'
     ['sublime']='https://download.sublimetext.com/sublimehq-pub.gpg'
     ['volian-scar-unstable']='https://deb.volian.org/volian/scar.key'
+    ['wezterm-fury']='https://apt.fury.io/wez/gpg.key'
   )
 
   for KEY_NAME in "${!APT_KEYS[@]}"; do
     add_apt_key "${APT_KEYS[${KEY_NAME}]}" "${KEY_NAME}" "${TMP_DOT_FILES}"
   done
 
-  echo "Adding repositories: docker, GhostWriter, sublime-text, virtualbox"
+  echo "Adding repositories: docker, GhostWriter, sublime-text"
   declare -a REPOSITORIES=(
     "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     'ppa:wereturtle/ppa'
     'ppa:gerardpuig/ppa'
     'deb [signed-by=/etc/apt/trusted.gpg.d/sublime.gpg] https://download.sublimetext.com/ apt/stable/'
-    "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
     'deb [signed-by=/etc/apt/trusted.gpg.d/volian-scar-unstable.gpg] https://deb.volian.org/volian/ scar main'
+    'deb [signed-by=/etc/apt/trusted.gpg.d/wezterm-fury.gpg] https://apt.fury.io/wez/ * *'
   )
 
   for REPOSITORY in "${REPOSITORIES[@]}"; do
@@ -140,11 +137,10 @@ function install_desktop_apps() {
   is_docker_installed
   are_extra_tools_installed
 
-  echo "Installing visual studio code, Google Chrome Stable, Slack"
+  echo "Installing Google Chrome Stable, Slack"
   LATEST_SLACK="$(curl -s 'https://slack.com/downloads/instructions/ubuntu' | xmllint --html --xpath 'string(/html/body/main/section[3]/div/p[1]/a[1]/@href)' - 2> /dev/null )"
   declare -A DEB_PACKAGES=(
     ['1password']='https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb' # pragma: allowlist secret
-    ['code']='https://go.microsoft.com/fwlink/?LinkID=760868'
     ['google-chrome-stable']='https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
     ['slack']="${LATEST_SLACK}")
 
@@ -155,13 +151,6 @@ function install_desktop_apps() {
   # needed for multiple apps
   mkdir -p "${HOME}/bin" || true
   HOME_BIN="${HOME}/bin"
-
-  if ! grep -q 'Oracle VM VirtualBox Extension Pack' <(sudo VBoxManage list extpacks); then
-    echo 'Installing virtualbox Extension pack'
-    LATEST_EXT_PACK=$(curl 'https://www.virtualbox.org/wiki/Downloads' | xmllint --html --xpath 'string(//html/body/div[4]/div[3]/div[3]/div/div[2]/ul[3]/li/a/@href)' - 2> /dev/null)
-    curl -Lv "${LATEST_EXT_PACK}" -o "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
-    sudo VBoxManage extpack install --replace "${TMP_DOT_FILES}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack"
-  fi
 
   if ! grep -q 'JetBrains Mono' <(fc-list); then
     echo 'Installing Jetbrains Font'

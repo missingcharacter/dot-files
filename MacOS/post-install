@@ -18,7 +18,6 @@ function are_brew_basics_installed() {
   'exa'
   'fd'
   'fpp'
-  'rclone'
   'ripgrep'
   'pandoc'
   'shellcheck'
@@ -33,7 +32,6 @@ function are_brew_basics_installed() {
 
 function are_cask_basics_installed() {
   declare -a BREW_CASK_BASICS=('1password'
-    'alacritty'
     'alfred'
     'firefox'
     'font-hack-nerd-font'
@@ -52,8 +50,8 @@ function are_cask_basics_installed() {
     'transmission'
     'tripmode'
     'tunnelblick'
-    'visual-studio-code'
-    'vlc')
+    'vlc'
+    'wezterm')
   are_brew_basics_installed
   install_if_not_installed 'brewcask' 'n' "${BREW_CASK_BASICS[@]}"
 }

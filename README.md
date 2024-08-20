@@ -19,6 +19,7 @@ Keep key configurations and share them among your computers
   - [gnupg](https://gnupg.org/)
   - [JetBrains Mono font](https://www.jetbrains.com/lp/mono/)
   - [jq](https://stedolan.github.io/jq/)
+  - [keyring](https://pypi.org/project/keyring/)
   - [inetutils](https://www.gnu.org/software/inetutils/)
   - [mackup](https://github.com/lra/mackup)
   - [parallel](https://www.gnu.org/software/parallel/)
@@ -33,9 +34,8 @@ Keep key configurations and share them among your computers
   - [tmux](https://tmux.github.io/)
   - [tree](http://mama.indstate.edu/users/ice/tree/)
   - [vim](https://www.vim.org/)
-  - [visual studio code](https://code.visualstudio.com/)
-  - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
   - [vlc](https://www.videolan.org/vlc/)
+  - [wezterm](https://wezfurlong.org/wezterm/index.html)
   - [wget](https://www.gnu.org/software/wget/)
   - [wireshark](https://www.wireshark.org)
   - [xz](https://tukaani.org/xz/)
@@ -65,19 +65,12 @@ Keep key configurations and share them among your computers
 
 - Installs:
   - [Homebrew](https://brew.sh)
-    - [mitmproxy](https://mitmproxy.org/downloads/)
   - [apt](https://wiki.debian.org/Apt)
     - [apt-file](https://wiki.debian.org/apt-file)
     - [ghostwriter](https://wereturtle.github.io/ghostwriter/)
     - [libxml2-utils](http://xmlsoft.org)
     - [Network Manager OpenVPN](https://gitlab.gnome.org/GNOME/NetworkManager-openvpn)
-    - [python3-keyring](https://pypi.org/project/keyring/)
     - [xclip](https://github.com/astrand/xclip)
-
-### Stuff I may replace
-
-- Virtualbox with [multipass](https://multipass.run/) or
-  [xhyve](https://github.com/machyve/xhyve), `xhyve` if I need windows hosts
 
 ## how I use mackup
 

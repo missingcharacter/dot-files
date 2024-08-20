@@ -34,7 +34,6 @@ function are_basics_installed() {
     'lsb-release'
     'make'
     'procps'
-    'python3-keyring'
     'software-properties-common'
     'tk-dev'
     'wget'

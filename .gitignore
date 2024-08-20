@@ -39,8 +39,6 @@ Thumbs.db
 
 # Arbitrary files and folders #
 ###############################
-# I symlink alacritty.toml
-alacritty/alacritty.toml
 
 ## General ##
 #############
@@ -92,7 +90,6 @@ Music/*
 Pictures/*
 Screenshots/*
 Videos/*
-VirtualBox VMs/*
 .TrueCrypt-lock-ricardo
 .TrueCrypt/
 .adobe/

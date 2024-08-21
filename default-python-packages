@@ -1,5 +1,6 @@
 keyring
 poetry
+pre-commit
 pynvim
 uv
 ruff

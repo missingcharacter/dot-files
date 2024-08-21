@@ -191,7 +191,7 @@ function install_desktop_apps() {
       git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${HOME}/src/nerd-fonts"
     fi
     cd "${HOME}/src/nerd-fonts" || exit 1
-    ./install.sh -q -A
+    ./install.sh -q
     cd - || exit 1
     fc-cache -f -v
   fi
@@ -210,7 +210,7 @@ function install_desktop_apps() {
     LATEST_JETBRAINS_TOOLBOX=$(curl -sL 'https://data.services.jetbrains.com//products/releases?code=TBA&latest=true&type=release' | jq -r '.TBA[].downloads.linux.link')
     curl -Lv "${LATEST_JETBRAINS_TOOLBOX}" -o "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz"
     tar -xzvf "${TMP_DOT_FILES}/jetbrains-toolbox.tar.gz" -C "${TMP_DOT_FILES}"
-    mv "${TMP_DOT_FILES}/jetbrains-toolbox-*/jetbrains-toolbox" "${HOME_BIN}/"
+    mv "${TMP_DOT_FILES}"/jetbrains-toolbox-*/jetbrains-toolbox "${HOME_BIN}/"
   fi
 
   if ! grep -q 'Bourne-Again shell' <(file ~/.tmux/plugins/tpm/tpm); then

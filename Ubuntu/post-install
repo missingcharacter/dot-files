@@ -10,6 +10,20 @@ strictMode
 # shellcheck disable=SC1091
 . "${GITROOT}"/Ubuntu/base
 
+function get_deb_url_from_xpath() {
+  local URL="${1}"
+  local XPATH="${2}"
+  local DEB_URL
+  DEB_URL="$(curl -s \
+      "${URL}" | \
+      xmllint --html \
+      --xpath "${XPATH}" - 2> /dev/null)"
+  if [[ "${#DEB_URL}" -lt 4 ]]; then
+    return 1
+  fi
+  echo "${DEB_URL}"
+}
+
 function is_repo_present() {
   local REPO="${1}"
   grep -v -E '^#|^ *$' /etc/apt/sources.list /etc/apt/sources.list.d/*.list | grep -Fq "${REPO/ppa:/}"
@@ -17,9 +31,10 @@ function is_repo_present() {
 
 function add_apt_repo() {
   local REPO="${1}"
-  echo "will try to remove repository ${REPO} if it exists already"
+  local FILE_NAME="${2}"
+  msg_info "will try to remove repository ${REPO} if it exists already"
   if ! is_repo_present "${REPO}"; then
-    sudo add-apt-repository -y "${REPO}"
+    echo "${REPO}" | sudo tee /etc/apt/sources.list.d/"${FILE_NAME}".list > /dev/null
   fi
 }
 
@@ -104,11 +119,11 @@ function download_and_install_deb() {
 }
 
 function install_desktop_apps() {
+  local TMP_DOT_FILES
   TMP_DOT_FILES=$(mktemp -d dot-files.XXXX)
 
-  echo "Adding apt keys for docker, sublime-text"
+  msg_info 'Adding apt keys for docker, sublime-text'
   declare -A APT_KEYS=(
-    ['docker']='https://download.docker.com/linux/ubuntu/gpg'
     ['sublime']='https://download.sublimetext.com/sublimehq-pub.gpg'
     ['wezterm-fury']='https://apt.fury.io/wez/gpg.key'
   )
@@ -117,26 +132,29 @@ function install_desktop_apps() {
     add_apt_key "${APT_KEYS[${KEY_NAME}]}" "${KEY_NAME}" "${TMP_DOT_FILES}"
   done
 
-  sudo install -m 0755 -d /etc/apt/keyrings
-  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-  sudo chmod a+r /etc/apt/keyrings/docker.asc
+  msg_info 'Will create /etc/apt/keyrings/docker.asc if does not exist'
+  if [[ ! -e /etc/apt/keyrings/docker.asc ]]; then
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    msg_info 'Created /etc/apt/keyrings/docker.asc'
+  fi
 
   echo "Adding repositories: docker, GhostWriter, sublime-text"
-  declare -a REPOSITORIES=(
-    "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    'ppa:wereturtle/ppa'
-    'ppa:gerardpuig/ppa'
-    'deb [signed-by=/etc/apt/trusted.gpg.d/sublime.gpg] https://download.sublimetext.com/ apt/stable/'
-    'deb [signed-by=/etc/apt/trusted.gpg.d/volian-scar-unstable.gpg] https://deb.volian.org/volian/ scar main'
-    'deb [signed-by=/etc/apt/trusted.gpg.d/wezterm-fury.gpg] https://apt.fury.io/wez/ * *'
+  declare -A REPOSITORIES=(
+    ['docker']="deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    ['ghostwriter']='deb https://ppa.launchpadcontent.net/wereturtle/ppa/ubuntu jammy main'
+    ['ubuntu-cleaner']='deb https://ppa.launchpadcontent.net/gerardpuig/ppa/ubuntu jammy main'
+    ['sublime']='deb [signed-by=/etc/apt/trusted.gpg.d/sublime.gpg] https://download.sublimetext.com/ apt/stable/'
+    ['wezterm']='deb [signed-by=/etc/apt/trusted.gpg.d/wezterm-fury.gpg] https://apt.fury.io/wez/ * *'
   )
 
-  for REPOSITORY in "${REPOSITORIES[@]}"; do
-    add_apt_repo "${REPOSITORY}"
+  for KEY in "${!REPOSITORIES[@]}"; do
+    add_apt_repo "${REPOSITORIES[${KEY}]}" "${KEY}"
   done
 
   echo "Installing Google Chrome Stable, Slack"
-  LATEST_SLACK="$(curl -s 'https://slack.com/downloads/instructions/ubuntu' | xmllint --html --xpath 'string(/html/body/main/section[3]/div/p[1]/a[1]/@href)' - 2> /dev/null )"
+  LATEST_SLACK="$(get_deb_url_from_xpath 'https://slack.com/downloads/instructions/linux?ddl=1&build=deb' 'string(/html/body/main/section[1]/iframe/@src)')"
   declare -A DEB_PACKAGES=(
     ['1password']='https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb' # pragma: allowlist secret
     ['google-chrome-stable']='https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'

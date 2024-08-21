@@ -34,7 +34,11 @@ function add_apt_repo() {
   local FILE_NAME="${2}"
   msg_info "will try to remove repository ${REPO} if it exists already"
   if ! is_repo_present "${REPO}"; then
-    echo "${REPO}" | sudo tee /etc/apt/sources.list.d/"${FILE_NAME}".list > /dev/null
+    if [[ "${REPO}" =~ ^ppa:.*/ppa$ ]]; then
+      sudo add-apt-repository -y "${REPO}"
+    else
+      echo "${REPO}" | sudo tee /etc/apt/sources.list.d/"${FILE_NAME}".list > /dev/null
+    fi
   fi
 }
 
@@ -78,7 +82,6 @@ function are_extra_tools_installed() {
   install_if_not_installed 'apt' 'n' "${EXTRA_UBUNTU_TOOLS[@]}"
   declare -a EXTRA_BREW_TOOLS=('bat'
     'bfg'
-    'exa'
     'fd'
     'fpp'
     'bitwarden-cli'
@@ -143,8 +146,8 @@ function install_desktop_apps() {
   echo "Adding repositories: docker, GhostWriter, sublime-text"
   declare -A REPOSITORIES=(
     ['docker']="deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    ['ghostwriter']='deb https://ppa.launchpadcontent.net/wereturtle/ppa/ubuntu jammy main'
-    ['ubuntu-cleaner']='deb https://ppa.launchpadcontent.net/gerardpuig/ppa/ubuntu jammy main'
+    ['ghostwriter']='ppa:wereturtle/ppa'
+    ['ubuntu-cleaner']='ppa:gerardpuig/ppa'
     ['sublime']='deb [signed-by=/etc/apt/trusted.gpg.d/sublime.gpg] https://download.sublimetext.com/ apt/stable/'
     ['wezterm']='deb [signed-by=/etc/apt/trusted.gpg.d/wezterm-fury.gpg] https://apt.fury.io/wez/ * *'
   )
@@ -167,7 +170,7 @@ function install_desktop_apps() {
     download_and_install_deb "${DEB_PACKAGES[${KEY}]}" "${KEY}"
   done
 
-  sudo apt update
+  retry_command "10" "sudo" "apt" "update"
 
   is_docker_installed
   are_extra_tools_installed

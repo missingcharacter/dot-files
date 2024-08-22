@@ -22,6 +22,13 @@
     ; see: http://stackoverflow.com/questions/13148066/warning-push-default-is-unset-its-implicit-value-is-changing-in-git-2-0
     default = simple
     autoSetupRemote = true
+[pull]
+    rebase = true
+[init]
+    defaultBranch = main
+[fetch]
+    prune = true
+    pruneTags = true
 [core]
     editor = vim
     whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
@@ -103,7 +110,3 @@
     br = branch
     dc = diff --cached
     pt = !git tag -l | xargs git tag -d && git fetch -t
-[pull]
-    rebase = true
-[init]
-    defaultBranch = main

@@ -47,7 +47,7 @@ end)
 
 -- This is where you actually apply your config choices
 config.font_size = 15.0
-config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
+config.font = wezterm.font("JetBrains Mono")
 config.window_background_opacity = 0.9
 config.default_cursor_style = "BlinkingBlock"
 -- For example, changing the color scheme:

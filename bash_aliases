@@ -74,17 +74,30 @@ function setgitconfig() {
   fi
 }
 
+function get_secret() {
+  local service_name="${1}"
+  local username="${2}"
+  local password
+  password="$(keyring get "${service_name}" "${username}")"
+  if [[ "${#password}" -eq 0 ]]; then
+    msg_error "You may need to run: keyring set ${service_name} ${username}" >&2
+    return 1
+  fi
+  echo "${password}"
+}
+
 function gitconfig() {
-  local CONFIG_TYPE
-  local GPG_SIGN
-  CONFIG_TYPE="${1}"
-  GPG_SIGN="$(keyring get git "${CONFIG_TYPE}_GPG_SIGN")"
-  setgitconfig 'user.name' "$(keyring get git "${CONFIG_TYPE}_NAME")"
-  setgitconfig 'user.email' "$(keyring get git "${CONFIG_TYPE}_EMAIL")"
+  local CONFIG_TYPE="${1}"
+  local GPG_SIGN='false'
+  if [[ "$(get_secret git "${CONFIG_TYPE}_GPG_SIGN")" == 'true' ]]; then
+    GPG_SIGN='true'
+  fi
+  setgitconfig 'user.name' "$(get_secret git "${CONFIG_TYPE}_NAME")"
+  setgitconfig 'user.email' "$(get_secret git "${CONFIG_TYPE}_EMAIL")"
   setgitconfig 'commit.gpgsign' "${GPG_SIGN}"
   setgitconfig 'tag.gpgsign' "${GPG_SIGN}"
   if [[ "${GPG_SIGN}" == 'true' ]]; then
-    setgitconfig 'user.signingkey' "$(keyring get git "${CONFIG_TYPE}_GPG_KEY")"
+    setgitconfig 'user.signingkey' "$(get_secret git "${CONFIG_TYPE}_GPG_KEY")"
   fi
 }
 

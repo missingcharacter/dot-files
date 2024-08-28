@@ -17,6 +17,7 @@ function are_brew_basics_installed() {
   'bfg'
   'fd'
   'fpp'
+  'gh'
   'ripgrep'
   'pandoc'
   'shellcheck'

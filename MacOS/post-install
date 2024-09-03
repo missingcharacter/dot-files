@@ -34,6 +34,7 @@ function are_cask_basics_installed() {
   declare -a BREW_CASK_BASICS=('1password'
     'alfred'
     'firefox'
+    'flameshot'
     'font-hack-nerd-font'
     'font-jetbrains-mono'
     'google-chrome'

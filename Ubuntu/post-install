@@ -177,14 +177,16 @@ function install_desktop_apps() {
   done
 
   echo "Installing Google Chrome Stable, Slack"
-  local latest_slack
+  local latest_slack latest_flameshot
   latest_slack="$(get_deb_url_from_xpath 'https://slack.com/downloads/instructions/linux?ddl=1&build=deb' 'string(/html/body/main/section[1]/iframe/@src)')"
+  latest_flameshot="$(get_latest_github_tag 'flameshot-org' 'flameshot' 'true')"
   declare -A deb_packages=(
     ['1password']='https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb' # pragma: allowlist secret
     ['google-chrome-stable']='https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb'
     ['slack']="${latest_slack}"
     ['nala']='https://deb.volian.org/volian/pool/main/v/volian-archive/volian-archive-nala_0.3.1_all.deb'
     ['volian-keyring']='https://deb.volian.org/volian/pool/main/v/volian-archive/volian-archive-keyring_0.3.1_all.deb'
+    ['flameshot']="https://github.com/flameshot-org/flameshot/releases/download/v${latest_flameshot}/flameshot-${latest_flameshot}-1.ubuntu-22.04.amd64.deb"
   )
 
   for key in "${!deb_packages[@]}"; do

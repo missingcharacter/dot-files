@@ -13,6 +13,7 @@ Keep key configurations and share them among your computers
   - [oh-my-posh](https://ohmyposh.dev)
   - [bfg](https://rtyley.github.io/bfg-repo-cleaner/)
   - [docker](https://docs.docker.com/install/)
+  - [flameshot](https://github.com/flameshot-org/flameshot)
   - [fpp](https://github.com/facebook/PathPicker)
   - [gawk](https://www.gnu.org/software/gawk/)
   - [git-filter-repo](https://github.com/newren/git-filter-repo)

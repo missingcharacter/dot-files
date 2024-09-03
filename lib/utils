@@ -68,6 +68,19 @@ function get_brew_location() {
   esac
 }
 
+function get_latest_github_tag() {
+  local owner="${1}"
+  local repo="${2}"
+  local remove_v="${3:-false}"
+  local latest_tag
+  latest_tag="$(curl -s "https://api.github.com/repos/${owner}/${repo}/releases/latest" | jq -r .tag_name)"
+  if [[ "${remove_v}" == 'true' ]]; then
+    echo -n "${latest_tag}" | tr -d 'v'
+    return 0
+  fi
+  echo -n "${latest_tag}"
+}
+
 function source_asdf() {
   disableStrictMode
   # shellcheck disable=SC1091

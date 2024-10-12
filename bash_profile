@@ -1,4 +1,4 @@
-export EDITOR=vim
+export EDITOR=nvim
 # git can now ask for gpg key passphrase
 GPG_TTY=$(tty)
 export GPG_TTY

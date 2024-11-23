@@ -5,3 +5,4 @@ pynvim
 uv
 ruff
 detect-secrets
+click

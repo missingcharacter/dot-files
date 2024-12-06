@@ -35,6 +35,7 @@ function are_basics_installed() {
     'parallel'
     'pssh'
     'saml2aws'
+    'tealdeer'
     'tree'
     'neovim'
     'stylua'

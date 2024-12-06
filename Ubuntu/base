@@ -59,6 +59,7 @@ function are_basics_installed() {
    'stylua'
    'tree'
    'neovim'
+   'tealdeer'
    'yq')
   msg_info 'Will run apt update'
   sudo apt update

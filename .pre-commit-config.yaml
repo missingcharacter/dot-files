@@ -35,7 +35,7 @@ repos:
       - id: requirements-txt-fixer
       - id: mixed-line-ending
   - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.24
+    rev: v0.1.25
     hooks:
       - id: shellcheck
         exclude: '.*\.sh\.j2'
@@ -48,6 +48,6 @@ repos:
     hooks:
       - id: actionlint-system
   - repo: https://github.com/JohnnyMorganz/StyLua
-    rev: v2.0.1
+    rev: v2.0.2
     hooks:
       - id: stylua-system

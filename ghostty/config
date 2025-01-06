@@ -1,0 +1,8 @@
+window-padding-color = background
+theme = Dracula
+font-family = "JetBrains Mono"
+font-size = 18
+# https://ghostty.org/docs/config/reference#font-feature
+font-feature = -calt
+font-feature = -liga
+font-feature = -dlig

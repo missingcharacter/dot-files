@@ -87,8 +87,14 @@ for LINK in "${LINKS[@]}"; do
   link_if_not_exists "${GITROOT}/${LINK}" "${HOME}/.${LINK}"
 done
 
-# neovim
-link_if_not_exists "${GITROOT}/nvim" "${HOME}/.config/nvim"
+# Config folders
+declare -a CONFIG_FOLDERS=(
+  'ghostty'
+  'nvim'
+)
+for CONFIG_FOLDER in "${CONFIG_FOLDERS[@]}"; do
+  link_if_not_exists "${GITROOT}/${CONFIG_FOLDER}" "${HOME}/.config/${CONFIG_FOLDER}"
+done
 
 declare -a OS_SPECIFIC_LINKS=()
 mapfile -t OS_SPECIFIC_LINKS < <(get_os_specific_links "${MACHINE_OS}")

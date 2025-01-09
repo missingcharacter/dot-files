@@ -7,3 +7,5 @@ font-feature = -calt
 font-feature = -liga
 font-feature = -dlig
 fullscreen = false
+window-height = 510
+window-width = 1640

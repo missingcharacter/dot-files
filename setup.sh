@@ -92,6 +92,9 @@ declare -a CONFIG_FOLDERS=(
   'ghostty'
   'nvim'
 )
+if [[ ! -e "${HOME}/.config" ]]; then
+  mkdir "${HOME}/.config"
+fi
 for CONFIG_FOLDER in "${CONFIG_FOLDERS[@]}"; do
   link_if_not_exists "${GITROOT}/${CONFIG_FOLDER}" "${HOME}/.config/${CONFIG_FOLDER}"
 done

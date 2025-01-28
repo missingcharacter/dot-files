@@ -63,7 +63,11 @@ function get_brew_location() {
       echo -n '/home/linuxbrew/.linuxbrew/bin/brew'
       ;;
     MacOS)
-      echo -n '/usr/local/bin/brew'
+      if [[ "$(uname -m)" == 'arm64' ]]; then
+        echo -n '/opt/homebrew/bin/brew'
+      else
+        echo -n '/usr/local/bin/brew'
+      fi
       ;;
   esac
 }

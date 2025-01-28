@@ -1,6 +1,6 @@
 # Programming languages
 dotnet-core 8.0.100
-java adoptopenjdk-8.0.252+9.1
+java temurin-21.0.6+7.0.LTS
 golang 1.22.0
 groovy 2.4.12
 lua 5.4.6

@@ -529,6 +529,10 @@ function has_files() {
   return "${retval}"
 }
 
+function TitleCaseConverter() {
+  printf "%s" "$1" | sed 's/.*/\L&/; s/[a-z]*/\u&/g'
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

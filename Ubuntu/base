@@ -43,6 +43,7 @@ function are_basics_installed() {
   BREW_BASICS=(
    'actionlint'
    'asciidoc'
+   'asdf'
    'awscli'
    'fontconfig'
    'gcc'
@@ -93,7 +94,6 @@ function is_asdf_installed() {
     msg_info 'Will try to install asdf dependencies'
     install_if_not_installed 'apt' "${ASK}" "${ASDF_DEPS[@]}"
     msg_info 'Will try to install asdf using git'
-    git_install_asdf "${ASK}"
+    source_asdf
   fi
-  source_asdf
 }

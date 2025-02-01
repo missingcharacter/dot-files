@@ -14,6 +14,7 @@ function are_basics_installed() {
   # `awscli` https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
   declare -a BREW_BASICS=(
     'actionlint'
+    'asdf'
     'awscli'
     'bash'
     'coreutils'
@@ -68,6 +69,6 @@ function is_asdf_installed() {
     msg_info 'Will try to install asdf dependencies'
     install_if_not_installed 'brew' "${ASK}" "${ASDF_DEPS[@]}"
     msg_info 'Will try to install asdf using git'
-    git_install_asdf "${ASK}"
+    source_asdf
   fi
 }

@@ -88,9 +88,10 @@ function get_latest_github_tag() {
 function source_asdf() {
   disableStrictMode
   # shellcheck disable=SC1091
-  . "${HOME}"/.asdf/asdf.sh
-  # shellcheck disable=SC1091
-  . "${HOME}"/.asdf/completions/asdf.bash
+  . "$(brew --prefix)"/opt/asdf/libexec/asdf.sh
+  export ASDF_DATA_DIR="${HOME}/.asdf"
+  # shellcheck disable=SC1090
+  . <(asdf completion bash)
   strictMode
 }
 
@@ -363,26 +364,6 @@ function get_git_tags() {
     fi
   done \
       | LC_ALL=C sort -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4d -k 5,5d
-}
-
-function git_install_asdf() {
-  # How to:
-  # only to be used within is_asdf_installed function
-  # in ${GITROOT}/(Ubuntu|MacOS)/base
-  local ASK="${1:-'y'}"
-  local ANSWER='y'
-  declare -a ASDF_TAGS=()
-  msg_info 'Seems like asdf is not installed'
-  if [[ "${ASK}" == 'y' ]]; then
-    ANSWER="$(get_user_reply 'Want me to install asdf?')"
-    echo
-  fi
-  if [[ ${ANSWER} =~ ^[Yy]$ ]]; then
-    local ASDF_REPO="https://github.com/asdf-vm/asdf.git"
-    mapfile -t ASDF_TAGS < <(get_git_tags ${ASDF_REPO})
-    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_TAGS[-1]}"
-    source_asdf
-  fi
 }
 
 function install_asdf_tool_versions() {

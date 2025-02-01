@@ -365,8 +365,8 @@ function pkg_update_asdf() {
   git pull
   cd - || return 1
 
-  msg_info 'asdf update; asdf plugin-update --all'
-  asdf update; asdf plugin-update --all
+  msg_info 'asdf plugin-update --all'
+  asdf plugin-update --all
 }
 
 function pkg_update_nodejs() {

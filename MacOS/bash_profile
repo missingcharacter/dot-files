@@ -3,11 +3,29 @@ if [[ "$(uname -m)" == 'arm64' ]]; then
 else
   eval "$(/usr/local/bin/brew shellenv)"
 fi
+
 # Homebrew's Bash completion stuff
 if [ -f "$(brew --prefix)"/etc/bash_completion ]; then
   # shellcheck disable=SC1091
   source "$(brew --prefix)"/etc/bash_completion
 fi
+
+# `asdf` is now managed by homebrew
+# shellcheck disable=SC1090
+. <(asdf completion bash)
+# Hook direnv into your shell.
+# shellcheck disable=SC1091
+. "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
+
+# Go specific env vars
+GOPATH="${HOME}/src/gopath"
+GOROOT="$(asdf where golang)/go"
+export GOPATH GOROOT
+
+# Java specific env vars
+JDK_HOME="$(asdf where java)"
+JAVA_HOME="$(asdf where java)/jre"
+export JDK_HOME JAVA_HOME
 
 # Update PATH
 export PATH="$(brew --prefix)/opt/curl/bin:${PATH}:${HOME}/src/gopath/bin:${HOME}/bin"

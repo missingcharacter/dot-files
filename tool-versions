@@ -25,6 +25,6 @@ helm 3.13.3
 helm-ct 3.3.1
 helm-docs 1.10.0
 # misc tools
-rclone 1.65.2
+rclone 1.69.0
 direnv 2.33.0
 1password-cli 2.24.0

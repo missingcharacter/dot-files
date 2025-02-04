@@ -108,7 +108,6 @@ function brew_taps() {
     MacOS)
       # Note: Brew cask is not support on homebrew for linux
       brew tap buo/cask-upgrade
-      brew tap homebrew/cask-fonts
       ;;
     *)
       msg_info 'There are no OS specific taps for you'

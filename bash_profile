@@ -22,28 +22,9 @@ if [ -f "${HOME}"/.bash_aliases ]; then
   . "${HOME}"/.bash_aliases
 fi
 
-# https://asdf-vm.com/guide/getting-started.html#_3-install-asdf
-# shellcheck disable=SC1091
-. "${HOME}"/.asdf/asdf.sh
-# shellcheck disable=SC1091
-. "${HOME}"/.asdf/completions/asdf.bash
-# Hook direnv into your shell.
-# shellcheck disable=SC1091
-. "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
-
 # Change Pinta Language back to english
 #export LANG=en_GB
 #export LANG=en_US.UTF-8
-
-# Go specific env vars
-GOPATH="${HOME}/src/gopath"
-GOROOT="$(asdf where golang)/go"
-export GOPATH GOROOT
-
-# Java specific env vars
-JDK_HOME="$(asdf where java)"
-JAVA_HOME="$(asdf where java)/jre"
-export JDK_HOME JAVA_HOME
 
 # Verbose terraform stderr
 # export TF_LOG="TRACE"

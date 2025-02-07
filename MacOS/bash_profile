@@ -11,6 +11,7 @@ if [ -f "$(brew --prefix)"/etc/bash_completion ]; then
 fi
 
 # `asdf` is now managed by homebrew
+export ASDF_DATA_DIR="${HOME}/.asdf"
 # shellcheck disable=SC1090
 . <(asdf completion bash)
 # Hook direnv into your shell.

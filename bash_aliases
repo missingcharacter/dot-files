@@ -153,7 +153,7 @@ function youtube-dl-best() {
   local YOUTUBE_URL="${1}"
   # Assumes `ffmpeg` and/or `avconv` are in your path
   # `brew install ffmpeg`
-  youtube-dl \
+  yt-dlp \
     -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' \
     --merge-output-format mp4 "${YOUTUBE_URL}"
 }

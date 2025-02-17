@@ -6,4 +6,4 @@ uv
 ruff
 detect-secrets
 click
-youtube-dl
+yt-dlp

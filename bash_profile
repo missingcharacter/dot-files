@@ -67,3 +67,7 @@ eval "$(oh-my-posh init bash --config "${HOME}"/.ohmyposh.json)"
 if [ -f "${HOME}/.config/fabric/fabric-bootstrap.inc" ]; then
     . "${HOME}/.config/fabric/fabric-bootstrap.inc"
 fi
+
+# activate mise
+# https://mise.jdx.dev/
+eval "$(mise activate bash)"

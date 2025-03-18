@@ -361,6 +361,12 @@ function get_git_tags() {
 }
 
 function install_mise_tool_versions() {
-  # https://mise.jdx.dev/faq.html#how-do-i-migrate-from-asdf
+  # cd to home folder
+  cd || exit 1
   mise install
+  # come back to folder we were before we went to home folder
+  cd - || exit 1
+  # trust `mise/config.toml` so tools and their versions are available in this
+  # repo too
+  mise trust
 }

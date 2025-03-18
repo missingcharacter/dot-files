@@ -10,8 +10,6 @@ if [ -f "$(brew --prefix)"/etc/bash_completion ]; then
   source "$(brew --prefix)"/etc/bash_completion
 fi
 
-eval "$(mise activate bash)"
-
 # Update PATH
 export PATH="$(brew --prefix)/opt/curl/bin:${PATH}:${HOME}/src/gopath/bin:${HOME}/bin"
 

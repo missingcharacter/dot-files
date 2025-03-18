@@ -56,7 +56,7 @@ done
 # Installing basics
 # shellcheck disable=SC1090,SC1091
 . "${GITROOT}/${MACHINE_OS}/base"
-is_asdf_installed "${ASK}"
+is_mise_installed "${ASK}"
 
 # Setting up mackup
 MACKUP_CUSTOM_APPS_DIR="${HOME}/.mackup"
@@ -67,7 +67,6 @@ link_if_not_exists "${GITROOT}/${MY_MACKUP_CFG}" "${MACKUP_CUSTOM_APPS_DIR}/${MY
 
 # Actual dot-files
 declare -a LINKS=(
-  'asdfrc'
   'bashrc'
   'bash_profile'
   'bash_aliases'
@@ -90,6 +89,7 @@ done
 # Config folders
 declare -a CONFIG_FOLDERS=(
   'ghostty'
+  'mise'
   'nvim'
 )
 if [[ ! -e "${HOME}/.config" ]]; then

@@ -43,7 +43,6 @@ function are_basics_installed() {
   BREW_BASICS=(
    'actionlint'
    'asciidoc'
-   'asdf'
    'awscli'
    'fontconfig'
    'gcc'
@@ -53,6 +52,7 @@ function are_basics_installed() {
    'jless'
    'jq'
    'mackup'
+   'mise'
    'oh-my-posh'
    'parallel'
    'pssh'
@@ -71,29 +71,12 @@ function are_basics_installed() {
   install_if_not_installed 'brew' "${ASK}" "${BREW_BASICS[@]}"
 }
 
-function is_asdf_installed() {
+function is_mise_installed() {
   local ASK="${1:-'y'}"
-  if [[ ! -e "${HOME}/.asdf/asdf.sh" ]] || [[ ! -e "$(get_brew_location)" ]]; then
-    # Ubuntu 18.04 `apt install -y libncurses-dev libxslt-dev` gives the output below
-    # Note, selecting 'libncurses5-dev' instead of 'libncurses-dev'
-    # Note, selecting 'libxslt1-dev' instead of 'libxslt-dev'
-    declare -a ASDF_DEPS=('autoconf'
-      'automake'
-      'libbz2-dev'
-      'libffi-dev'
-      'libncurses5-dev'
-      'libreadline-dev'
-      'libsqlite3-dev'
-      'libssl-dev'
-      'libtool'
-      'libxslt1-dev'
-      'libyaml-dev'
-      'unixodbc-dev'
-      'unzip')
+  if ! command -v mise &> /dev/null || [[ ! -e "$(get_brew_location)" ]]; then
+    msg_info 'Will try to install brew if not installed'
     are_basics_installed "${ASK}"
-    msg_info 'Will try to install asdf dependencies'
-    install_if_not_installed 'apt' "${ASK}" "${ASDF_DEPS[@]}"
-    msg_info 'Will try to install asdf using git'
-    source_asdf
+    msg_info 'Will try to activate mise'
+    source_mise
   fi
 }

@@ -45,7 +45,7 @@ test_arrays
 
 function test_latest_tag() {
   local repo1="https://github.com/JetBrains/kotlin"
-  local repo2="https://github.com/asdf-vm/asdf.git"
+  local repo2="https://github.com/jdx/mise"
   echo "Getting tags for ${repo1}"
   declare -a tags_from_repo1 tags_from_repo2
   mapfile -t tags_from_repo1 < <(get_git_tags "${repo1}")

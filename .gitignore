@@ -50,8 +50,6 @@ Thumbs.db
 !.ssh/config
 .aws/*
 !.aws/config
-.asdf
-.asdf/*
 .composer/*
 .dlv/*
 !.dlv/config.yml

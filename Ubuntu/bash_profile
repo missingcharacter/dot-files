@@ -1,22 +1,6 @@
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# `asdf` is now managed by homebrew
-export ASDF_DATA_DIR="${HOME}/.asdf"
-# shellcheck disable=SC1090
-. <(asdf completion bash)
-# Hook direnv into your shell.
-# shellcheck disable=SC1091
-. "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
-
-# Go specific env vars
-GOPATH="${HOME}/src/gopath"
-GOROOT="$(asdf where golang)/go"
-export GOPATH GOROOT
-
-# Java specific env vars
-JDK_HOME="$(asdf where java)"
-JAVA_HOME="$(asdf where java)/jre"
-export JDK_HOME JAVA_HOME
+eval "$(mise activate bash)"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.

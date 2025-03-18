@@ -8,7 +8,7 @@ Keep key configurations and share them among your computers
 
 - Installs:
   - [1password-cli](https://support.1password.com/command-line/)
-  - [asdf](https://github.com/asdf-vm/asdf)
+  - [mise](https://github.com/jdx/mise)
   - [awscli](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
   - [oh-my-posh](https://ohmyposh.dev)
   - [bfg](https://rtyley.github.io/bfg-repo-cleaner/)

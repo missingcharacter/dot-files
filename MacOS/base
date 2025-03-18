@@ -14,7 +14,6 @@ function are_basics_installed() {
   # `awscli` https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
   declare -a BREW_BASICS=(
     'actionlint'
-    'asdf'
     'awscli'
     'bash'
     'coreutils'
@@ -32,6 +31,7 @@ function are_basics_installed() {
     'bitwarden-cli'
     'mackup'
     'mas'
+    'mise'
     'oh-my-posh'
     'parallel'
     'pssh'
@@ -49,26 +49,12 @@ function are_basics_installed() {
   install_if_not_installed 'brew' "${ASK}" "${BREW_BASICS[@]}"
 }
 
-function is_asdf_installed() {
+function is_mise_installed() {
   local ASK="${1:-'y'}"
-  if ! command -v asdf &> /dev/null || ! command -v brew &> /dev/null; then
-    declare -a ASDF_DEPS=('autoconf'
-      'automake'
-      'coreutils'
-      'gcc'
-      'libtool'
-      'libxslt'
-      'libyaml'
-      'openssl'
-      'make'
-      'readline'
-      'unixodbc'
-      'unzip')
+  if ! command -v mise &> /dev/null || ! command -v brew &> /dev/null; then
     msg_info 'Will try to install brew if not installed'
     are_basics_installed "${ASK}"
-    msg_info 'Will try to install asdf dependencies'
-    install_if_not_installed 'brew' "${ASK}" "${ASDF_DEPS[@]}"
-    msg_info 'Will try to install asdf using git'
-    source_asdf
+    msg_info 'Will try to activate mise'
+    source_mise
   fi
 }

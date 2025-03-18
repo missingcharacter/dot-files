@@ -109,13 +109,9 @@ function clean-multipass() {
   multipass purge
 }
 
-function asdf-all () {
-  awk '{ print $1 }' ~/.tool-versions | grep -v '^#'
-}
-
-function asdf-all-versions () {
-  for i in $(asdf plugin list); do
-    echo "Plugin ${i} and versions are $(asdf list "${i}")"
+function mise-all-versions () {
+  for i in $(mise plugin ls); do
+    echo "Plugin ${i} and versions are $(mise ls -i "${i}")"
   done
 }
 
@@ -282,7 +278,7 @@ function pkg_update() {
     "system"
     "mas"
     "brew"
-    "asdf"
+    "mise"
     "nodejs"
     "gem"
     "pip3"
@@ -299,7 +295,7 @@ function pkg_update() {
   msg_info "Packages to update: ${pkgs[*]}"
   for pkg in "${pkgs[@]}"; do
     case "${pkg}" in
-      system|mas|brew|asdf|nodejs|gem|pip3|mackup)
+      system|mas|brew|mise|nodejs|gem|pip3|mackup)
         pkg_update_"${pkg}"
         ;;
       *)
@@ -359,14 +355,9 @@ function pkg_update_brew() {
   brew update; brew upgrade; brew cleanup;
 }
 
-function pkg_update_asdf() {
-  msg_info 'cd ~/.asdf/plugins/python/pyenv/ && git pull && cd -'
-  cd ~/.asdf/plugins/python/pyenv/ || return 1
-  git pull
-  cd - || return 1
-
-  msg_info 'asdf plugin update --all'
-  asdf plugin update --all
+function pkg_update_mise() {
+  msg_info 'mise plugins ls | xargs -L1 mise plugins update'
+  mise plugins ls | xargs -L1 mise plugins update
 }
 
 function pkg_update_nodejs() {

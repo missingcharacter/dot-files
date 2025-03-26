@@ -455,6 +455,7 @@ function cleancontainers() {
   get_docker_cmds docker_cmds
   "${docker_cmds[@]}" ps -qa -f status=exited | xargs "${docker_cmds[@]}" rm
   "${docker_cmds[@]}" images -qa -f dangling=true | xargs "${docker_cmds[@]}" rmi
+  "${docker_cmds[@]}" builder prune -af
 }
 
 function cleandockervolumes() {

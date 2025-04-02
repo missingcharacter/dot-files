@@ -1,8 +1,6 @@
 keyring
-poetry
 pre-commit
 pynvim
-uv
 ruff
 detect-secrets
 click

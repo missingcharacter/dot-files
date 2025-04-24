@@ -27,4 +27,4 @@ dotnet-core = "8.0.100"
 uv = "0.6.11"
 
 [settings]
-idiomatic_version_file_enable_tools = ["python"]
+idiomatic_version_file_enable_tools = ["python", "ruby"]

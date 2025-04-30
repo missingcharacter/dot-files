@@ -71,3 +71,7 @@ fi
 # activate mise
 # https://mise.jdx.dev/
 eval "$(mise activate bash)"
+
+if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
+  export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+fi

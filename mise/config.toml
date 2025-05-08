@@ -28,4 +28,4 @@ uv = "0.6.11"
 krew = "0.4.5"
 
 [settings]
-idiomatic_version_file_enable_tools = ["python", "ruby"]
+idiomatic_version_file_enable_tools = ["python", "ruby", "java"]

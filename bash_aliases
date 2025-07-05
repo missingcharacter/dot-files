@@ -154,6 +154,42 @@ function youtube-dl-best() {
     --merge-output-format mp4 "${YOUTUBE_URL}"
 }
 
+function get_sed_args() {
+  local -n args=$1
+  case "$(uname)" in
+    Darwin)
+      args+=('-i' "''")
+      ;;
+    Linux)
+      args+=('-i')
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+}
+
+function gitgrepreplace () {
+  local OLD_TEXT="${1}"
+  shift
+  local NEW_TEXT="${1}"
+  shift
+  local SEPARATOR="${1:-!}"
+  shift
+  declare -a GREP_PATHS=("${1:-.}")
+  shift
+  if [[ "${GREP_PATHS[0]}" != '.' ]]; then
+    while [[ $# -gt 0 ]]; do
+      GREP_PATHS+=("${1}")
+      shift
+    done
+  fi
+  local sed_args
+  get_sed_args sed_args
+  local REPLACE="s${SEPARATOR}${OLD_TEXT}${SEPARATOR}${NEW_TEXT}${SEPARATOR}g"
+  git grep -l "${OLD_TEXT}" "${GREP_PATHS[@]}" | xargs sed "${sed_args[@]}" "${REPLACE}"
+}
+
 function gitgrepdiff() {
   local STRING="${1}"
   local DEFAULT_BRANCH="${2:-$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')}"

@@ -46,15 +46,6 @@ function cleansshagent () {
   pgrep -u "$(id -u)" 'ssh-agent'
 }
 
-function gitgrepreplace () {
-  local OLD_TEXT="${1}"
-  local NEW_TEXT="${2}"
-  local GREP_PATH="${3:-.}"
-  local SEPARATOR="${4:-!}"
-  local REPLACE="s${SEPARATOR}${OLD_TEXT}${SEPARATOR}${NEW_TEXT}${SEPARATOR}g"
-  git grep -l "${OLD_TEXT}" "${GREP_PATH}" | xargs sed -i "${REPLACE}"
-}
-
 function aptlistinrepo() {
   local REPO="${1:-ppa.launchpad}"
   grep ^Package \

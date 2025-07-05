@@ -15,15 +15,6 @@ function watch () {
   done
 }
 
-function gitgrepreplace () {
-  local OLD_TEXT="${1}"
-  local NEW_TEXT="${2}"
-  local GREP_PATH="${3:-.}"
-  local SEPARATOR="${4:-!}"
-  local REPLACE="s${SEPARATOR}${OLD_TEXT}${SEPARATOR}${NEW_TEXT}${SEPARATOR}g"
-  git grep -l "${OLD_TEXT}" "${GREP_PATH}" | xargs gsed -i "${REPLACE}"
-}
-
 function getent() {
   # Trying to make dscacheutil like getent
   # in macOS `man dscacheutil`

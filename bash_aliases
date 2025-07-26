@@ -109,6 +109,13 @@ function clean-multipass() {
   multipass purge
 }
 
+function clean-limactl() {
+  for i in $(limactl list -q); do
+    limactl stop "${i}"
+    limactl delete "${i}"
+  done
+}
+
 function mise-all-versions () {
   for i in $(mise plugin ls); do
     echo "Plugin ${i} and versions are $(mise ls -i "${i}")"

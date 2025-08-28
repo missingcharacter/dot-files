@@ -165,7 +165,7 @@ function get_sed_args() {
   local -n args=$1
   case "$(uname)" in
     Darwin)
-      args+=('-i' "''")
+      args+=('-i' "")
       ;;
     Linux)
       args+=('-i')

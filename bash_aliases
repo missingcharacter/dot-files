@@ -435,8 +435,8 @@ function pkg_update_mackup() {
   msg_info 'hash -r'
   hash -r
 
-  msg_info "mackup backup; folder is ${folder}"
-  mackup backup;
+  msg_info "mackup --force-no backup; folder is ${folder}"
+  mackup --force-no backup;
   rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files:"${folder}";
   rclone sync -v --password-command "keyring get dot-files RCLONE_CONFIG_PASS" ~/.dot-files-rclone/ dot-files-dropbox:"${folder}";
 }

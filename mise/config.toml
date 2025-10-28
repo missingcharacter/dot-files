@@ -24,7 +24,7 @@ rclone = "1.69.1"
 tflint = "0.58.0"
 sbt = "1.11.2"
 dotnet-core = "9.0.301"
-uv = "0.8.22"
+uv = "0.9.5"
 krew = "0.4.5"
 
 [settings]

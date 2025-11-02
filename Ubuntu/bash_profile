@@ -41,3 +41,7 @@ fi
 export MODULAR_HOME="${HOME}/.modular"
 
 export PATH="${HOME}/.modular/pkg/packages.modular.com_mojo/bin:${PATH}:${HOME}/src/gopath/bin:${HOME}/.local/bin:${HOME}/bin:/snap/bin"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/ricardo/.lmstudio/bin"
+# End of LM Studio CLI section

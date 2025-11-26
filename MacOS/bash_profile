@@ -16,3 +16,6 @@ export PATH="$(brew --prefix)/opt/curl/bin:${PATH}:${HOME}/src/gopath/bin:${HOME
 # Source: https://iterm2.com/documentation-shell-integration.html
 # shellcheck disable=SC1091
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
+# Added by Antigravity
+export PATH="/Users/Ricardo.Rosales/.antigravity/antigravity/bin:$PATH"

@@ -7,10 +7,10 @@
         {
           "background": "#003543",
           "foreground": "#fff",
-          "powerline_symbol": "\ue0b0",
-          "properties": {
+          "options": {
             "windows": "\uf179"
           },
+          "powerline_symbol": "\ue0b0",
           "style": "powerline",
           "template": " {{ if .WSL }}WSL at {{ end }}{{.Icon}}",
           "type": "os"
@@ -18,10 +18,10 @@
         {
           "background": "#003543",
           "foreground": "#fff",
-          "powerline_symbol": "\ue0b0",
-          "properties": {
+          "options": {
             "windows": "\uf179"
           },
+          "powerline_symbol": "\ue0b0",
           "style": "powerline",
           "template": " {{ .CurrentDate | date .Format }}",
           "type": "time"
@@ -29,11 +29,11 @@
         {
           "background": "#0087D8",
           "foreground": "#fff",
-          "powerline_symbol": "\ue0b0",
-          "properties": {
+          "options": {
             "folder_separator_icon": "/",
             "style": "full"
           },
+          "powerline_symbol": "\ue0b0",
           "style": "powerline",
           "template": " \ue5ff {{ .Path }} ",
           "type": "path"
@@ -47,12 +47,12 @@
             "{{ if gt .Ahead 0 }}#000002{{ end }}",
             "{{ if gt .Behind 0 }}#89d1dc{{ end }}"
           ],
-          "powerline_symbol": "\ue0b0",
-          "properties": {
+          "options": {
             "fetch_stash_count": true,
             "fetch_status": true,
             "fetch_upstream_icon": true
           },
+          "powerline_symbol": "\ue0b0",
           "style": "powerline",
           "template": " {{ .HEAD }} {{ .BranchStatus }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Staging.Changed) (.Working.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0}}\udb80\udd93 {{ .StashCount }}{{ end }}{{ if gt .WorktreeCount 0}} \uf1bb {{ .WorktreeCount }}{{ end }} ",
           "type": "git"
@@ -60,12 +60,12 @@
         {
           "background": "#0087D8",
           "foreground": "#003544",
-          "powerline_symbol": "\ue0b0",
-          "properties": {
+          "options": {
             "display_mode": "context",
             "fetch_version": false,
             "fetch_virtual_env": true
           },
+          "powerline_symbol": "\ue0b0",
           "style": "powerline",
           "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} ",
           "type": "python"
@@ -76,10 +76,10 @@
             "{{ if gt .Code 0 }}#f1184c{{ end }}"
           ],
           "foreground": "#242424",
-          "powerline_symbol": "\ue0b0",
-          "properties": {
+          "options": {
             "always_enabled": true
           },
+          "powerline_symbol": "\ue0b0",
           "style": "powerline",
           "template": " \udb81\udf8f ",
           "type": "exit"
@@ -93,7 +93,7 @@
       "segments": [
         {
           "foreground": "#FFD700",
-          "properties": {
+          "options": {
             "root_icon": "#"
           },
           "style": "plain",
@@ -112,5 +112,5 @@
   ],
   "console_title_template": "{{ .Shell }} in {{ .Folder }}",
   "final_space": true,
-  "version": 3
+  "version": 4
 }

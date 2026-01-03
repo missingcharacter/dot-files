@@ -73,5 +73,10 @@ fi
 eval "$(mise activate bash)"
 
 if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
-  export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+  export PATH="${KREW_ROOT:-$HOME/.krew}/bin:${PATH}"
+fi
+
+# opencode
+if [[ -d "${HOME}/.opencode/bin" ]]; then
+  export PATH="${HOME}/.opencode/bin:${PATH}"
 fi

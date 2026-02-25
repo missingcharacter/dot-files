@@ -22,7 +22,7 @@ alias findterragruntcache='find . -type d -name ".terragrunt-cache"'
 alias findterraformcache='find . -type d -name ".terraform"'
 alias clearterragruntcache='find . -type d -name ".terragrunt-cache" -prune -exec rm -rf {} \;'
 alias clearterraformcache='find . -type d -name ".terraform" -prune -exec rm -rf {} \;'
-alias clearawscreds='truncate -s 0 ~/.aws/credentials'
+alias clearawscreds='truncate -s 0 ~/.aws/credentials' # pragma: allowlist secret
 alias getkubeconfig="pulumi stack output -j k8s-controllers | jq -r '.[].iam_kubeconfig'"
 alias kdump='kubectl get all --all-namespaces'
 alias kips='kubectl get nodes -o jsonpath={.items[*].status.addresses[?\(@.type==\"InternalIP\"\)].address}'
@@ -78,7 +78,7 @@ function get_secret() {
   local service_name="${1}"
   local username="${2}"
   local password
-  password="$(keyring get "${service_name}" "${username}")"
+  password="$(keyring get "${service_name}" "${username}")" # pragma: allowlist secret
   if [[ "${#password}" -eq 0 ]]; then
     msg_error "You may need to run: keyring set ${service_name} ${username}" >&2
     return 1

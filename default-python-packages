@@ -2,6 +2,6 @@ keyring
 pre-commit
 pynvim
 ruff
-detect-secrets
+git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets
 click
 yt-dlp

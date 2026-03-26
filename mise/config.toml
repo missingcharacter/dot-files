@@ -26,7 +26,6 @@ sbt = "1.12.6"
 dotnet-core = "10.0.201"
 uv = "0.10.12"
 krew = "0.4.5"
-"github:anomalyco/opencode" = "1.2.27"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "ruby", "java", "node"]

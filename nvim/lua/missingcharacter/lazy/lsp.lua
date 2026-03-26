@@ -17,11 +17,24 @@ return {
         local cmp = require("cmp")
         local cmp_lsp = require("cmp_nvim_lsp")
         local capabilities = vim.tbl_deep_extend("force", {}, vim.lsp.protocol.make_client_capabilities(), cmp_lsp.default_capabilities())
-        local lspconfig = require("lspconfig")
-        -- `mason-lspconfig` does not support mojo
-        lspconfig.mojo.setup({
+        local util = require("lspconfig.util")
+        vim.lsp.config("mojo", {
+            cmd = { "mojo-lsp-server" },
+            root_dir = util.find_git_ancestor,
+            single_file_support = true,
             capabilities = capabilities,
+            on_attach = function(client, bufnr)
+                on_attach(client, bufnr)
+                vim.keymap.set("n", "<leader>fmt", function()
+                    vim.cmd("noa silent !mojo format --quiet " .. vim.fn.expand("%:p"))
+                end) -- manually format document
+            end,
+            filetypes = { "mojo", "*.🔥" },
         })
+        -- `mason-lspconfig` does not support mojo
+        --lspconfig.mojo.setup({
+        --    capabilities = capabilities,
+        --})
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({

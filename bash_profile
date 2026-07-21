@@ -72,11 +72,6 @@ fi
 # https://mise.jdx.dev/
 eval "$(mise activate bash)"
 
-# atuin
-if command -v atuin &> /dev/null; then
-  eval "$(atuin init bash)"
-fi
-
 if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
   export PATH="${KREW_ROOT:-$HOME/.krew}/bin:${PATH}"
 fi

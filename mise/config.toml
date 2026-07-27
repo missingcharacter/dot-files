@@ -23,9 +23,9 @@ helm-ct = "3.14.0"
 rclone = "1.74.4"
 tflint = "0.64.0"
 sbt = "2.0.4"
-dotnet-core = "10.0.302"
 uv = "0.11.32"
 krew = "0.5.0"
+"vfox:mise-plugins/vfox-dotnet" = "10.0.302"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "ruby", "java", "node"]

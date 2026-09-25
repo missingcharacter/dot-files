@@ -26,7 +26,7 @@ sbt = "2.0.9"
 uv = "0.12.19"
 krew = "0.5.0"
 "vfox:mise-plugins/vfox-dotnet" = "10.0.302"
-opencode = "2.0.16"
+opencode = "1.18.32"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "ruby", "java", "node"]

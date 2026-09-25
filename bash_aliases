@@ -570,6 +570,11 @@ function TitleCaseConverter() {
   printf "%s" "$1" | sed 's/.*/\L&/; s/[a-z]*/\u&/g'
 }
 
+function allopencodesessions() {
+  sqlite3 -header -column ~/.local/share/opencode/opencode.db \
+      "SELECT id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated FROM session ORDER BY time_updated DESC;"
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

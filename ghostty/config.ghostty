@@ -1,6 +1,6 @@
 window-padding-color = background
 theme = GitHub Dark High Contrast
-font-family = "JetBrains Mono"
+#font-family = "JetBrains Mono"
 font-size = 18
 # https://ghostty.org/docs/config/reference#font-feature
 font-feature = -calt

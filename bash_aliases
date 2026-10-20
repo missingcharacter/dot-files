@@ -575,6 +575,27 @@ function allopencodesessions() {
       "SELECT id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated FROM session ORDER BY time_updated DESC;"
 }
 
+function az_pw_clipboard() {
+  local keyvault="${1}"
+  local keyname="${2}"
+  local clipboard_cmd=''
+  case "$(uname)" in
+    Darwin)
+      clipboard_cmd='pbcopy'
+      ;;
+    Linux)
+      clipboard_cmd='wl-clipboard'
+      ;;
+    *)
+      msg_error "Operating System $(uname) is not supported"
+      ;;
+  esac
+  az keyvault secret show \
+    --vault-name "${keyvault}" \
+    --name "${keyname}" \
+    -o tsv --query 'value' | "${clipboard_cmd}"
+}
+
 # Sourcing Operating System Specific bash_aliases
 if [ -f ~/.bash_os_aliases ]; then
     # shellcheck source=/dev/null

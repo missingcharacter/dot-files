@@ -571,13 +571,21 @@ function TitleCaseConverter() {
 }
 
 function allopencodesessions() {
-  sqlite3 -header -column ~/.local/share/opencode/opencode.db \
-    "SELECT 'v2' AS version, id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated \
-    FROM session_v2 \
-    UNION ALL \
-    SELECT 'v1' AS version, id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated \
-    FROM session \
-    ORDER BY updated DESC;"
+  sqlite3 -header -column ~/.local/share/opencode/opencode.db "
+    SELECT
+        GROUP_CONCAT(version, ',') AS version,
+        id,
+        MAX(title) AS title,
+        MAX(directory) AS directory,
+        MAX(updated) AS updated
+    FROM (
+        SELECT 'v2' AS version, id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated FROM session_v2
+        UNION ALL
+        SELECT 'v1' AS version, id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated FROM session
+    )
+    GROUP BY id
+    ORDER BY updated DESC;
+    "
 }
 
 function az_pw_clipboard() {

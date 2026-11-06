@@ -572,7 +572,12 @@ function TitleCaseConverter() {
 
 function allopencodesessions() {
   sqlite3 -header -column ~/.local/share/opencode/opencode.db \
-      "SELECT id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated FROM session ORDER BY time_updated DESC;"
+    "SELECT 'v2' AS version, id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated \
+    FROM session_v2 \
+    UNION ALL \
+    SELECT 'v1' AS version, id, title, directory, datetime(time_updated/1000, 'unixepoch', 'localtime') AS updated \
+    FROM session \
+    ORDER BY updated DESC;"
 }
 
 function az_pw_clipboard() {

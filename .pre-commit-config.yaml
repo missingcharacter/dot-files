@@ -40,7 +40,7 @@ repos:
       - id: shellcheck
         exclude: '.*\.sh\.j2'
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.49.1
+    rev: v0.50.0
     hooks:
       - id: markdownlint-fix
   - repo: https://github.com/rhysd/actionlint
@@ -48,6 +48,6 @@ repos:
     hooks:
       - id: actionlint-system
   - repo: https://github.com/JohnnyMorganz/StyLua
-    rev: v2.5.2
+    rev: v2.6.0
     hooks:
       - id: stylua-system

@@ -357,8 +357,8 @@ function pkg_update_system() {
       sudo softwareupdate -i -a;
       ;;
     Linux)
-      msg_info 'sudo nala upgrade;'
-      sudo nala upgrade;
+      msg_info 'sudo nala dist-upgrade;'
+      sudo nala dist-upgrade;
 
       msg_info 'sudo snap refresh --list && sudo snap refresh;'
       sudo snap refresh --list && sudo snap refresh;
